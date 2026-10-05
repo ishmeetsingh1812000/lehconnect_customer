@@ -484,10 +484,7 @@ export const BookingWidget = ({
       departureDate.getFullYear() === now.getFullYear() &&
       departureDate.getMonth() === now.getMonth() &&
       departureDate.getDate() === now.getDate();
-    if (
-      isToday &&
-      pickupDateTime.getTime() - now.getTime() < 60 * 60 * 1000
-    ) {
+    if (isToday && pickupDateTime.getTime() - now.getTime() < 60 * 60 * 1000) {
       return "Please select a pickup time at least 1 hour from now.";
     }
 
@@ -954,7 +951,9 @@ export const BookingWidget = ({
         ? `${pickupSlug}-local-rental`
         : `${pickupSlug}-to-${dropSlug}`;
 
-      const targetTripType = isHourly ? "local" : searchParams.cabs.tripType || "oneway";
+      const targetTripType = isHourly
+        ? "local"
+        : searchParams.cabs.tripType || "oneway";
       router.push(`/cabs/${routeSlug}?trip_type=${targetTripType}`);
     } else if (activeTab === "hotels") {
       updateSearchParams("hotels", {
@@ -1510,10 +1509,10 @@ export const BookingWidget = ({
                               <span
                                 key={day}
                                 className={`leh-calendar-day-cell ${isDepartureCalendarDaySelected(day) ? "active" : ""} ${isDepartureCalendarDayInPast(day) ? "disabled" : ""}`}
-                                aria-disabled={isDepartureCalendarDayInPast(day)}
-                                onClick={() =>
-                                  selectDepartureCalendarDay(day)
-                                }
+                                aria-disabled={isDepartureCalendarDayInPast(
+                                  day,
+                                )}
+                                onClick={() => selectDepartureCalendarDay(day)}
                               >
                                 {day}
                               </span>
@@ -1795,7 +1794,6 @@ export const BookingWidget = ({
                       <span className="fw-bold text-dark">{pickupTimeVal}</span>
                       <i className="fa-regular fa-clock text-muted fs-7"></i>
                     </div>
-                    <span className="leh-input-card-subtext">Morning slot</span>
 
                     {openPicker === "time" && (
                       <div
@@ -1837,7 +1835,9 @@ export const BookingWidget = ({
                                 <span
                                   key={day}
                                   className={`leh-calendar-day-cell ${isDepartureCalendarDaySelected(day) ? "active" : ""} ${isDepartureCalendarDayInPast(day) ? "disabled" : ""}`}
-                                  aria-disabled={isDepartureCalendarDayInPast(day)}
+                                  aria-disabled={isDepartureCalendarDayInPast(
+                                    day,
+                                  )}
                                   onClick={() =>
                                     selectDepartureCalendarDay(day)
                                   }
