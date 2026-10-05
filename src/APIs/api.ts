@@ -230,3 +230,11 @@ export const verifyCabBookingPayment = async (payload) => {
   console.log("verifyCabBookingPayment response", response);
   return response.data;
 };
+
+export const getCabBookingPreview = async (payload) => {
+  const { data } = await apiClient.post(
+    "/customer/cab/booking/preview",
+    payload,
+  ); // use your axios instance
+  return data;
+};

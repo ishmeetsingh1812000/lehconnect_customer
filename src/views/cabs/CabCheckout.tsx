@@ -1,12 +1,13 @@
 "use client";
 
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import { useNavigate } from "../../hooks/useAppNavigation";
 import { useBooking } from "../../context/BookingContext";
 import { ROUTES } from "../../constants/routes";
 import {
   createCabBooking,
   createCabBookingOrder,
+  getCabBookingPreview,
   getDistance,
   verifyCabBookingPayment,
 } from "../../APIs/api";
@@ -31,10 +32,58 @@ const loadRazorpay = () =>
     document.body.appendChild(script);
   });
 
+const toYMD = (input) => {
+  if (!input) return null;
+
+  // Date object -> use local parts (toISOString() can shift the day because of timezone)
+  if (input instanceof Date && !Number.isNaN(input.getTime())) {
+    const y = input.getFullYear();
+    const m = String(input.getMonth() + 1).padStart(2, "0");
+    const d = String(input.getDate()).padStart(2, "0");
+    return `${y}-${m}-${d}`;
+  }
+
+  const s = String(input).trim();
+
+  // Already YYYY-MM-DD, or ISO like 2026-10-06T10:00:00Z
+  const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
+  if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
+
+  // "22 Jul'26", "22 Jul 2026", "22 July 2026"
+  const months = [
+    "jan",
+    "feb",
+    "mar",
+    "apr",
+    "may",
+    "jun",
+    "jul",
+    "aug",
+    "sep",
+    "oct",
+    "nov",
+    "dec",
+  ];
+  const txt = s.match(/^(\d{1,2})\s+([A-Za-z]{3,9})\s*'?\s*(\d{2}|\d{4})$/);
+  if (txt) {
+    const mi = months.indexOf(txt[2].slice(0, 3).toLowerCase());
+    if (mi !== -1) {
+      const year = txt[3].length === 2 ? `20${txt[3]}` : txt[3];
+      return `${year}-${String(mi + 1).padStart(2, "0")}-${txt[1].padStart(2, "0")}`;
+    }
+  }
+
+  // "06/10/2026" or "06-10-2026" (assumed DD/MM/YYYY, the Indian format)
+  const dmy = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
+  if (dmy)
+    return `${dmy[3]}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
+
+  return null;
+};
+
 export const CabCheckout = () => {
   const navigate = useNavigate();
-  const { checkoutItem, user, coupons, addBooking, updateProfile } =
-    useBooking();
+  const { checkoutItem, user, addBooking, updateProfile } = useBooking();
 
   // ---------- ALL HOOKS FIRST (before any early return) ----------
   const [activeStep, setActiveStep] = useState(1); // 1: Review, 2: Traveler Info + Pay
@@ -47,7 +96,79 @@ export const CabCheckout = () => {
   const [pickupLandmark, setPickupLandmark] = useState("");
   const [useWallet, setUseWallet] = useState(false);
   const [couponCode, setCouponCode] = useState("");
-  const [appliedCoupon, setAppliedCoupon] = useState(null);
+  const [appliedPromo, setAppliedPromo] = useState(null); // validated promo code string
+
+  // Server fare preview state
+  const [distanceKm, setDistanceKm] = useState(0);
+  const [preview, setPreview] = useState(null);
+  const [previewLoading, setPreviewLoading] = useState(false);
+  const [previewError, setPreviewError] = useState(null);
+
+  const isHourly = !!(
+    checkoutItem?.isHourly || checkoutItem?.tripType === "hourly"
+  );
+  // vehicle token = itemId without the "-0-0" suffix
+  const vehicleToken =
+    checkoutItem?.vehicle_token ||
+    String(checkoutItem?.itemId || "").split("-")[0];
+
+  // Resolve distance (km) once; needed by both the preview and the booking
+  useEffect(() => {
+    if (!checkoutItem) return;
+    let cancelled = false;
+
+    (async () => {
+      let km = Number(checkoutItem.totalDistance) || 0;
+      if (!km && isHourly) {
+        km = parseInt(checkoutItem.packageDistance, 10) || 0; // "40 kms" -> 40
+      }
+      if (!km && !isHourly) {
+        try {
+          const d = await getDistance(checkoutItem.pickup, checkoutItem.drop);
+          if (d?.distanceValue) km = Math.round(d.distanceValue / 1000);
+        } catch (e) {
+          console.error("getDistance failed", e);
+        }
+      }
+      if (!cancelled) setDistanceKm(km);
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [checkoutItem, isHourly]);
+
+  // Server-side fare preview. Re-runs when wallet toggle / promo / distance changes.
+  useEffect(() => {
+    if (!vehicleToken || !distanceKm) return;
+    let cancelled = false;
+    setPreviewLoading(true);
+
+    (async () => {
+      try {
+        const res = await getCabBookingPreview(
+          buildPreviewPayload(appliedPromo),
+        );
+        if (cancelled) return;
+        setPreview(unwrap(res));
+        setPreviewError(null);
+      } catch (err) {
+        if (cancelled) return;
+        setPreview(null);
+        setPreviewError(
+          err?.response?.data?.message ||
+            err?.message ||
+            "Could not fetch fare. Please try again.",
+        );
+      } finally {
+        if (!cancelled) setPreviewLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, [vehicleToken, distanceKm, useWallet, appliedPromo, user?.walletBalance]);
 
   // ---------- Early return AFTER hooks ----------
   if (!checkoutItem) {
@@ -79,43 +200,52 @@ export const CabCheckout = () => {
     );
   }
 
-  const isHourly = checkoutItem.isHourly || checkoutItem.tripType === "hourly";
-
-  // ---------- Pricing (display only; server is the source of truth) ----------
-  const basePrice = checkoutItem.price;
-  let discount = 0;
-  if (appliedCoupon) {
-    discount = Math.min(
-      (basePrice * appliedCoupon.discount) / 100,
-      appliedCoupon.maxDiscount,
-    );
-  }
-  const subtotal = basePrice - discount;
-  const walletBalance = user?.walletBalance ?? 0;
-  const walletApplied = useWallet ? Math.min(subtotal, walletBalance) : 0;
-  const grandTotal = subtotal - walletApplied;
+  // ---------- Pricing (from server preview; falls back to listing price until loaded) ----------
+  const fare = preview?.fare_summary;
+  const basePrice = fare?.base_fare ?? checkoutItem.price;
+  const discount = fare?.discount ?? 0;
+  const walletBalance =
+    preview?.wallet?.available_balance ?? user?.walletBalance ?? 0;
+  const walletApplied = useWallet ? (preview?.wallet?.amount_used ?? 0) : 0;
+  const grandTotal = preview?.payable_amount ?? checkoutItem.price;
 
   // Stepper: show step 3 (Payment) as active while Razorpay is open
   const progressStep = isPaying ? 3 : activeStep;
 
-  // ---------- Coupons ----------
-  const handleApplyCoupon = (e) => {
+  // ---------- Coupons (validated by the server) ----------
+  const handleApplyCoupon = async (e) => {
     e.preventDefault();
-    const found = coupons.find(
-      (c) => c.code.toUpperCase() === couponCode.toUpperCase(),
-    );
-    if (found) {
-      setAppliedCoupon(found);
-      toast.success(
-        `Coupon applied successfully! You saved ₹${Math.min((basePrice * found.discount) / 100, found.maxDiscount)}`,
+    const code = couponCode.trim();
+    if (!code) return;
+
+    if (!vehicleToken || !distanceKm) {
+      toast.error("Fare is not ready yet. Please try again in a moment.");
+      return;
+    }
+
+    try {
+      const res = await getCabBookingPreview(buildPreviewPayload(code));
+      const data = unwrap(res);
+
+      if (data?.promo?.applied) {
+        setAppliedPromo(code.toUpperCase()); // effect above refreshes the preview
+        toast.success(
+          `Coupon applied successfully! You saved ₹${Number(data.fare_summary?.discount || 0).toLocaleString()}`,
+        );
+      } else {
+        toast.error(data?.promo?.message || "Invalid Coupon Code.");
+      }
+    } catch (err) {
+      toast.error(
+        err?.response?.data?.message ||
+          err?.message ||
+          "Could not apply coupon.",
       );
-    } else {
-      toast.error("Invalid Coupon Code.");
     }
   };
 
   const handleRemoveCoupon = () => {
-    setAppliedCoupon(null);
+    setAppliedPromo(null);
     setCouponCode("");
     toast.success("Coupon removed.");
   };
@@ -133,7 +263,7 @@ export const CabCheckout = () => {
       to: checkoutItem.drop,
       date: checkoutItem.date,
       time: checkoutItem.time,
-      price: checkoutItem.price,
+      price: basePrice,
       tripType:
         checkoutItem.tripType || (checkoutItem.isHourly ? "hourly" : "oneway"),
       isHourly,
@@ -173,13 +303,19 @@ export const CabCheckout = () => {
       return;
     }
 
+    if (!preview || previewLoading) {
+      toast.error("Fare is still being calculated. Please wait a moment.");
+      return;
+    }
+
     setIsPaying(true);
     try {
       // 1) Create the PENDING booking (reuse it if nothing changed since last try)
       const key = [
-        checkoutItem.vehicle_token,
+        vehicleToken,
+        distanceKm,
         walletApplied,
-        appliedCoupon?.code || "",
+        appliedPromo || "",
         travelerName,
         travelerPhone,
         travelerEmail,
@@ -191,20 +327,6 @@ export const CabCheckout = () => {
 
       if (!created) {
         console.log("Creating new cab booking with key", key, checkoutItem);
-        // vehicle token = itemId without the "-0-0" suffix
-        const vehicleToken =
-          checkoutItem.vehicle_token ||
-          String(checkoutItem.itemId || "").split("-")[0];
-
-        // distance in km
-        let distanceKm = Number(checkoutItem.totalDistance) || 0;
-        if (!distanceKm && isHourly) {
-          distanceKm = parseInt(checkoutItem.packageDistance, 10) || 0; // "40 kms" -> 40
-        }
-        if (!distanceKm && !isHourly) {
-          const d = await getDistance(checkoutItem.pickup, checkoutItem.drop);
-          if (d?.distanceValue) distanceKm = Math.round(d.distanceValue / 1000);
-        }
 
         if (!vehicleToken || !distanceKm) {
           toast.error(
@@ -238,7 +360,7 @@ export const CabCheckout = () => {
           contact: travelerPhone.replace(/\D/g, "").slice(-10),
           total_distance: distanceKm,
           wallet_amount: walletApplied,
-          coupon_code: appliedCoupon?.code || null,
+          coupon_code: appliedPromo,
           from_web: true,
           traveller_details: {
             name: travelerName,
@@ -253,8 +375,10 @@ export const CabCheckout = () => {
 
       const { booking, payment } = created;
       console.log(
-        "LISTING PRICE:",
-        checkoutItem.price,
+        "PREVIEW TOTAL:",
+        preview?.fare_summary?.total_fare,
+        "| preview payable:",
+        preview?.payable_amount,
         "| distance sent:",
         created?.booking?.total_distance,
         "| payment obj:",
@@ -375,54 +499,12 @@ export const CabCheckout = () => {
     handlePayment();
   };
 
-  const toYMD = (input) => {
-    if (!input) return null;
-
-    // Date object -> use local parts (toISOString() can shift the day because of timezone)
-    if (input instanceof Date && !Number.isNaN(input.getTime())) {
-      const y = input.getFullYear();
-      const m = String(input.getMonth() + 1).padStart(2, "0");
-      const d = String(input.getDate()).padStart(2, "0");
-      return `${y}-${m}-${d}`;
-    }
-
-    const s = String(input).trim();
-
-    // Already YYYY-MM-DD, or ISO like 2026-10-06T10:00:00Z
-    const iso = s.match(/^(\d{4})-(\d{2})-(\d{2})/);
-    if (iso) return `${iso[1]}-${iso[2]}-${iso[3]}`;
-
-    // "22 Jul'26", "22 Jul 2026", "22 July 2026"
-    const months = [
-      "jan",
-      "feb",
-      "mar",
-      "apr",
-      "may",
-      "jun",
-      "jul",
-      "aug",
-      "sep",
-      "oct",
-      "nov",
-      "dec",
-    ];
-    const txt = s.match(/^(\d{1,2})\s+([A-Za-z]{3,9})\s*'?\s*(\d{2}|\d{4})$/);
-    if (txt) {
-      const mi = months.indexOf(txt[2].slice(0, 3).toLowerCase());
-      if (mi !== -1) {
-        const year = txt[3].length === 2 ? `20${txt[3]}` : txt[3];
-        return `${year}-${String(mi + 1).padStart(2, "0")}-${txt[1].padStart(2, "0")}`;
-      }
-    }
-
-    // "06/10/2026" or "06-10-2026" (assumed DD/MM/YYYY, the Indian format)
-    const dmy = s.match(/^(\d{1,2})[\/-](\d{1,2})[\/-](\d{4})$/);
-    if (dmy)
-      return `${dmy[3]}-${dmy[2].padStart(2, "0")}-${dmy[1].padStart(2, "0")}`;
-
-    return null;
-  };
+  const buildPreviewPayload = (promo) => ({
+    vehicle_token: vehicleToken,
+    total_distance: distanceKm,
+    wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
+    ...(promo ? { promo_code: promo } : {}),
+  });
 
   // ---------- Render ----------
   return (
@@ -548,7 +630,7 @@ export const CabCheckout = () => {
                           Total Fare
                         </span>
                         <h4 className="fw-bold text-dark my-0.5 leh-style-auto-1068">
-                          ₹{checkoutItem.price.toLocaleString()}
+                          ₹{Number(basePrice).toLocaleString()}
                         </h4>
                         <span className="text-muted fs-9">
                           All inclusive pricing ℹ
@@ -900,14 +982,14 @@ export const CabCheckout = () => {
                   <i className="fa-solid fa-ticket text-primary me-1"></i> Apply
                   Promo Code
                 </h6>
-                {appliedCoupon ? (
+                {appliedPromo ? (
                   <div className="d-flex justify-content-between align-items-center border border-success p-2.5 rounded bg-success-subtle">
                     <div>
                       <span className="fw-bold text-success fs-8 d-block">
-                        {appliedCoupon.code} Applied
+                        {appliedPromo} Applied
                       </span>
                       <small className="text-muted fs-9">
-                        {appliedCoupon.description}
+                        {preview?.promo?.message}
                       </small>
                     </div>
                     <button
@@ -936,10 +1018,10 @@ export const CabCheckout = () => {
                     </button>
                   </form>
                 )}
-                {appliedCoupon && (
+                {appliedPromo && discount > 0 && (
                   <small className="text-success fw-bold d-block mt-2 fs-8">
                     <i className="fa-solid fa-check me-1.5"></i> Awesome! You
-                    saved ₹{discount}
+                    saved ₹{discount.toLocaleString()}
                   </small>
                 )}
               </div>
@@ -955,7 +1037,8 @@ export const CabCheckout = () => {
                     <div>
                       <span className="text-dark">Pay using Wallet</span>
                       <small className="text-muted fs-8 d-block mt-0.5">
-                        Available Balance: ₹{walletBalance.toLocaleString()}
+                        Available Balance: ₹
+                        {Number(walletBalance).toLocaleString()}
                       </small>
                     </div>
                   </label>
@@ -982,13 +1065,13 @@ export const CabCheckout = () => {
                 <div className="d-flex justify-content-between fs-8 mb-2.5 text-secondary">
                   <span>Base Cab Fare</span>
                   <span className="fw-semibold">
-                    ₹{basePrice.toLocaleString()}
+                    ₹{Number(basePrice).toLocaleString()}
                   </span>
                 </div>
 
                 {discount > 0 && (
                   <div className="d-flex justify-content-between fs-8 mb-2.5 text-success fw-bold">
-                    <span>Discount ({appliedCoupon?.code})</span>
+                    <span>Discount ({appliedPromo})</span>
                     <span>- ₹{discount.toLocaleString()}</span>
                   </div>
                 )}
@@ -1002,28 +1085,43 @@ export const CabCheckout = () => {
 
                 <div className="d-flex justify-content-between fs-8 mb-2.5 text-secondary">
                   <span>Taxes & Fees</span>
-                  <span>Included</span>
+                  <span>
+                    {fare?.taxes_fees > 0
+                      ? `₹${fare.taxes_fees.toLocaleString()}`
+                      : "Included"}
+                  </span>
                 </div>
 
                 <hr className="my-3" />
 
                 <div className="d-flex justify-content-between fw-bold text-dark fs-6">
                   <span>Grand Total</span>
-                  <span className="fs-5 fw-black   leh-style-auto-1068">
-                    ₹{grandTotal.toLocaleString()}
+                  <span
+                    className="fs-5 fw-black   leh-style-auto-1068"
+                    style={{ opacity: previewLoading ? 0.5 : 1 }}
+                  >
+                    ₹{Number(grandTotal).toLocaleString()}
                   </span>
                 </div>
 
                 {discount > 0 && (
                   <div className="p-2 mt-3 text-center border-0 text-success fw-semibold fs-8 leh-style-auto-1074">
                     <i className="fa-solid fa-check me-1.5"></i> You will save ₹
-                    {discount} on this booking
+                    {discount.toLocaleString()} on this booking
+                  </div>
+                )}
+
+                {previewError && (
+                  <div className="alert alert-danger fs-8 py-2 mt-3 mb-0">
+                    {previewError}
                   </div>
                 )}
 
                 <button
                   type="button"
-                  disabled={isPaying}
+                  disabled={
+                    isPaying || previewLoading || (activeStep === 2 && !preview)
+                  }
                   onClick={handlePrimaryAction}
                   className="btn btn-primary btn-lg w-100 rounded-pill py-3 fw-bold mt-4 border-0 d-flex align-items-center justify-content-center gap-1.5 leh-style-auto-1075"
                 >
@@ -1034,8 +1132,10 @@ export const CabCheckout = () => {
                     </>
                   ) : isPaying ? (
                     "Processing..."
+                  ) : previewLoading ? (
+                    "Calculating fare..."
                   ) : grandTotal > 0 ? (
-                    `Pay ₹${grandTotal.toLocaleString()}`
+                    `Pay ₹${Number(grandTotal).toLocaleString()}`
                   ) : (
                     "Confirm Booking"
                   )}
