@@ -1,0 +1,2955 @@
+/*
+   LehConnect Premium Travel Booking Responsive CSS
+   Contains all media queries for responsive layouts across all viewports (1600px down to 320px).
+   Consolidated, merged, and cleanly organized - zero media queries in style.css.
+*/
+
+/* ==========================================================================
+   Global Responsive Foundations & Overflow Protection
+   ========================================================================== */
+html,
+body {
+  overflow-x: clip !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  position: relative;
+}
+
+img,
+video,
+iframe,
+canvas,
+svg {
+  max-width: 100%;
+  height: auto;
+}
+
+h1, h2, h3, h4, h5, h6,
+p, span, div, a, label, li {
+  overflow-wrap: break-word;
+  word-wrap: break-word;
+}
+
+/* Modal Headers & Badges Responsive Text Protection */
+.modal-header {
+  min-width: 0;
+}
+
+.modal-header .badge {
+  white-space: normal !important;
+  word-break: break-word !important;
+  text-align: left;
+  line-height: 1.35;
+}
+
+.modal-header h4,
+.modal-header h5,
+.modal-header h6 {
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+/* Checkout Step 2 Proceed to Payment Hidden */
+.sada,
+button.sada,
+button.btn.leh-style-auto-1060.sada {
+  display: none !important;
+}
+
+/* ==========================================================================
+   1. Ultra-Wide Displays (min-width: 1600px)
+   ========================================================================== */
+@media (min-width: 1600px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1280px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .leh-hero-section {
+    padding: 4.5rem 0 9rem 0 !important;
+  }
+
+  .leh-hero-title {
+    font-size: 2.85rem !important;
+  }
+
+  .packages-carousel-outer {
+    padding: 0 35px;
+  }
+}
+
+/* ==========================================================================
+   2. Standard Desktops & Above (min-width: 1200px)
+   ========================================================================== */
+@media (min-width: 1200px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1200px !important;
+    margin-left: auto !important;
+    margin-right: auto !important;
+  }
+
+  .leh-nav-item {
+    padding: 4px 10px !important;
+  }
+}
+
+/* ==========================================================================
+   3. Large Tablets & Desktops (min-width: 769px)
+   ========================================================================== */
+@media (min-width: 769px) {
+  .leh-about-timeline-item:not(:first-child) {
+    margin-top: -80px;
+  }
+}
+
+/* ==========================================================================
+   4. Medium Screens & Above (min-width: 768px)
+   ========================================================================== */
+@media (min-width: 768px) {
+  .pkg-card-img-container {
+    width: 250px !important;
+    height: 180px !important;
+  }
+
+  .pkg-card-info-col {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .pkg-card-price-col {
+    width: 220px !important;
+    flex-shrink: 0;
+  }
+}
+
+/* ==========================================================================
+   5. Large Desktops (max-width: 1440px)
+   ========================================================================== */
+@media (max-width: 1440px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1200px !important;
+  }
+
+  .packages-carousel-outer {
+    padding: 0 30px;
+  }
+}
+
+/* ==========================================================================
+   6. Standard Laptops (max-width: 1366px)
+   ========================================================================== */
+@media (max-width: 1366px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1200px !important;
+  }
+
+  .leh-nav-item {
+    padding: 4px 8px !important;
+    font-size: 11px !important;
+  }
+}
+
+/* ==========================================================================
+   7. Small Desktops & Large Laptops (max-width: 1280px)
+   ========================================================================== */
+@media (max-width: 1280px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1180px !important;
+    padding-left: 20px !important;
+    padding-right: 20px !important;
+  }
+
+  .leh-nav-item {
+    padding: 4px 7px !important;
+    font-size: 10.8px !important;
+  }
+}
+
+/* ==========================================================================
+   8. Laptops & Medium Desktops (max-width: 1200px)
+   ========================================================================== */
+@media (max-width: 1200px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 1140px !important;
+    padding-left: 18px !important;
+    padding-right: 18px !important;
+  }
+
+  .leh-tab-nav-bar {
+    max-width: 100%;
+    border-radius: 10px;
+    padding: 8px 10px;
+  }
+
+  .leh-tab-nav-bar-link {
+    font-size: 0.72rem;
+    padding: 4px 6px;
+  }
+
+  .leh-tab-icon-circle {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+  }
+
+  .leh-input-grid {
+    grid-template-columns: 1.1fr 1.1fr 1fr 1fr 1fr;
+  }
+
+  .packages-carousel-outer {
+    padding: 0 25px;
+  }
+
+  .swiper-button-prev-custom {
+    left: 0px;
+  }
+
+  .swiper-button-next-custom {
+    right: 0px;
+  }
+
+  .leh-nav-item {
+    padding: 3px 6px !important;
+    font-size: 10px !important;
+  }
+
+  .leh-nav-item i {
+    font-size: 14px !important;
+  }
+}
+
+/* ==========================================================================
+   9. Landscape Tablets & Compact Laptops (max-width: 1024px)
+   ========================================================================== */
+@media (max-width: 1024px) {
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 960px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .gap-4 {
+    gap: 1.25rem !important;
+  }
+
+  .gap-3 {
+    gap: 0.85rem !important;
+  }
+
+  .leh-header-login-btn {
+    min-width: 85px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .leh-nav-item {
+    padding: 2px 4px !important;
+    font-size: 9.5px !important;
+  }
+
+  .leh-hero-title {
+    font-size: 2.25rem !important;
+  }
+
+  .leh-hero-subtitle {
+    font-size: 1.05rem !important;
+  }
+}
+
+/* ==========================================================================
+   10. Tablets & Small Laptops (max-width: 992px)
+   ========================================================================== */
+@media (max-width: 992px) {
+  .leh-hero-section {
+    padding: 3rem 0 8rem 0 !important;
+  }
+
+  .leh-booking-container {
+    margin-top: -100px !important;
+  }
+
+  .leh-input-grid {
+    grid-template-columns: 1fr 1fr !important;
+    border-radius: 8px;
+  }
+
+  .leh-input-card-grid {
+    display: grid !important;
+    grid-template-columns: 1fr 1fr !important;
+    gap: 10px !important;
+  }
+
+  .leh-swap-btn,
+  .leh-swap-btn-card {
+    display: none !important;
+  }
+
+  .leh-input-col {
+    border-right: none !important;
+    border-bottom: 1px solid var(--gray-200);
+    padding: 1rem 1.25rem !important;
+  }
+
+  .leh-input-col:nth-child(even) {
+    border-left: 1px solid var(--gray-200);
+  }
+
+  .leh-input-col:last-child {
+    border-bottom: none;
+  }
+
+  .leh-why-book {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ==========================================================================
+   11. Tablets & Collapsible Menus (max-width: 991px)
+   ========================================================================== */
+@media (max-width: 991px) {
+  .leh-logo-img,
+  .leh-style-auto-1024,
+  .leh-login-logo {
+    height: 38px !important;
+    width: auto !important;
+    max-width: 125px !important;
+    object-fit: contain !important;
+  }
+
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 720px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .leh-about-mockup-img {
+    height: 300px;
+  }
+
+  .table {
+    display: block;
+    width: 100%;
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+  }
+
+  .dashboard-outer-wrapper {
+    overflow-x: hidden !important;
+    width: 100% !important;
+  }
+
+  .dashboard-layout {
+    flex-direction: column !important;
+    gap: 1.25rem !important;
+    margin-top: 1rem !important;
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .dashboard-sidebar {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 1.25rem 0 0.75rem 0 !important;
+  }
+
+  .dashboard-sidebar-header {
+    padding: 0 1.25rem 1rem 1.25rem !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .sidebar-completion-box {
+    margin: 0 1.25rem 0.75rem 1.25rem !important;
+    padding: 0.75rem 1rem !important;
+  }
+
+  .dashboard-menu {
+    display: grid !important;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)) !important;
+    gap: 6px !important;
+    padding: 0 1rem !important;
+  }
+
+  .dashboard-menu-link {
+    padding: 0.65rem 0.85rem !important;
+    font-size: 0.825rem !important;
+    border-radius: 8px !important;
+    border-left: none !important;
+    border-bottom: 2px solid transparent !important;
+    background: #f8fafc !important;
+  }
+
+  .dashboard-menu-link:hover,
+  .dashboard-menu-link.active {
+    background-color: rgba(13, 110, 253, 0.08) !important;
+    border-bottom-color: var(--primary-color) !important;
+  }
+
+  .dashboard-content {
+    width: 100% !important;
+    min-width: 0 !important;
+    max-width: 100% !important;
+    padding: 1.5rem !important;
+    overflow-x: hidden !important;
+  }
+
+  .lehconnect-hotel-search-strip {
+    top: 60px;
+  }
+
+  .lehconnect-search-strip-inner {
+    gap: 8px;
+  }
+
+  .lehconnect-search-input-box {
+    min-width: 140px;
+    flex: 1 1 45%;
+  }
+
+  .lehconnect-search-update-btn {
+    width: 100%;
+    padding: 10px;
+  }
+
+  .holiday-packages-section {
+    padding: 30px 0 50px;
+  }
+
+  .packages-heading h2 {
+    font-size: 24px;
+  }
+
+  .destination-details-bar h3 {
+    font-size: 18px;
+  }
+
+  .package-card-img-container {
+    height: 200px;
+  }
+
+  .leh-hld-gallery {
+    grid-template-columns: 1fr !important;
+  }
+
+  .leh-gallery-grid {
+    display: none !important;
+  }
+
+  .leh-gallery-main {
+    height: 320px !important;
+  }
+
+  .leh-subnav-wrapper {
+    top: 56px !important;
+  }
+
+  .leh-subnav-btn {
+    padding: 12px 16px !important;
+    font-size: 13px !important;
+  }
+
+  .leh-snapshot-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 10px !important;
+    padding-bottom: 8px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .leh-snapshot-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 170px !important;
+    min-width: 170px !important;
+  }
+
+  .leh-card {
+    padding: 22px 18px !important;
+    border-radius: 14px !important;
+    margin-bottom: 20px !important;
+  }
+
+  .leh-price-widget {
+    position: static !important;
+    margin-top: 24px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .filter-sidebar {
+    margin-bottom: 1.5rem;
+  }
+
+  .card .col-md-4.text-md-end.border-start {
+    border-left: none !important;
+    border-top: 1px dashed #e2e8f0 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    margin-top: 6px !important;
+    text-align: left !important;
+  }
+}
+
+/* ==========================================================================
+   12. Tablets & Large Mobiles (max-width: 768px)
+   ========================================================================== */
+@media (max-width: 768px) {
+  .leh-login-modal-card {
+    flex-direction: column !important;
+    max-width: 440px !important;
+    width: 92% !important;
+    margin: auto !important;
+  }
+
+  .leh-login-modal-content {
+    width: 100% !important;
+    padding: 24px 20px !important;
+  }
+
+  .container,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    max-width: 540px !important;
+    padding-left: 16px !important;
+    padding-right: 16px !important;
+  }
+
+  .leh-hero-title {
+    font-size: 1.8rem !important;
+    line-height: 1.25 !important;
+  }
+
+  .leh-hero-subtitle {
+    font-size: 0.95rem !important;
+  }
+
+  .ssae {
+    width: 100% !important;
+    text-align: center;
+    justify-content: center;
+  }
+
+  .leh-why-book {
+    grid-template-columns: 1fr;
+    gap: 1.5rem;
+  }
+
+  .gallery-grid {
+    grid-template-columns: 1fr 1fr;
+    grid-template-rows: 150px 150px 150px;
+  }
+
+  .gallery-item-1 {
+    grid-column: 1 / 3;
+    grid-row: 1 / 2;
+  }
+
+  .leh-about-timeline::after {
+    left: 31px !important;
+  }
+
+  .leh-about-timeline-item {
+    width: 100% !important;
+    padding-left: 70px !important;
+    padding-right: 25px !important;
+    text-align: left !important;
+  }
+
+  .leh-about-timeline-item::after {
+    left: 23px !important;
+  }
+
+  .leh-about-timeline-item.right,
+  .leh-about-timeline-item.left {
+    left: 0% !important;
+    text-align: left !important;
+  }
+
+  .leh-about-timeline-item:not(:first-child) {
+    margin-top: 0 !important;
+  }
+
+  .leh-faq-btn {
+    padding: 14px 20px !important;
+    font-size: 0.85rem !important;
+  }
+
+  h1,
+  .h1 {
+    font-size: 1.75rem !important;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.45rem !important;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.25rem !important;
+  }
+
+  /* Form Controls Standardization - Touch-friendly height, padding, font size & full width */
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    min-height: 46px !important;
+    padding: 10px 14px !important;
+    font-size: 15px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 45px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 45px !important;
+  }
+
+  textarea.form-control {
+    min-height: 100px !important;
+    padding: 10px 14px !important;
+    font-size: 15px !important;
+    width: 100% !important;
+  }
+
+  .btn {
+    min-height: 44px !important;
+    font-size: 14px !important;
+    padding: 10px 18px !important;
+    border-radius: 8px !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+  }
+
+  .btn-sm {
+    min-height: 36px !important;
+    font-size: 13px !important;
+    padding: 6px 14px !important;
+  }
+
+  .input-group .form-control,
+  .input-group .form-select {
+    width: auto !important;
+    flex: 1 1 auto !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 36px !important;
+    height: 36px !important;
+    font-size: 0.85rem !important;
+  }
+
+  .lehconnect-hotel-card {
+    flex-direction: column !important;
+    padding: 14px !important;
+    gap: 14px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-card-gallery-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    min-width: 0 !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-hero-img-wrapper {
+    height: 200px !important;
+    width: 100% !important;
+  }
+
+  .lehconnect-thumbnails-row {
+    display: flex !important;
+    gap: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-thumbnails-row img,
+  .lehconnect-thumb-img,
+  .lehconnect-thumb-item {
+    width: calc(25% - 4.5px) !important;
+    max-width: calc(25% - 4.5px) !important;
+    height: 48px !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+    flex: 0 0 calc(25% - 4.5px) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-card-details-col {
+    width: 100% !important;
+    min-width: 0 !important;
+  }
+
+  .lehconnect-card-price-col {
+    width: 100% !important;
+    max-width: 100% !important;
+    border-left: none !important;
+    border-top: 1px dashed #e0e0e0 !important;
+    padding-left: 0 !important;
+    padding-top: 14px !important;
+    text-align: left !important;
+    display: flex !important;
+    flex-direction: row !important;
+    justify-content: space-between !important;
+    align-items: flex-end !important;
+    flex-wrap: wrap !important;
+    gap: 10px !important;
+  }
+
+  .lehconnect-price-top-meta {
+    align-items: flex-start !important;
+  }
+
+  .lehconnect-select-room-btn {
+    width: auto !important;
+    min-width: 140px !important;
+    padding: 8px 18px !important;
+    font-size: 13px !important;
+  }
+
+  .lehconnect-login-offer-text {
+    text-align: left !important;
+    width: 100% !important;
+  }
+
+  .packages-carousel-outer {
+    padding: 0 10px;
+  }
+
+  .swiper-button-prev-custom,
+  .swiper-button-next-custom {
+    display: none !important;
+  }
+
+  .packages-heading {
+    margin-bottom: 16px;
+  }
+
+  /* How It Works - Process Cards */
+  .leh-style-auto-1130 {
+    min-height: auto !important;
+    padding: 1.5rem 1.25rem !important;
+  }
+
+  .leh-style-auto-1132 {
+    width: 72px !important;
+    height: 72px !important;
+    margin-bottom: 1rem !important;
+  }
+
+  .leh-style-auto-1133,
+  .leh-style-auto-1137 {
+    font-size: 1.55rem !important;
+    margin-top: 0 !important;
+  }
+
+  /* Holiday Details (<= 768px) */
+  .leh-gallery-main {
+    height: 260px !important;
+  }
+
+  .leh-gallery-btn {
+    bottom: 12px !important;
+    right: 12px !important;
+    padding: 7px 14px !important;
+    font-size: 12px !important;
+  }
+
+  .leh-card {
+    padding: 20px 16px !important;
+    margin-bottom: 18px !important;
+  }
+
+  .leh-card-title {
+    font-size: 16.5px !important;
+  }
+
+  .leh-activity-box {
+    gap: 14px !important;
+    padding: 14px 16px !important;
+  }
+
+  .leh-activity-img {
+    width: 120px !important;
+    height: 85px !important;
+  }
+
+  .leh-stay-card {
+    padding: 18px 16px !important;
+  }
+
+  .leh-stay-img {
+    height: 210px !important;
+    width: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .leh-transfer-card {
+    padding: 18px 16px !important;
+  }
+
+  .leh-subnav-btn {
+    padding: 10px 14px !important;
+    font-size: 12.5px !important;
+  }
+
+  .leh-style-auto-1091 {
+    height: 200px !important;
+    width: 100% !important;
+  }
+
+  .leh-style-auto-1091 img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .pkg-card-img-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 200px !important;
+  }
+
+  .col-md-3 .list-group {
+    flex-direction: row !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .col-md-3 .list-group-item {
+    white-space: nowrap !important;
+    border-radius: 20px !important;
+    padding: 8px 16px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .leh-about-timeline-item.left .content {
+    text-align: left !important;
+  }
+
+  .leh-about-timeline-item.left .content .d-flex {
+    justify-content: flex-start !important;
+    text-align: left !important;
+    flex-direction: row-reverse !important;
+  }
+
+  .leh-style-auto-1065 {
+    width: 100px !important;
+  }
+
+  .leh-style-auto-1064,
+  .leh-checkout-progress-bar {
+    top: 18px !important;
+  }
+}
+
+/* ==========================================================================
+   13. Portrait Tablets & Stacked Grids (max-width: 767px)
+   ========================================================================== */
+@media (max-width: 767px) {
+  .leh-snapshot-grid {
+    display: flex;
+    overflow-x: auto;
+    flex-wrap: nowrap;
+    gap: 10px;
+    padding-bottom: 8px;
+    -webkit-overflow-scrolling: touch;
+    scrollbar-width: thin;
+  }
+
+  .leh-snapshot-grid::-webkit-scrollbar {
+    height: 4px;
+  }
+
+  .leh-snapshot-grid::-webkit-scrollbar-thumb {
+    background: #cbd5e1;
+    border-radius: 4px;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 155px;
+    min-width: 155px;
+  }
+
+  .col-md-4.text-md-end,
+  .col-md-3.text-md-end {
+    border-left: none !important;
+    border-top: 1px solid #f0f0f0 !important;
+    padding-top: 10px !important;
+    margin-top: 10px !important;
+    text-align: left !important;
+  }
+
+  .border-start-md {
+    border-left: none !important;
+  }
+
+  .pkg-card-price-col {
+    border-left: none !important;
+    border-top: 1px solid #f0f0f0 !important;
+    padding-top: 10px !important;
+    margin-top: 10px !important;
+    width: 100% !important;
+  }
+
+  .table-responsive {
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    width: 100% !important;
+    margin-bottom: 12px !important;
+  }
+
+  .leh-style-auto-1062 {
+    display: none !important;
+  }
+}
+
+/* ==========================================================================
+   14. Mobile Devices (max-width: 576px)
+   ========================================================================== */
+@media (max-width: 576px) {
+  .leh-logo-img,
+  .leh-style-auto-1024,
+  .leh-login-logo {
+    height: 34px !important;
+    width: auto !important;
+    max-width: 115px !important;
+    object-fit: contain !important;
+  }
+  .leh-inner-box{
+    padding:0px 10px !important;
+  }
+ 
+
+  .leh-login-modal-card {
+    border-radius: 16px !important;
+  }
+
+  .leh-login-modal-content {
+    padding: 20px 16px !important;
+  }
+
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    width: 100% !important;
+    max-width: 100% !important;
+    padding-left: 14px !important;
+    padding-right: 14px !important;
+  }
+
+  .leh-hero-section {
+    padding: 2rem 0 6rem 0 !important;
+  }
+
+  .leh-booking-container {
+    margin-top: -75px !important;
+  }
+
+  .leh-input-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .leh-input-card-grid {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 12px !important;
+  }
+
+  .leh-input-card {
+    min-height: 76px !important;
+    padding: 0.65rem 0.85rem !important;
+    width: 100% !important;
+  }
+
+  .leh-input-col {
+    border-left: none !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    padding: 0.75rem 1rem !important;
+    min-height: 56px !important;
+  }
+
+  .leh-input-col:last-child {
+    border-bottom: none !important;
+  }
+
+  .leh-booking-card {
+    padding: 1.75rem 1rem 3.25rem 1rem !important;
+    border-radius: 10px !important;
+  }
+
+  .leh-tab-nav-bar {
+    top: -15px;
+    border-radius: 8px;
+    padding: 6px;
+  }
+
+  .leh-tab-nav-bar-link {
+    font-size: 0.65rem;
+    padding: 2px;
+  }
+
+  .leh-tab-icon-circle {
+    width: 32px;
+    height: 32px;
+    font-size: 1rem;
+    margin-bottom: 3px;
+  }
+
+  .leh-search-btn-floating {
+    width: auto !important;
+    min-width: 200px !important;
+    max-width: 90% !important;
+    padding: 10px 24px !important;
+    font-size: 14.5px !important;
+    bottom: -20px !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .leh-undercard-row {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 6px !important;
+  }
+
+  .leh-radio-pill {
+    padding: 4px 10px !important;
+    font-size: 0.72rem !important;
+    gap: 4px !important;
+    white-space: nowrap !important;
+  }
+
+  .leh-toggle-pill {
+    padding: 7px 10px !important;
+    font-size: 0.78rem !important;
+    display: inline-flex !important;
+    align-items: center !important;
+    justify-content: center !important;
+    text-align: center !important;
+    white-space: nowrap !important;
+  }
+
+  .leh-offers-container {
+    padding: 1rem !important;
+    margin-bottom: 2rem !important;
+  }
+
+  .leh-offers-carousel-item {
+    flex: 0 0 100% !important;
+    max-width: 100% !important;
+    width: 100% !important;
+  }
+
+  .leh-offer-card {
+    height: auto !important;
+    min-height: 140px !important;
+  }
+
+  .dashboard-menu {
+    grid-template-columns: 1fr 1fr !important;
+    gap: 6px !important;
+    padding: 0 0.75rem !important;
+  }
+
+  .dashboard-menu-link {
+    padding: 0.55rem 0.65rem !important;
+    font-size: 0.76rem !important;
+    gap: 6px !important;
+  }
+
+  .dashboard-content {
+    padding: 1.15rem 0.85rem !important;
+  }
+
+  .dashboard-user-banner {
+    padding: 1rem !important;
+    border-radius: 10px !important;
+  }
+
+  .profile-completion-card {
+    padding: 1rem 0.85rem !important;
+  }
+
+  .wallet-dashboard-card,
+  .refer-earn-card {
+    padding: 1.15rem 0.85rem !important;
+  }
+
+  .leh-service-toggle-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 8px 6px !important;
+    width: 100% !important;
+  }
+
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(1),
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(2) {
+    flex: 1 1 calc(50% - 4px) !important;
+    max-width: calc(50% - 3px) !important;
+  }
+
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(n + 3) {
+    flex: 1 1 calc(33.333% - 6px) !important;
+    font-size: 0.75rem !important;
+    padding: 6px 6px !important;
+  }
+
+  .holiday-theme-tabs-scroll button {
+    padding: 6px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Search Strip Full-Width Stack on Mobile */
+  .lehconnect-hotel-search-strip {
+    position: static !important;
+    top: auto !important;
+    padding: 12px 10px !important;
+    border-radius: 8px !important;
+  }
+
+  .lehconnect-search-strip-inner {
+    flex-direction: column !important;
+    gap: 8px !important;
+  }
+
+  .lehconnect-search-input-box {
+    width: 100% !important;
+    min-width: 100% !important;
+    flex: 1 1 100% !important;
+    padding: 8px 12px !important;
+  }
+
+  .lehconnect-search-update-btn {
+    width: 100% !important;
+    padding: 10px !important;
+    font-size: 14px !important;
+  }
+
+  /* Hotel Card Price Column Full Stack */
+  .lehconnect-card-price-col {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 8px !important;
+    border-top: 1px dashed #e0e0e0 !important;
+    border-left: none !important;
+    padding-top: 12px !important;
+    padding-left: 0 !important;
+    width: 100% !important;
+  }
+
+  .lehconnect-select-room-btn {
+    width: 100% !important;
+    padding: 9px 16px !important;
+    font-size: 13.5px !important;
+  }
+
+  /* Room Modal */
+  .lehconnect-room-modal-backdrop {
+    padding: 8px 6px !important;
+  }
+
+  .lehconnect-room-modal-content {
+    border-radius: 10px !important;
+    max-width: 100% !important;
+    max-height: 93vh !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 0.8rem !important;
+  }
+
+  .leh-viewed-card {
+    width: 240px !important;
+    padding: 12px 10px !important;
+  }
+
+  /* Holiday Details Page - Complete Mobile (<= 576px) Full-Width Optimization */
+  .leh-hld-page {
+    overflow-x: hidden !important;
+  }
+
+  .leh-breadcrumb {
+    font-size: 11px !important;
+    gap: 4px 6px !important;
+    padding: 8px 0 4px 0 !important;
+  }
+
+  .leh-hld-strip {
+    padding: 6px 0 !important;
+  }
+
+  .leh-strip-box {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+  }
+
+  .leh-strip-item {
+    border-right: none !important;
+    border-bottom: 1px solid #edf2f7 !important;
+    padding: 7px 12px !important;
+    width: 100% !important;
+  }
+
+  .leh-strip-item:last-child {
+    border-bottom: none !important;
+  }
+
+  .leh-strip-label {
+    font-size: 9.5px !important;
+  }
+
+  .leh-strip-value {
+    font-size: 12px !important;
+    gap: 4px !important;
+  }
+
+  /* 5-Photo Gallery - Full Width */
+  .leh-hld-gallery {
+    grid-template-columns: 1fr !important;
+    width: 100% !important;
+    border-radius: 12px !important;
+    margin-bottom: 16px !important;
+  }
+
+  .leh-gallery-grid {
+    display: none !important;
+  }
+
+  .leh-gallery-main {
+    width: 100% !important;
+    height: 220px !important;
+  }
+
+  .leh-gallery-main img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+  }
+
+  .leh-gallery-btn {
+    bottom: 10px !important;
+    right: 10px !important;
+    padding: 6px 12px !important;
+    font-size: 11px !important;
+    border-radius: 20px !important;
+  }
+
+  /* Subnav Sticky Bar */
+  .leh-subnav-wrapper {
+    top: 52px !important;
+    border-bottom-width: 1px !important;
+  }
+
+  .leh-subnav-list {
+    gap: 4px !important;
+  }
+
+  .leh-subnav-btn {
+    padding: 8px 12px !important;
+    font-size: 11.5px !important;
+  }
+
+  /* Trip Snapshot Grid - Swipeable Row */
+  .leh-snapshot-grid {
+    display: flex !important;
+    overflow-x: auto !important;
+    flex-wrap: nowrap !important;
+    gap: 8px !important;
+    padding-bottom: 6px !important;
+    margin-bottom: 16px !important;
+    -webkit-overflow-scrolling: touch !important;
+    scrollbar-width: none !important;
+  }
+
+  .leh-snapshot-grid::-webkit-scrollbar {
+    display: none !important;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 145px !important;
+    min-width: 145px !important;
+    padding: 8px 8px !important;
+    border-radius: 10px !important;
+    gap: 6px !important;
+  }
+
+  .leh-snapshot-icon {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 13px !important;
+    border-radius: 8px !important;
+  }
+
+  .leh-snapshot-label {
+    font-size: 9.5px !important;
+  }
+
+  .leh-snapshot-value {
+    font-size: 11px !important;
+  }
+
+  /* Full-Width Cards */
+  .leh-card {
+    padding: 16px 12px !important;
+    border-radius: 12px !important;
+    margin-bottom: 16px !important;
+    width: 100% !important;
+  }
+
+  .leh-card-header {
+    padding-bottom: 10px !important;
+    margin-bottom: 14px !important;
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .leh-card-title {
+    font-size: 15px !important;
+  }
+
+  /* Day Timeline - Compact Left Padding */
+  .leh-timeline-container {
+    padding-left: 28px !important;
+  }
+
+  .leh-timeline-container::before {
+    left: 10px !important;
+    top: 14px !important;
+    bottom: 14px !important;
+  }
+
+  .leh-day-node {
+    margin-bottom: 20px !important;
+  }
+
+  .leh-day-dot {
+    left: -28px !important;
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 10px !important;
+    box-shadow: 0 0 0 4px #ebf8ff !important;
+    top: 12px !important;
+  }
+
+  .leh-day-card {
+    border-radius: 12px !important;
+  }
+
+  .leh-day-header {
+    padding: 12px 12px !important;
+    gap: 8px !important;
+  }
+
+  .leh-day-body {
+    padding: 14px 12px !important;
+  }
+
+  .leh-day-desc {
+    font-size: 13px !important;
+    line-height: 1.55 !important;
+    margin-bottom: 14px !important;
+  }
+
+  .leh-meals-row {
+    padding: 8px 10px !important;
+    gap: 6px !important;
+    border-radius: 8px !important;
+    margin-bottom: 14px !important;
+  }
+
+  /* Full-Width Activity Box & Image */
+  .leh-activity-list {
+    gap: 12px !important;
+  }
+
+  .leh-activity-box {
+    display: flex !important;
+    flex-direction: column !important;
+    align-items: stretch !important;
+    width: 100% !important;
+    padding: 12px !important;
+    gap: 10px !important;
+    border-radius: 12px !important;
+  }
+
+  .leh-activity-img {
+    width: 100% !important;
+    height: 175px !important;
+    max-height: 190px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+    display: block !important;
+  }
+
+  .leh-activity-box > div {
+    width: 100% !important;
+  }
+
+  /* Full-Width Hotel Stay Card & Image */
+  .leh-stay-card {
+    padding: 14px 12px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+  }
+
+  .leh-stay-card .row.g-4 {
+    margin: 0 !important;
+  }
+
+  .leh-stay-card .row.g-4 > * {
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .leh-stay-img {
+    width: 100% !important;
+    height: 190px !important;
+    max-height: 200px !important;
+    object-fit: cover !important;
+    border-radius: 10px !important;
+    display: block !important;
+    margin-bottom: 12px !important;
+  }
+
+  .leh-room-badge-box {
+    padding: 10px 12px !important;
+    border-radius: 8px !important;
+    margin: 10px 0 !important;
+  }
+
+  .leh-stay-card .pt-3.border-top {
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+  }
+
+  .leh-stay-card .pt-3.border-top .d-flex.gap-2 {
+    width: 100% !important;
+  }
+
+  .leh-stay-card .pt-3.border-top .d-flex.gap-2 button {
+    flex: 1 1 50% !important;
+    text-align: center !important;
+    justify-content: center !important;
+    font-size: 12px !important;
+    padding: 7px 10px !important;
+  }
+
+  /* Full-Width Transfers Card & Image */
+  .leh-transfer-card {
+    padding: 14px 12px !important;
+    border-radius: 12px !important;
+    width: 100% !important;
+  }
+
+  .leh-transfer-card .row.g-4 {
+    margin: 0 !important;
+  }
+
+  .leh-transfer-card .row.g-4 > * {
+    padding: 0 !important;
+    width: 100% !important;
+  }
+
+  .leh-transfer-card img {
+    width: 100% !important;
+    max-height: 160px !important;
+    height: auto !important;
+    object-fit: contain !important;
+    border-radius: 8px !important;
+    margin-bottom: 10px !important;
+  }
+
+  /* Activities & Included Passes (Tab 4) - Full Width */
+  #section-activities .d-flex.p-3{
+    flex-direction: column !important;
+    align-items: stretch !important;
+    gap: 10px !important;
+    padding: 12px !important;
+    width: 100% !important;
+  }
+
+  #section-activities .d-flex.p-3img {
+    width: 100% !important;
+    height: 150px !important;
+    object-fit: cover !important;
+    border-radius: 8px !important;
+  }
+
+  #section-activities .d-flex.p-3.text-end {
+    text-align: start !important;
+    border-top: 1px solid #edf2f7 !important;
+    padding-top: 8px !important;
+    width: 100% !important;
+    display: flex !important;
+    justify-content: space-between !important;
+    align-items: center !important;
+  }
+
+  /* Roundtrip Flights Section */
+  #section-flights .p-3 {
+    padding: 12px !important;
+    border-radius: 10px !important;
+  }
+
+  #section-flights .row.g-3 {
+    margin: 0 !important;
+    display: flex !important;
+    flex-wrap: nowrap !important;
+    align-items: center !important;
+    justify-content: space-between !important;
+  }
+
+  #section-flights .row.g-3 > .col-md-3:first-child {
+    width: 38% !important;
+    padding: 0 !important;
+    text-align: start !important;
+  }
+
+  #section-flights .row.g-3 > .col-md-6 {
+    width: 24% !important;
+    padding: 0 !important;
+    text-align: center !important;
+  }
+
+  #section-flights .row.g-3 > .col-md-3:last-child {
+    width: 38% !important;
+    padding: 0 !important;
+    text-align: end !important;
+  }
+
+  #section-flights .fs-4 {
+    font-size: 1.15rem !important;
+  }
+
+  #section-flights .fs-8 {
+    font-size: 11px !important;
+  }
+
+  /* Inclusions & Exclusions */
+  .leh-inc-box,
+  .leh-exc-box {
+    padding: 14px 12px !important;
+    border-radius: 12px !important;
+  }
+
+  .leh-inc-box ul li,
+  .leh-exc-box ul li {
+    font-size: 13px !important;
+    gap: 8px !important;
+  }
+
+  /* Reviews */
+  .leh-review-card {
+    padding: 12px 10px !important;
+    border-radius: 10px !important;
+    margin-bottom: 10px !important;
+  }
+
+  .leh-review-card img {
+    width: 34px !important;
+    height: 34px !important;
+  }
+
+  .leh-review-card p {
+    font-size: 12.5px !important;
+    line-height: 1.5 !important;
+  }
+
+  /* Right-Hand Sticky Booking Widget on Mobile */
+  .leh-price-widget {
+    padding: 16px 12px !important;
+    border-radius: 14px !important;
+    margin-top: 16px !important;
+    width: 100% !important;
+  }
+
+  .leh-book-btn {
+    padding: 12px 16px !important;
+    font-size: 14px !important;
+    border-radius: 10px !important;
+    width: 100% !important;
+  }
+
+  .leh-emi-banner {
+    padding: 8px 10px !important;
+    font-size: 11.5px !important;
+    margin-bottom: 12px !important;
+  }
+
+  /* Bootstrap Modals on Mobile */
+  .modal-dialog {
+    margin: 8px !important;
+    max-width: calc(100vw - 16px) !important;
+    width: 100% !important;
+  }
+
+  .modal-content {
+    border-radius: 14px !important;
+  }
+
+  .modal-header,
+  .modal-body {
+    padding: 14px 12px !important;
+  }
+
+  .leh-transfer-card-modal {
+    padding: 12px !important;
+  }
+
+  /* Mobile <= 576px Full Width & Aspect Ratio Preservation */
+  .leh-style-auto-1091 {
+    height: 180px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .leh-style-auto-1091 img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+  }
+
+  .leh-cab-badge {
+    font-size: 0.72rem !important;
+    padding: 3px 8px !important;
+  }
+
+  .leh-style-auto-1092 {
+    font-size: 0.82rem !important;
+    padding: 9px 12px !important;
+  }
+
+  .pkg-card-img-container {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: 185px !important;
+  }
+
+  .leh-datetime-picker {
+    width: min(calc(100vw - 28px), 360px) !important;
+    max-width: 100% !important;
+    flex-direction: column !important;
+    left: 50% !important;
+    transform: translateX(-50%) !important;
+  }
+
+  .leh-datepicker-left {
+    width: 100% !important;
+    border-right: none !important;
+    border-bottom: 1px solid var(--gray-200) !important;
+    padding: 0.75rem !important;
+  }
+
+  .leh-timepicker-right {
+    width: 100% !important;
+    padding: 0.75rem !important;
+  }
+
+  .form-box {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .leh-style-auto-1065 {
+    width: 90px !important;
+  }
+
+  .leh-style-auto-1065 .fs-8 {
+    font-size: 0.75rem !important;
+  }
+
+  .leh-style-auto-1064,
+  .leh-checkout-progress-bar {
+    top: 15px !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 0.78rem !important;
+  }
+
+  .listing-card .leh-style-auto-1099 {
+    width: 45px !important;
+  }
+}
+
+/* ==========================================================================
+   15. Small Mobile Screens (max-width: 480px)
+   ========================================================================== */
+@media (max-width: 480px) {
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    padding-left: 12px !important;
+    padding-right: 12px !important;
+  }
+
+  .card-body {
+    padding: 1.15rem 0.85rem !important;
+  }
+
+  .leh-hero-title {
+    font-size: 1.55rem !important;
+  }
+
+  .leh-hero-subtitle {
+    font-size: 0.88rem !important;
+  }
+
+  h1,
+  .h1 {
+    font-size: 1.5rem !important;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.3rem !important;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.15rem !important;
+  }
+
+  h4,
+  .h4 {
+    font-size: 1.05rem !important;
+  }
+
+  h5,
+  .h5 {
+    font-size: 0.95rem !important;
+  }
+
+  .fs-1,
+  .fs-2,
+  .fs-3 {
+    font-size: 1.45rem !important;
+  }
+
+  .fs-4 {
+    font-size: 1.2rem !important;
+  }
+
+  .fs-5 {
+    font-size: 1.05rem !important;
+  }
+
+  .fs-6 {
+    font-size: 0.92rem !important;
+  }
+
+  /* Form Inputs on Small Mobile - Comfortable Touch Height and Font Size */
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    min-height: 45px !important;
+    padding: 9px 12px !important;
+    font-size: 14.5px !important;
+    border-radius: 8px !important;
+    width: 100% !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 44px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 44px !important;
+  }
+
+  .btn {
+    min-height: 42px !important;
+    padding: 8px 14px !important;
+    font-size: 13.5px !important;
+  }
+
+  .leh-input-card {
+    min-height: 72px !important;
+    padding: 0.55rem 0.75rem !important;
+  }
+
+  .package-card-img-container {
+    height: 180px;
+  }
+
+  .package-title {
+    font-size: 13px;
+    height: 38px;
+  }
+
+  .package-actual-price-row {
+    font-size: 16px;
+  }
+
+  .leh-checkout-step-circle {
+    width: 28px !important;
+    height: 28px !important;
+    font-size: 0.72rem !important;
+  }
+  .badge.bg-success-subtle {
+    font-size: 8px !important;
+  }
+
+  .leh-style-auto-1130 {
+    padding: 1.25rem 1rem !important;
+  }
+
+  .leh-style-auto-1132 {
+    width: 64px !important;
+    height: 64px !important;
+    margin-bottom: 0.85rem !important;
+  }
+
+  .leh-style-auto-1133,
+  .leh-style-auto-1137 {
+    font-size: 1.4rem !important;
+    margin-top: 0 !important;
+  }
+
+  /* Holiday Details (<= 480px) */
+  .leh-gallery-main {
+    height: 200px !important;
+  }
+
+  .leh-activity-img {
+    height: 160px !important;
+  }
+
+  .leh-stay-img {
+    height: 180px !important;
+  }
+
+  #section-activities .d-flex.p-3img {
+    height: 135px !important;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 140px !important;
+    min-width: 140px !important;
+    padding: 7px 8px !important;
+  }
+
+  .leh-snapshot-icon {
+    width: 30px !important;
+    height: 30px !important;
+    font-size: 12px !important;
+  }
+
+  .leh-card-title {
+    font-size: 14.5px !important;
+  }
+
+  .leh-book-btn {
+    font-size: 13.5px !important;
+    padding: 11px 14px !important;
+  }
+
+  .leh-style-auto-1091 {
+    height: 165px !important;
+  }
+
+  .pkg-card-img-container {
+    height: 170px !important;
+  }
+
+  .leh-style-auto-1065 {
+    width: 80px !important;
+  }
+
+  .leh-style-auto-1065 .leh-style-auto-1062 {
+    display: none !important;
+  }
+
+  .leh-about-timeline-item {
+    padding-left: 55px !important;
+    padding-right: 8px !important;
+  }
+
+  .leh-about-timeline-item .content {
+    padding: 14px 12px !important;
+  }
+}
+
+/* ==========================================================================
+   16. Compact Mobile Viewports (max-width: 390px)
+   ========================================================================== */
+@media (max-width: 390px) {
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    padding-left: 10px !important;
+    padding-right: 10px !important;
+  }
+
+  .leh-hero-title {
+    font-size: 1.38rem !important;
+  }
+
+  .card-body {
+    padding: 1rem 0.75rem !important;
+  }
+
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    min-height: 44px !important;
+    padding: 8px 11px !important;
+    font-size: 14px !important;
+    border-radius: 7px !important;
+    width: 100% !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 42px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 42px !important;
+  }
+
+  .btn {
+    min-height: 40px !important;
+    padding: 7px 12px !important;
+    font-size: 13px !important;
+  }
+
+  .leh-input-card {
+    min-height: 68px !important;
+    padding: 0.5rem 0.7rem !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.7rem !important;
+  }
+}
+
+/* ==========================================================================
+   17. Standard Compact Mobiles / iPhone Breakpoint (max-width: 375px)
+   ========================================================================== */
+@media (max-width: 375px) {
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    padding-left: 9px !important;
+    padding-right: 9px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .leh-hero-title {
+    font-size: 1.32rem !important;
+  }
+
+  .leh-hero-subtitle {
+    font-size: 12px !important;
+  }
+
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    min-height: 44px !important;
+    padding: 8px 10px !important;
+    font-size: 14px !important;
+    border-radius: 7px !important;
+    width: 100% !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 42px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 42px !important;
+  }
+
+  .btn {
+    min-height: 39px !important;
+    font-size: 12.5px !important;
+    padding: 6px 12px !important;
+  }
+
+  .leh-input-card {
+    min-height: 68px !important;
+    padding: 0.5rem 0.65rem !important;
+  }
+
+  .leh-search-btn-floating {
+    min-width: 175px !important;
+    max-width: 90% !important;
+    padding: 8px 16px !important;
+    font-size: 13.5px !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.7rem !important;
+  }
+
+  .lehconnect-card-name {
+    font-size: 15px !important;
+  }
+
+  .lehconnect-current-price-val {
+    font-size: 20px !important;
+  }
+
+  /* Holiday Details (<= 375px) */
+  .leh-gallery-main {
+    height: 185px !important;
+  }
+
+  .leh-activity-img {
+    height: 150px !important;
+  }
+
+  .leh-stay-img {
+    height: 170px !important;
+  }
+
+  #section-activities .d-flex.p-3img {
+    height: 125px !important;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 135px !important;
+    min-width: 135px !important;
+  }
+
+  .leh-timeline-container {
+    padding-left: 26px !important;
+  }
+
+  .leh-day-dot {
+    left: -26px !important;
+    width: 20px !important;
+    height: 20px !important;
+    font-size: 9.5px !important;
+  }
+
+  .leh-card {
+    padding: 14px 10px !important;
+  }
+
+  .leh-price-widget {
+    padding: 14px 10px !important;
+  }
+
+  .leh-style-auto-1091 {
+    height: 150px !important;
+  }
+
+  .pkg-card-img-container {
+    height: 155px !important;
+  }
+
+  .leh-style-auto-1065 {
+    width: 70px !important;
+  }
+
+  .leh-style-auto-1065 .fs-8 {
+    font-size: 0.70rem !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 26px !important;
+    height: 26px !important;
+    font-size: 0.72rem !important;
+  }
+
+  .leh-style-auto-1064,
+  .leh-checkout-progress-bar {
+    top: 13px !important;
+  }
+
+  .listing-card {
+    padding: 10px 8px !important;
+  }
+
+  .listing-card .col-4 {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+
+  .form-box {
+    padding: 1rem 0.75rem !important;
+  }
+
+  .dashboard-content {
+    padding: 0.75rem 0.5rem !important;
+  }
+
+  .leh-about-timeline-item {
+    padding-left: 48px !important;
+    padding-right: 5px !important;
+  }
+
+  .leh-about-timeline-item::after {
+    left: 14px !important;
+    width: 14px !important;
+    height: 14px !important;
+  }
+
+  .leh-about-timeline::after {
+    left: 20px !important;
+  }
+}
+
+/* ==========================================================================
+   18. Ultra-Compact Mobile Viewports (max-width: 360px)
+   ========================================================================== */
+@media (max-width: 360px) {
+  .leh-hero-title {
+    font-size: 1.25rem !important;
+  }
+
+  .leh-hero-subtitle {
+    font-size: 11px !important;
+    margin: 0px;
+  }
+
+  .leh-about-timeline-item {
+    padding-left: 50px !important;
+    padding-right: 10px !important;
+  }
+
+  .leh-about-timeline-item::after {
+    left: 15px !important;
+  }
+
+  .leh-about-timeline::after {
+    left: 23px !important;
+  }
+
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg,
+  .container-xl,
+  .container-xxl {
+    padding-left: 8px !important;
+    padding-right: 8px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .row {
+    margin-left: -4px !important;
+    margin-right: -4px !important;
+  }
+
+  .row > * {
+    padding-left: 4px !important;
+    padding-right: 4px !important;
+  }
+
+  h1,
+  .h1 {
+    font-size: 1.3rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.15rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h3,
+  .h3 {
+    font-size: 1.02rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h4,
+  .h4 {
+    font-size: 0.95rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h5,
+  .h5 {
+    font-size: 0.88rem !important;
+    line-height: 1.25 !important;
+  }
+
+  h6,
+  .h6 {
+    font-size: 0.80rem !important;
+  }
+
+  .card,
+  .listing-card {
+    padding: 12px 10px !important;
+  }
+
+  .card-body {
+    padding: 12px 8px !important;
+  }
+
+  /* Maintained Touch Comfort for Inputs on Ultra-Compact Screen */
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    font-size: 13.5px !important;
+    padding: 7px 10px !important;
+    min-height: 44px !important;
+    border-radius: 6px !important;
+    width: 100% !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 40px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 40px !important;
+  }
+
+  .btn {
+    font-size: 12.5px !important;
+    padding: 6px 12px !important;
+    min-height: 38px !important;
+  }
+
+  .leh-header {
+    padding: 6px 0 !important;
+  }
+
+  .leh-logo-img,
+  .leh-style-auto-1024,
+  .leh-login-logo {
+    height: 30px !important;
+    width: auto !important;
+    max-width: 105px !important;
+    object-fit: contain !important;
+  }
+
+  .leh-mobile-user-btn {
+    width: 32px !important;
+    height: 32px !important;
+    font-size: 12px !important;
+  }
+
+  .leh-dropdown-user-profile {
+    max-width: calc(100vw - 16px) !important;
+    min-width: 220px !important;
+    right: 0 !important;
+    left: auto !important;
+  }
+
+  .leh-mobile-nav {
+    gap: 8px !important;
+    padding: 4px 0 6px 0 !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+  }
+
+  .leh-mobile-nav-item {
+    min-width: 48px !important;
+    padding: 2px 3px !important;
+    font-size: 9px !important;
+  }
+
+  .leh-mobile-nav-item i {
+    font-size: 13px !important;
+  }
+
+  .leh-hero-section {
+    padding: 1.5rem 0 5rem 0 !important;
+  }
+
+  .leh-booking-container {
+    margin-top: -65px !important;
+  }
+
+  .leh-booking-card {
+    padding: 1.25rem 0.65rem 2.85rem 0.65rem !important;
+    border-radius: 8px !important;
+  }
+
+  .leh-service-toggle-container {
+    display: flex !important;
+    flex-wrap: wrap !important;
+    gap: 6px 4px !important;
+    margin-bottom: 12px !important;
+    width: 100% !important;
+  }
+
+  .leh-toggle-pill {
+    padding: 5px 6px !important;
+    font-size: 0.70rem !important;
+  }
+
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(1),
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(2) {
+    flex: 1 1 calc(50% - 3px) !important;
+    max-width: calc(50% - 2px) !important;
+  }
+
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(n + 3) {
+    flex: 1 1 calc(33.333% - 4px) !important;
+    font-size: 0.67rem !important;
+    padding: 5px 3px !important;
+  }
+
+  .leh-undercard-row {
+    flex-wrap: wrap !important;
+    justify-content: flex-start !important;
+    gap: 4px !important;
+  }
+
+  .leh-radio-pill {
+    padding: 3px 8px !important;
+    font-size: 8px !important;
+    white-space: nowrap !important;
+  }
+
+  .leh-input-card {
+    padding: 0.5rem 0.65rem !important;
+    min-height: 66px !important;
+  }
+
+  .leh-input-label {
+    font-size: 0.65rem !important;
+  }
+
+  .leh-input-city {
+    font-size: 1.05rem !important;
+  }
+
+  .leh-input-subtext {
+    font-size: 0.68rem !important;
+  }
+
+  .leh-search-btn-floating {
+    width: calc(100% - 20px) !important;
+    max-width: 240px !important;
+    min-width: 0 !important;
+    padding: 8px 14px !important;
+    font-size: 13px !important;
+    bottom: -18px !important;
+  }
+
+  .lehconnect-hotel-search-strip {
+    position: static !important;
+    top: auto !important;
+    padding: 8px 6px !important;
+    border-radius: 6px !important;
+  }
+
+  .lehconnect-hotel-breadcrumbs {
+    font-size: 10px !important;
+    white-space: nowrap !important;
+    overflow-x: auto !important;
+  }
+
+  .lehconnect-hotel-heading-title {
+    font-size: 1.1rem !important;
+  }
+
+  .lehconnect-hotel-sort-bar {
+    padding: 8px 8px !important;
+  }
+
+  .lehconnect-sort-tabs-wrapper {
+    flex-wrap: nowrap !important;
+    overflow-x: auto !important;
+    -webkit-overflow-scrolling: touch !important;
+    gap: 6px !important;
+    padding-bottom: 6px !important;
+  }
+
+  .lehconnect-sort-tab-btn {
+    white-space: nowrap !important;
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .lehconnect-quick-chips-row {
+    gap: 4px !important;
+  }
+
+  .lehconnect-quick-chip {
+    font-size: 10.5px !important;
+    padding: 3px 8px !important;
+    flex-shrink: 0 !important;
+  }
+
+  .lehconnect-hotel-card {
+    padding: 10px 8px !important;
+    gap: 10px !important;
+    overflow: hidden !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-hero-img-wrapper {
+    height: 160px !important;
+  }
+
+  .lehconnect-thumbnails-row img,
+  .lehconnect-thumb-img,
+  .lehconnect-thumb-item {
+    width: calc(25% - 4.5px) !important;
+    max-width: calc(25% - 4.5px) !important;
+    height: 38px !important;
+    object-fit: cover !important;
+    border-radius: 4px !important;
+    flex: 0 0 calc(25% - 4.5px) !important;
+    min-width: 0 !important;
+    box-sizing: border-box !important;
+  }
+
+  .lehconnect-card-name {
+    font-size: 15px !important;
+  }
+
+  .lehconnect-rating-pill {
+    font-size: 11px !important;
+    padding: 2px 6px !important;
+  }
+
+  .lehconnect-highlight-item {
+    font-size: 11px !important;
+  }
+
+  .lehconnect-room-type-bar {
+    font-size: 11px !important;
+    padding: 4px 8px !important;
+  }
+
+  .lehconnect-price-top-meta {
+    align-items: flex-start !important;
+    text-align: left !important;
+  }
+
+  .lehconnect-current-price-val {
+    font-size: 20px !important;
+  }
+
+  .lehconnect-login-offer-text {
+    text-align: left !important;
+  }
+
+  .lehconnect-room-modal-backdrop {
+    padding: 8px 4px !important;
+  }
+
+  .lehconnect-room-modal-header {
+    padding: 10px 12px !important;
+  }
+
+  .lehconnect-room-modal-header h4 {
+    font-size: 14px !important;
+  }
+
+  .lehconnect-room-modal-body {
+    padding: 10px 8px !important;
+  }
+
+  .lehconnect-room-option-card {
+    padding: 10px 8px !important;
+    margin-bottom: 12px !important;
+  }
+
+  .lehconnect-plan-option-box {
+    padding: 10px 8px !important;
+  }
+
+  .col-4 {
+    padding-left: 2px !important;
+    padding-right: 2px !important;
+  }
+
+  .col-4 .fs-7 {
+    font-size: 11px !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 24px !important;
+    height: 24px !important;
+    font-size: 0.68rem !important;
+  }
+
+  .leh-style-auto-1065 .fs-8 {
+    font-size: 0.65rem !important;
+  }
+
+  .input-group {
+    flex-wrap: nowrap !important;
+  }
+
+  .input-group .form-control {
+    font-size: 12px !important;
+    padding: 6px 8px !important;
+  }
+
+  .input-group .btn {
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+    white-space: nowrap !important;
+  }
+
+  .leh-style-auto-1042 {
+    border-radius: 12px !important;
+    min-height: auto !important;
+    margin: 10px 0 !important;
+  }
+
+  .leh-style-auto-1045 {
+    padding: 16px 12px !important;
+  }
+
+  .table {
+    font-size: 11.5px !important;
+  }
+
+  .table th,
+  .table td {
+    padding: 6px 8px !important;
+    white-space: nowrap !important;
+  }
+
+  .leh-carousel-section {
+    padding: 12px 8px !important;
+  }
+
+  .pkg-card-img-container {
+    height: 150px !important;
+  }
+
+  .dashboard-menu {
+    grid-template-columns: 1fr !important;
+  }
+
+  .dashboard-content {
+    padding: 0.85rem 0.6rem !important;
+  }
+
+  .premium-footer {
+    padding-top: 30px !important;
+    padding-bottom: 20px !important;
+  }
+
+  .footer-bottom {
+    font-size: 11px !important;
+  }
+
+  .leh-style-auto-1132 {
+    width: 58px !important;
+    height: 58px !important;
+    margin-bottom: 0.75rem !important;
+  }
+
+  .leh-style-auto-1133,
+  .leh-style-auto-1137 {
+    font-size: 1.25rem !important;
+    margin-top: 0 !important;
+  }
+
+  .leh-style-auto-1118 {
+    width: 280px !important;
+  }
+}
+
+/* ==========================================================================
+   19. Smallest Viewports Fine-Tuning (max-width: 320px)
+   ========================================================================== */
+@media (max-width: 320px) {
+  .container,
+  .container-fluid,
+  .container-sm,
+  .container-md,
+  .container-lg, 
+  .container-xl,
+  .container-xxl {
+    padding-left: 6px !important;
+    padding-right: 6px !important;
+    width: 100% !important;
+    max-width: 100% !important;
+  }
+
+  .row {
+    margin-left: -3px !important;
+    margin-right: -3px !important;
+  }
+
+  .row > * {
+    padding-left: 3px !important;
+    padding-right: 3px !important;
+  }
+
+  .leh-logo-img,
+  .leh-style-auto-1024,
+  .leh-login-logo {
+    height: 28px !important;
+    width: auto !important;
+    max-width: 95px !important;
+    object-fit: contain !important;
+  }
+
+  .leh-header-login-btn {
+    font-size: 10px !important;
+    padding: 3px 8px !important;
+  }
+
+  .leh-service-toggle-container {
+    gap: 5px 3px !important;
+  }
+
+  .leh-toggle-pill {
+    padding: 4px 4px !important;
+    font-size: 0.66rem !important;
+  }
+
+  .leh-service-toggle-container > .leh-toggle-pill:nth-child(n + 3) {
+    font-size: 0.64rem !important;
+    padding: 4px 2px !important;
+  }
+
+  .leh-hero-title {
+    font-size: 1.15rem !important;
+  }
+
+  h1,
+  .h1 {
+    font-size: 1.18rem !important;
+  }
+
+  h2,
+  .h2 {
+    font-size: 1.08rem !important;
+  }
+
+  .form-control,
+  .form-select,
+  input[type="text"],
+  input[type="email"],
+  input[type="password"],
+  input[type="tel"],
+  input[type="number"],
+  input[type="date"],
+  input[type="search"],
+  select {
+    min-height: 42px !important;
+    padding: 6px 8px !important;
+    font-size: 13px !important;
+    border-radius: 6px !important;
+    width: 100% !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.ps-5,
+  .position-relative > input.form-control.ps-5,
+  .position-relative > input.ps-5 {
+    padding-left: 40px !important;
+  }
+
+  input.leh-style-auto-1032,
+  input.form-control.pe-5,
+  .position-relative > input.form-control.pe-5,
+  .position-relative > input.pe-5 {
+    padding-right: 40px !important;
+  }
+
+  .btn {
+    min-height: 36px !important;
+    font-size: 12px !important;
+    padding: 6px 10px !important;
+  }
+
+  .leh-input-card {
+    min-height: 62px !important;
+    padding: 0.45rem 0.55rem !important;
+  }
+
+  .leh-search-btn-floating {
+    max-width: 220px !important;
+    font-size: 12px !important;
+    padding: 7px 10px !important;
+  }
+
+  .lehconnect-current-price-val {
+    font-size: 18px !important;
+  }
+
+  .lehconnect-select-room-btn {
+    font-size: 12px !important;
+    padding: 7px 12px !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.62rem !important;
+  }
+
+  .leh-checkout-step-circle-completed {
+    font-size: 0.72rem !important;
+  }
+
+  /* Holiday Details (<= 320px) */
+  .leh-gallery-main {
+    height: 170px !important;
+  }
+
+  .leh-gallery-btn {
+    padding: 5px 9px !important;
+    font-size: 10px !important;
+    bottom: 8px !important;
+    right: 8px !important;
+  }
+
+  .leh-activity-img {
+    height: 140px !important;
+  }
+
+  .leh-stay-img {
+    height: 160px !important;
+  }
+
+  .leh-transfer-card img {
+    max-height: 130px !important;
+  }
+
+  #section-activities .d-flex.p-3img {
+    height: 115px !important;
+  }
+
+  .leh-snapshot-item {
+    flex: 0 0 128px !important;
+    min-width: 128px !important;
+    padding: 6px 6px !important;
+  }
+
+  .leh-snapshot-label {
+    font-size: 9px !important;
+  }
+
+  .leh-snapshot-value {
+    font-size: 10.5px !important;
+  }
+
+  .leh-timeline-container {
+    padding-left: 24px !important;
+  }
+
+  .leh-day-dot {
+    left: -24px !important;
+    width: 18px !important;
+    height: 18px !important;
+    font-size: 9px !important;
+    box-shadow: 0 0 0 3px #ebf8ff !important;
+    top: 12px !important;
+  }
+
+  .leh-card {
+    padding: 12px 8px !important;
+  }
+
+  .leh-price-widget {
+    padding: 12px 8px !important;
+  }
+
+  .leh-book-btn {
+    font-size: 12px !important;
+    padding: 9px 10px !important;
+  }
+
+  #section-flights .fs-4 {
+    font-size: 1rem !important;
+  }
+
+  .leh-style-auto-1091 {
+    height: 135px !important;
+  }
+
+  .pkg-card-img-container {
+    height: 140px !important;
+  }
+
+  .leh-style-auto-1065 {
+    width: 60px !important;
+  }
+
+  .leh-style-auto-1065 .fs-8 {
+    font-size: 0.62rem !important;
+  }
+
+  .leh-checkout-step-circle {
+    width: 22px !important;
+    height: 22px !important;
+    font-size: 0.65rem !important;
+  }
+
+  .leh-style-auto-1064,
+  .leh-checkout-progress-bar {
+    top: 11px !important;
+  }
+
+  .leh-about-timeline-item {
+    padding-left: 42px !important;
+    padding-right: 4px !important;
+  }
+
+  .leh-about-timeline-item::after {
+    left: 11px !important;
+    width: 12px !important;
+    height: 12px !important;
+  }
+
+  .leh-about-timeline::after {
+    left: 16px !important;
+  }
+
+  .form-box {
+    padding: 0.85rem 0.5rem !important;
+  }
+
+  .dashboard-content {
+    padding: 0.65rem 0.4rem !important;
+  }
+
+  .leh-style-auto-1118 {
+    width: 260px !important;
+  }
+}

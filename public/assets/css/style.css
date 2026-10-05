@@ -1,0 +1,7406 @@
+/* 
+   LehConnect Premium Travel Booking CSS Theme
+   Fully Overhauled to Match LehConnect's Landing Page Layout exactly
+*/
+
+:root {
+  /* LehConnect Typography & Font Tokens */
+  --font-family-base: var(--font-lato), 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+  --font-family-heading: var(--font-lato), 'Lato', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  --primary-color: #0061ae;
+  --primary-rgb: 13, 110, 253;
+  --secondary-color: #ffcc29;
+  --secondary-rgb: 255, 107, 0;
+  --bg-color: #F5f7fa;
+  --text-color: #1A1A1A;
+  --white: #FFFFFF;
+  --gray-100: #F1F5F9;
+  --gray-200: #E2E8F0;
+  --gray-300: #CBD5E1;
+  --gray-600: #475569;
+  --gray-700: #334155;
+  --gray-800: #1E293B;
+
+  /* LehConnect Exact Styling Tokens */
+  --leh-blue-dark: #031424;
+  --leh-blue-light: #122c47;
+  --leh-brand-blue: #0061ae;
+  --leh-hover-blue: #eaf5ff;
+
+  --shadow-soft: 0 1px 7px 0 rgba(0, 0, 0, 0.06);
+  --shadow-medium: 0 4px 16px rgba(0, 0, 0, 0.08);
+  --shadow-premium: 0 4px 20px rgba(0, 0, 0, 0.08);
+
+  --border-radius-sm: 8px;
+  --border-radius-md: 12px;
+  --border-radius-lg: 16px;
+
+  --transition-speed: 0.25s;
+}
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html,
+body,
+#__next {
+  overflow-x: clip;
+  width: 100%;
+  max-width: 100%;
+}
+
+body {
+  font-family: var(--font-family-base);
+  background-color: var(--bg-color);
+  color: var(--text-color);
+  font-size: 14px;
+  line-height: 1.55;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-family-heading);
+  letter-spacing: -0.2px;
+}
+
+/* ==========================================================================
+   LehConnect Typography Scales: Font Weights & Font Sizes
+   ========================================================================== */
+
+/* Font Weights */
+.fw-300, .fw-light { font-weight: 300 !important; }
+.fw-400, .fw-normal { font-weight: 400 !important; }
+.fw-500, .fw-medium { font-weight: 500 !important; }
+.fw-600, .fw-semibold { font-weight: 600 !important; }
+.fw-700, .fw-bold { font-weight: 700 !important; }
+.fw-800, .fw-extrabold { font-weight: 800 !important; }
+.fw-900, .fw-black, .fw-bolder { font-weight: 900 !important; }
+
+/* Font Sizes */
+.fs-hero { font-size: 32px !important; line-height: 1.25 !important; }
+.fs-h1 { font-size: 26px !important; line-height: 1.3 !important; }
+.fs-h2 { font-size: 22px !important; line-height: 1.35 !important; }
+.fs-h3 { font-size: 18px !important; line-height: 1.4 !important; }
+.fs-h4 { font-size: 16px !important; line-height: 1.45 !important; }
+.fs-body { font-size: 14px !important; line-height: 1.55 !important; }
+
+.fs-1 { font-size: 32px !important; line-height: 1.25 !important; }
+.fs-2 { font-size: 28px !important; line-height: 1.3 !important; }
+.fs-3 { font-size: 24px !important; line-height: 1.3 !important; }
+.fs-4 { font-size: 20px !important; line-height: 1.35 !important; }
+.fs-5 { font-size: 18px !important; line-height: 1.4 !important; }
+.fs-6 { font-size: 16px !important; line-height: 1.45 !important; }
+.fs-7 { font-size: 14px !important; line-height: 1.5 !important; }
+.fs-8 { font-size: 12px !important; line-height: 1.45 !important; }
+.fs-9 { font-size: 11px !important; line-height: 1.4 !important; }
+.fs-10 { font-size: 10px !important; line-height: 1.35 !important; }
+
+/* Line Heights */
+.lh-tight { line-height: 1.2 !important; }
+.lh-base { line-height: 1.5 !important; }
+.lh-normal { line-height: 1.55 !important; }
+.lh-loose { line-height: 1.75 !important; }
+
+/* Letter Spacing */
+.tracking-tight { letter-spacing: -0.3px !important; }
+.tracking-normal { letter-spacing: 0 !important; }
+.tracking-wide { letter-spacing: 0.5px !important; }
+.tracking-wider { letter-spacing: 1px !important; }
+
+/* ==========================================================================
+   LehConnect Layout Standardization: Max-Width 1200px & Spacing
+   ========================================================================== */
+.container,
+.container-lg,
+.container-xl,
+.container-xxl {
+  max-width: 1200px !important;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  margin-left: auto !important;
+  margin-right: auto !important;
+}
+
+/* Scrollbar Styles */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--gray-100);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--gray-300);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--gray-600);
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Main Premium Layout */
+.app-container {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+.main-content {
+  flex: 1;
+}
+
+/* Header & Sticky Navbar */
+.premium-header {
+  position: sticky;
+  top: 0;
+  z-index: 1020;
+  background: var(--leh-blue-dark);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 0.5rem 0;
+  transition: all var(--transition-speed) ease;
+}
+
+.premium-header .navbar-brand {
+  color: var(--white) !important;
+  font-weight: 800;
+  font-size: 1.6rem;
+  letter-spacing: -0.5px;
+}
+
+.premium-header .navbar-brand span {
+  color: var(--secondary-color);
+}
+
+.premium-header .nav-link {
+  font-weight: 600;
+  font-size: 0.85rem;
+  color: rgba(255, 255, 255, 0.85) !important;
+  padding: 0.5rem 0.8rem !important;
+}
+
+.premium-header .nav-link:hover {
+  color: var(--white) !important;
+}
+
+.premium-header .btn-login-outline {
+  color: var(--white) !important;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  font-weight: 700;
+  font-size: 0.78rem;
+  padding: 0.5rem 1.25rem;
+  border-radius: 4px;
+  background: transparent;
+  transition: all var(--transition-speed) ease;
+}
+
+.premium-header .btn-login-outline:hover {
+  background-color: var(--white);
+  color: var(--leh-blue-dark) !important;
+}
+
+/* LehConnect Scenic Background Hero Section */
+.leh-hero-section {
+  position: relative;
+  overflow: hidden;
+  padding: 3rem 0 7rem 0;
+  text-align: center;
+  background-color: var(--leh-blue-dark);
+}
+
+.leh-hero-bg-picture,
+.leh-hero-bg-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+  z-index: 0;
+  pointer-events: none;
+}
+
+.leh-hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(180deg, rgba(3, 20, 36, 0.85) 0%, rgba(18, 44, 71, 0.95) 70%, var(--bg-color) 100%);
+  z-index: 1;
+  pointer-events: none;
+}
+
+.leh-hero-content {
+  position: relative;
+  z-index: 2;
+}
+
+.leh-hero-title {
+  color: var(--white);
+  font-size: 2rem;
+  font-weight: 800;
+  line-height: 1.25;
+  margin-bottom: 0.5rem;
+}
+
+.leh-hero-subtitle {
+  color: rgba(255, 255, 255, 0.75);
+  font-size: 0.95rem;
+  font-weight: 400;
+  line-height: 1.5;
+  margin-bottom: 2rem;
+}
+
+/* Overlapping LEH Booking Card Container */
+.leh-booking-container {
+  position: relative;
+  margin-top: -85px;
+  z-index: 100;
+  margin-bottom: 3.5rem;
+}
+
+.leh-booking-card {
+  background: var(--white);
+  border-radius: 16px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  padding: 2.25rem 1.75rem 2.75rem 1.75rem;
+  position: relative;
+  border: 1px solid #e7e7e7;
+}
+
+/* LehConnect Tab Headers Navigation - Floats and merges with the booking card */
+.leh-tab-nav-bar {
+  background: var(--white);
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  max-width: 960px;
+  margin: 0 auto;
+  position: relative;
+  z-index: 105;
+  top: -24px;
+  padding: 10px 15px;
+  border: 1px solid var(--gray-200);
+  overflow-x: auto;
+  -ms-overflow-style: none;
+  /* IE and Edge */
+  scrollbar-width: none;
+  /* Firefox */
+}
+
+.leh-tab-nav-bar::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+.leh-tab-nav-bar-link {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  flex: 1;
+  padding: 4px 10px;
+  font-size: 0.78rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  white-space: nowrap;
+  transition: all var(--transition-speed) ease;
+}
+
+/* Circle shape for icons */
+.leh-tab-icon-circle {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  background-color: var(--gray-100);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 5px;
+  font-size: 1.2rem;
+  color: var(--gray-600);
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-tab-nav-bar-link:hover .leh-tab-icon-circle {
+  background-color: var(--gray-200);
+  color: var(--leh-brand-blue);
+}
+
+.leh-tab-nav-bar-link.active {
+  color: var(--leh-brand-blue) !important;
+}
+
+.leh-tab-nav-bar-link.active .leh-tab-icon-circle {
+  background-color: var(--leh-brand-blue);
+  color: var(--white) !important;
+  box-shadow: 0 4px 10px rgba(0, 140, 255, 0.25);
+}
+
+/* LehConnect Input Grid (Unified bordered container) */
+.leh-input-grid {
+  display: grid;
+  grid-template-columns: 1.2fr 1.2fr 1fr 1fr 1.1fr;
+  border: 1px solid var(--gray-300);
+  border-radius: 12px;
+  overflow: visible;
+  background-color: var(--white);
+  position: relative;
+}
+
+.leh-input-col {
+  padding: 1.25rem 1.5rem;
+  cursor: pointer;
+  border-right: 1px solid var(--gray-200);
+  transition: background-color var(--transition-speed) ease;
+  position: relative;
+  text-align: left;
+}
+
+.leh-input-col:last-child {
+  border-right: none;
+}
+
+.leh-input-col:hover {
+  background-color: var(--leh-hover-blue);
+}
+
+/* LEH INDIVIDUAL SEPARATE CARDS LAYOUT */
+.leh-input-card-grid {
+  display: flex;
+  gap: 10px;
+  width: 100%;
+  position: relative;
+}
+
+.leh-input-card {
+  background-color: var(--white);
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  padding: 5px 10px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+  text-align: left;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.leh-input-card:hover {
+  border-color: #0061ae;
+  background-color: #f7faff;
+  box-shadow: 0 2px 10px rgba(0, 97, 174, 0.08);
+}
+
+.leh-input-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+}
+
+.leh-input-card-label {
+  font-size: 11px;
+  font-weight: 700;
+  color: #4a4a4a;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 2px;
+}
+
+.leh-input-card-placeholder {
+    font-size: 12px;
+    color: #757575;
+    margin-top: 2px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.leh-input-card-bold,.leh-style-auto-1010 {
+  font-size: 15px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.15;
+  margin: 2px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.leh-input-card-subtext {
+  font-size: 12px;
+  font-weight: 400;
+  color: #757575;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Inner border box inside card */
+.leh-inner-box {
+  /* border: 1px solid var(--gray-300); */
+  border-radius: 8px;
+  padding: 6px 12px;
+  background-color: var(--white);
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-inner-box:hover,
+.leh-inner-box:focus-within {
+  border-color: var(--leh-brand-blue);
+}
+.leh-inner-box input,.leh-inner-box span,.leh-inner-box select{
+  font-size: 15px;
+}
+/* FLIGHTS MULTI-CITY SPECIFIC DESIGN CLASSES */
+.leh-multicity-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-bottom: 15px;
+  position: relative;
+}
+
+.leh-add-city-btn {
+  background: var(--white);
+  border: 1.5px solid var(--leh-brand-blue);
+  color: var(--leh-brand-blue);
+  font-weight: 700;
+  font-size: 0.85rem;
+  border-radius: 6px;
+  padding: 8px 24px;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  margin: 10px auto 25px auto;
+  display: block;
+}
+
+.leh-add-city-btn:hover {
+  background-color: var(--leh-hover-blue);
+  box-shadow: 0 4px 10px rgba(0, 140, 255, 0.15);
+}
+
+.leh-multicity-footer-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  width: 100%;
+  margin-top: 10px;
+}
+
+/* Swapper for separate cards */
+.leh-swap-btn-card {
+  position: absolute;
+  top: 50%;
+  left: 20%;
+  /* Positioned between card 1 and card 2 */
+  transform: translate(-50%, -50%);
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: var(--white);
+  border: 1px solid var(--gray-300);
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  color: var(--leh-brand-blue);
+  cursor: pointer;
+  z-index: 20;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-swap-btn-card:hover {
+  transform: translate(-50%, -50%) rotate(180deg);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+}
+
+.leh-select-input {
+  background: transparent;
+  border: none;
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--gray-800);
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+}
+
+/* UNIFIED DATE-TIME PICKER DROPDOWN */
+.leh-datetime-picker {
+  display: flex;
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  border-radius: 12px;
+  box-shadow: var(--shadow-premium);
+  position: absolute;
+  top: 105%;
+  left: 0;
+  width: 480px;
+  z-index: 500;
+  overflow: hidden;
+}
+
+.leh-pickup-time-picker {
+  left: auto;
+  right: 0;
+  width: min(480px, calc(100vw - 16px));
+}
+
+.leh-datepicker-left {
+  width: 280px;
+  padding: 1rem;
+  border-right: 1px solid var(--gray-200);
+  text-align: center;
+}
+
+.leh-datepicker-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-weight: 700;
+  font-size: 1rem;
+  color: var(--gray-800);
+  margin-bottom: 12px;
+}
+
+.leh-datepicker-arrow-btn {
+  background: none;
+  border: none;
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  cursor: pointer;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.leh-datepicker-arrow-btn:hover {
+  background-color: var(--gray-100);
+  color: var(--leh-brand-blue);
+}
+
+.leh-calendar-grid-weekdays {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--gray-600);
+  margin-bottom: 8px;
+}
+
+.leh-calendar-grid-days {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.leh-calendar-day-cell {
+  aspect-ratio: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  border-radius: 4px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+.modal.show.d-block {
+    z-index: 99999 !important;
+}
+/* .hourly_rentals{
+  display: none !important;
+} */
+.local_class{
+  display: none !important;
+}
+.leh-calendar-day-cell:hover {
+  background-color: var(--leh-hover-blue);
+  color: var(--leh-brand-blue);
+}
+
+.leh-calendar-day-cell.disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+  pointer-events: none;
+}
+
+.leh-calendar-day-cell.active {
+  background-color: var(--leh-brand-blue) !important;
+  color: var(--white) !important;
+  border: 1px solid #0061ae;
+}
+
+.leh-datepicker-footer {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 15px;
+  border-top: 1px solid var(--gray-200);
+  padding-top: 10px;
+}
+
+.leh-datepicker-footer-btn {
+  background: none;
+  border: none;
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: var(--leh-brand-blue);
+  cursor: pointer;
+}
+
+/* Time Picker Right Section */
+.leh-timepicker-right {
+  display: flex;
+  flex: 1;
+  min-width: 0;
+  background-color: #fafbfc;
+  padding: 8px 4px;
+}
+
+.leh-time-column {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 220px;
+  overflow-y: auto;
+  scrollbar-width: none;
+  /* Hide scrollbar for clean layout */
+}
+
+.leh-time-period-column {
+  flex: 0 0 48px;
+}
+
+.leh-pickup-time-picker .leh-time-column:not(.leh-time-period-column) {
+  min-width: 56px;
+}
+
+.leh-time-column::-webkit-scrollbar {
+  display: none;
+}
+
+.leh-time-cell {
+  width: 32px;
+  height: 32px;
+  border-radius: 4px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.82rem;
+  font-weight: 600;
+  color: var(--gray-800);
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.leh-time-period-cell {
+  width: 42px;
+  flex-shrink: 0;
+}
+
+.leh-time-cell:hover {
+  background-color: var(--gray-200);
+}
+
+.leh-time-cell.active {
+  background-color: var(--leh-brand-blue) !important;
+  color: var(--white) !important;
+  font-weight: 700;
+}
+
+/* LehConnect Exact Fare/Option Pill Badges */
+.leh-fare-tag {
+  background-color: var(--white);
+  border: 1px solid var(--gray-300);
+  padding: 6px 14px;
+  border-radius: 20px;
+  font-size: 0.72rem;
+  font-weight: 600;
+  color: var(--gray-700);
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-fare-tag:hover {
+  background-color: var(--gray-100);
+}
+
+.leh-fare-tag.active {
+  background-color: var(--leh-hover-blue);
+  border-color: var(--leh-brand-blue);
+  color: var(--leh-brand-blue);
+}
+
+.leh-fare-tag-check {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  border: 1px solid var(--gray-300);
+  display: inline-block;
+  position: relative;
+}
+
+.leh-fare-tag.active .leh-fare-tag-check {
+  border-color: var(--leh-brand-blue);
+  background-color: var(--leh-brand-blue);
+}
+
+.leh-fare-tag.active .leh-fare-tag-check::after {
+  content: '';
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 4px;
+  height: 4px;
+  background: var(--white);
+  border-radius: 50%;
+}
+
+/* Absolute Floating LEH Search Button - LehConnect Signature Pill */
+.leh-search-btn-floating {
+    position: absolute;
+    bottom: 0;
+    left: 50%;
+    transform: translate(-50%, 50%);
+    background: linear-gradient(93deg, #0061ae, #004c8c);
+    color: var(--white) !important;
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.5px;
+    text-transform: capitalize;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 35px;
+    transition: all var(--transition-speed) ease;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    cursor: pointer;
+    z-index: 20;
+}
+
+.leh-search-btn-floating:hover {
+  transform: translate(-50%, 46%) scale(1.02);
+}
+
+/* Under Card Option Selectors */
+.leh-undercard-row {
+  display: flex;
+  justify-content: flex-start;
+  flex-wrap: wrap;
+  gap: 0.75rem;
+  margin-top: 1.25rem;
+  padding: 0 0.5rem;
+  align-items: center;
+}
+
+/* MODE TOGGLE BUTTONS - enquiry vs booking */
+.leh-service-toggle-container {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 1.25rem;
+  justify-content: flex-start;
+  align-items: center;
+}
+
+.leh-toggle-pill {
+  padding: 8px 24px;
+  border-radius: 50px;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all var(--transition-speed) ease;
+  border: 1px solid var(--gray-300);
+}
+
+.leh-toggle-pill-active {
+  background-color: #0061ae;
+  color: var(--white) !important;
+  border-color: #0061ae;
+  box-shadow: 0 3px 10px rgba(0, 102, 204, 0.2);
+}
+
+.leh-toggle-pill-inactive {
+  background-color: var(--white);
+  color: var(--gray-700);
+  border-color: var(--gray-300);
+}
+
+.leh-toggle-pill-inactive:hover {
+  background-color: var(--gray-100);
+}
+
+/* Light blue radio capsule selection wrapper */
+.leh-radio-pill {
+  background-color: #eaf5ff;
+  border: 1px solid #cce5ff;
+  padding: 6px 18px;
+  border-radius: 20px;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: #0061ae;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-radio-pill-inactive {
+  background-color: transparent;
+  border: 1px solid transparent;
+  color: var(--gray-600);
+}
+
+.leh-radio-pill input[type="radio"] {
+  accent-color: #0061ae;
+}
+
+/* LEH Offers Section */
+.leh-offers-container {
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  padding: 2rem;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-soft);
+  margin-bottom: 4rem;
+}
+
+.leh-offers-tabs {
+  display: flex;
+  gap: 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  padding-bottom: 0.75rem;
+  margin-bottom: 1.5rem;
+  overflow-x: auto;
+  scrollbar-width: none;
+  -ms-overflow-style: none;
+}
+
+.leh-offers-tabs::-webkit-scrollbar {
+  display: none;
+}
+
+.leh-offers-tab-btn {
+  font-weight: 700;
+  font-size: 0.85rem;
+  color: var(--gray-600);
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  position: relative;
+}
+
+.leh-offers-tab-btn.active {
+  color: var(--leh-brand-blue);
+}
+
+.leh-offers-tab-btn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -3px;
+  left: 0;
+  width: 100%;
+  height: 2px;
+  background-color: var(--leh-brand-blue);
+}
+
+.leh-offer-card {
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--gray-200);
+  overflow: hidden;
+  display: flex;
+  height: 170px;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-offer-card:hover {
+  box-shadow: var(--shadow-medium);
+}
+
+.leh-offer-card-img {
+  width: 130px;
+  height: 100%;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.leh-offer-card-body {
+  padding: 1rem 1.25rem;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  flex-grow: 1;
+  text-align: left;
+}
+
+/* Partner Airlines Carousel */
+.leh-partners-section {
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  padding: 2.5rem;
+  border: 1px solid var(--gray-200);
+  margin-bottom: 4rem;
+}
+
+.leh-partner-card {
+  background: var(--gray-100);
+  border-radius: var(--border-radius-md);
+  padding: 1.5rem;
+  text-align: center;
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-partner-card:hover {
+  transform: translateY(-5px);
+  background-color: var(--white);
+  box-shadow: var(--shadow-medium);
+}
+
+/* App Download Promotion Section */
+.leh-app-promo {
+  background: linear-gradient(90deg, #f3f7fd 0%, #e8eff9 100%);
+  border-radius: var(--border-radius-md);
+  padding: 3rem;
+  border: 1px solid var(--gray-200);
+  margin-bottom: 5rem;
+}
+
+/* Why Book with us - stats */
+.leh-why-book {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 2rem;
+  margin-bottom: 5rem;
+}
+
+.leh-why-book-card {
+  background-color: var(--white);
+  border-radius: var(--border-radius-md);
+  padding: 2.5rem 2rem;
+  text-align: center;
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-speed) ease;
+}
+
+.leh-why-book-card:hover {
+  transform: translateY(-5px);
+  box-shadow: var(--shadow-medium);
+}
+
+.leh-why-book-icon {
+  font-size: 2.5rem;
+  color: var(--primary-color);
+  margin-bottom: 1.25rem;
+}
+
+/* Destination / Offer Cards */
+.premium-card {
+  border-radius: var(--border-radius-md);
+  overflow: hidden;
+  border: 1px solid var(--gray-200);
+  background: var(--white);
+  box-shadow: var(--shadow-soft);
+  transition: all var(--transition-speed) ease;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.premium-card:hover {
+  transform: translateY(-6px);
+  box-shadow: var(--shadow-premium);
+  border-color: rgba(13, 110, 253, 0.15);
+}
+
+.premium-card-img-wrapper {
+  position: relative;
+  overflow: hidden;
+  padding-top: 65%;
+}
+
+.premium-card-img {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+
+.premium-card:hover .premium-card-img {
+  transform: scale(1.08);
+}
+
+.premium-card-badge {
+  position: absolute;
+  top: 15px;
+  right: 15px;
+  background: var(--secondary-color);
+  color: var(--white);
+  font-weight: 700;
+  font-size: 0.8rem;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  box-shadow: 0 4px 10px rgba(255, 107, 0, 0.2);
+}
+
+.premium-card-body {
+  padding: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.premium-card-title {
+  font-weight: 700;
+  font-size: 1.2rem;
+  color: var(--gray-800);
+  margin-bottom: 0.5rem;
+}
+
+/* Listings layout & filters (LehConnect Spacing & Polish) */
+.filter-sidebar {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid #e7e7e7;
+  padding: 18px 20px;
+  box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.06);
+  position: sticky;
+  top: 85px;
+}
+
+.filter-section {
+  border-bottom: 1px solid #ededed;
+  padding-bottom: 14px;
+  margin-bottom: 14px;
+}
+
+.filter-section:last-child {
+  border-bottom: none;
+  padding-bottom: 0;
+  margin-bottom: 0;
+}
+
+.filter-title {
+  font-weight: 700;
+  font-size: 15px;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+}
+
+.listing-card {
+  background: var(--white);
+  border-radius: 12px;
+  border: 1px solid #e7e7e7;
+  padding: 20px 24px;
+  box-shadow: 0 1px 7px 0 rgba(0, 0, 0, 0.06);
+  transition: all 0.2s ease;
+  margin-bottom: 16px;
+}
+
+.listing-card:hover {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
+  border-color: #b8d9f7;
+}
+
+/* Details Page styles */
+.gallery-grid {
+  display: grid;
+  grid-template-columns: 2fr 1fr 1fr;
+  grid-template-rows: 150px 150px;
+  gap: 10px;
+  margin-bottom: 2rem;
+}
+
+.gallery-item {
+  border-radius: var(--border-radius-sm);
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+}
+
+.gallery-item img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.3s ease;
+}
+
+.gallery-item:hover img {
+  transform: scale(1.05);
+}
+
+.gallery-item-1 {
+  grid-column: 1 / 2;
+  grid-row: 1 / 3;
+}
+
+/* Checkout Stepper */
+.stepper-container {
+  display: flex;
+  justify-content: space-between;
+  position: relative;
+  margin-bottom: 3rem;
+}
+
+.stepper-container::before {
+  content: '';
+  position: absolute;
+  top: 25px;
+  left: 0;
+  width: 100%;
+  height: 4px;
+  background-color: var(--gray-200);
+  z-index: 1;
+}
+
+.stepper-line-progress {
+  position: absolute;
+  top: 25px;
+  left: 0;
+  height: 4px;
+  background-color: var(--primary-color);
+  z-index: 1;
+  transition: width var(--transition-speed) ease;
+}
+
+.step-node {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  flex: 1;
+}
+
+.step-circle {
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background-color: var(--white);
+  border: 4px solid var(--gray-200);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-weight: 700;
+  font-size: 1.1rem;
+  color: var(--gray-600);
+  transition: all var(--transition-speed) ease;
+  box-shadow: var(--shadow-soft);
+}
+
+.step-node.active .step-circle {
+  border-color: var(--primary-color);
+  color: var(--primary-color);
+}
+
+.step-node.completed .step-circle {
+  background-color: var(--primary-color);
+  border-color: var(--primary-color);
+  color: var(--white);
+}
+
+.step-label {
+  margin-top: 0.5rem;
+  font-size: 0.85rem;
+  font-weight: 600;
+  color: var(--gray-600);
+}
+
+.step-node.active .step-label {
+  color: var(--primary-color);
+}
+
+/* User Dashboard & Sidebar Layout */
+.dashboard-outer-wrapper {
+  width: 100%;
+  overflow-x: hidden;
+}
+
+.dashboard-layout {
+  display: flex;
+  flex-direction: row;
+  margin-top: 2rem;
+  gap: 1.75rem;
+  align-items: flex-start;
+  width: 100%;
+}
+
+.dashboard-sidebar {
+  width: 280px;
+  min-width: 280px;
+  max-width: 280px;
+  flex-shrink: 0;
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--gray-200);
+  padding: 1.5rem 0;
+  box-shadow: var(--shadow-soft);
+  height: fit-content;
+}
+
+.dashboard-sidebar-header {
+  padding: 0 1.5rem 1.5rem 1.5rem;
+  border-bottom: 1px solid var(--gray-200);
+  margin-bottom: 1rem;
+}
+
+.dashboard-menu {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.dashboard-menu-link {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 0.85rem 1.5rem;
+  font-weight: 500;
+  color: var(--gray-600);
+  border-left: 4px solid transparent;
+  transition: all var(--transition-speed) ease;
+}
+
+.dashboard-menu-link:hover,
+.dashboard-menu-link.active {
+  background-color: rgba(13, 110, 253, 0.04);
+  color: var(--primary-color);
+  border-left-color: var(--primary-color);
+}
+
+.dashboard-menu-link svg {
+  font-size: 1.25rem;
+}
+
+.dashboard-content {
+  flex-grow: 1;
+  min-width: 0;
+  background: var(--white);
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--gray-200);
+  padding: 2rem;
+  box-shadow: var(--shadow-soft);
+  overflow-x: hidden;
+}
+
+/* LehConnect-Style Dashboard Enhancements */
+.dashboard-user-banner {
+  /* background: linear-gradient(135deg, #0a223d 0%, #0056b3 100%);
+  border-radius: 14px;
+  padding: 1.5rem 1.75rem;
+  color: #fff;
+  margin-bottom: 1.75rem;
+  box-shadow: 0 4px 14px rgba(0, 86, 179, 0.15); */
+  display: none !important;
+}
+
+.profile-completion-card {
+  background: #ffffff;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.profile-step-pill {
+  background: #f4f6f8;
+  border: 1px solid #e5e9ec;
+  border-radius: 8px;
+  padding: 0.65rem 0.9rem;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 0.825rem;
+  font-weight: 600;
+  color: #333;
+}
+
+.profile-step-pill.completed {
+  background: #eef9f2;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.profile-step-pill.pending {
+  background: #fff8eb;
+  border-color: #ffe4b5;
+  color: #856404;
+}
+
+.wallet-dashboard-card {
+  background: linear-gradient(135deg, #0056b3 0%, #0061ae  100%);
+  border-radius: 12px;
+  padding: 1.5rem;
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(0, 140, 255, 0.25);
+  position: relative;
+  overflow: hidden;
+}
+
+.wallet-dashboard-card::after {
+  content: '';
+  position: absolute;
+  right: -30px;
+  bottom: -30px;
+  width: 140px;
+  height: 140px;
+  background: radial-gradient(circle, rgba(255,255,255,0.15) 0%, rgba(255,255,255,0) 70%);
+  border-radius: 50%;
+  pointer-events: none;
+}
+
+.wallet-quick-chip {
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.35);
+  color: #ffffff;
+  font-size: 0.75rem;
+  font-weight: 700;
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  user-select: none;
+}
+
+.wallet-quick-chip:hover {
+  background: #ffffff;
+  color: #0056b3;
+}
+
+.refer-earn-card {
+  background: linear-gradient(135deg, #fff9f0 0%, #fff2db 100%);
+  border: 1px solid #fed89a;
+  border-radius: 12px;
+  padding: 1.5rem;
+  box-shadow: 0 2px 10px rgba(245, 130, 32, 0.08);
+  position: relative;
+  overflow: hidden;
+}
+
+.referral-code-box {
+  background: #ffffff;
+  border: 2px dashed #f58220;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  display: inline-flex;
+  align-items: center;
+  gap: 12px;
+  font-family: monospace;
+  font-weight: 800;
+  font-size: 1.1rem;
+  color: #f58220;
+  letter-spacing: 1px;
+}
+
+.sidebar-completion-box {
+  background: #f7f9fa;
+  border: 1px solid #eaedf0;
+  border-radius: 10px;
+  padding: 0.75rem 1rem;
+  margin: 0.75rem 1.25rem 0.5rem 1.25rem;
+}
+
+.sidebar-signout-btn {
+  background: #fff;
+  border: 1px solid #f1aeb5;
+  color: #dc3545;
+  font-weight: 700;
+  font-size: 0.85rem;
+  padding: 0.6rem 1rem;
+  border-radius: 8px;
+  transition: all 0.2s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+}
+
+.sidebar-signout-btn:hover {
+  background: #dc3545;
+  color: #fff;
+  border-color: #dc3545;
+  box-shadow: 0 3px 8px rgba(220, 53, 69, 0.2);
+}
+
+/* Status Badges */
+.status-badge {
+  font-size: 0.75rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.status-badge-success {
+  background-color: rgba(25, 135, 84, 0.1);
+  color: rgb(25, 135, 84);
+}
+
+.status-badge-pending {
+  background-color: rgba(255, 193, 7, 0.1);
+  color: rgb(180, 130, 0);
+}
+
+.status-badge-failed {
+  background-color: rgba(220, 53, 69, 0.1);
+  color: rgb(220, 53, 69);
+}
+
+/* Footer styling */
+.premium-footer {
+  background-color: var(--gray-800);
+  color: var(--gray-300);
+  padding: 5rem 0 2rem 0;
+  margin-top: 5rem;
+}
+
+.premium-footer h5 {
+  color: var(--white);
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.footer-link {
+  color: var(--gray-300);
+  display: block;
+  margin-bottom: 0.75rem;
+  font-size: 0.9rem;
+  text-decoration: none;
+}
+
+.footer-link:hover {
+  color:#0061ae  !important;
+  transform: translateX(4px);
+  text-decoration: none;
+}
+
+.premium-footer .text-muted {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.premium-footer a.text-muted {
+  color: rgba(255, 255, 255, 0.55) !important;
+  transition: color 0.2s ease;
+}
+
+.premium-footer a.text-muted:hover {
+  color: var(--secondary-color) !important;
+}
+
+.premium-footer .footer-bottom,
+.premium-footer .footer-bottom p {
+  color: rgba(255, 255, 255, 0.55) !important;
+}
+
+.footer-bottom {
+  border-top: 1px solid var(--gray-700);
+  padding-top: 2rem;
+  margin-top: 3rem;
+  font-size: 0.85rem;
+}
+
+/* Loader styling */
+.premium-loader-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  min-height: 50vh;
+}
+
+.premium-spinner {
+  width: 50px;
+  height: 50px;
+  border: 5px solid rgba(13, 110, 253, 0.1);
+  border-top-color: var(--primary-color);
+  border-radius: 50%;
+  animation: spinner-spin 1s infinite linear;
+}
+
+@keyframes spinner-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+
+/* Testimonial slider & FAQ accordion styling */
+.testimonial-card {
+  background: var(--white);
+  padding: 2rem;
+  border-radius: var(--border-radius-md);
+  border: 1px solid var(--gray-200);
+  box-shadow: var(--shadow-soft);
+  margin: 1rem 0.5rem;
+}
+
+.faq-card {
+  border: 1px solid var(--gray-200);
+  border-radius: var(--border-radius-md) !important;
+  margin-bottom: 1rem;
+  overflow: hidden;
+  box-shadow: var(--shadow-soft);
+}
+
+.faq-button {
+  background: var(--white);
+  color: var(--gray-800);
+  font-weight: 600;
+  text-align: left;
+  border: none;
+  width: 100%;
+  padding: 1.25rem 1.5rem;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  cursor: pointer;
+  outline: none;
+  font-size: 1rem;
+}
+
+.faq-button.active {
+  color: var(--primary-color);
+  border-bottom: 1px solid var(--gray-100);
+}
+
+.faq-body {
+  padding: 1.25rem 1.5rem;
+  background-color: var(--white);
+  font-size: 0.95rem;
+  color: var(--gray-600);
+}
+
+/* Custom Offers Horizontal Carousel / Slider */
+.leh-offers-carousel {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+  scrollbar-width: none;
+  /* Firefox */
+  -ms-overflow-style: none;
+  /* IE/Edge */
+  padding: 10px 0;
+  width: 100%;
+}
+
+.leh-offers-carousel::-webkit-scrollbar {
+  display: none;
+  /* Chrome, Safari, Opera */
+}
+
+.leh-offers-carousel-item {
+  flex: 0 0 450px;
+  max-width: 450px;
+  width: 450px;
+}
+
+.leh-carousel-nav-btn {
+  font-size: 1.5rem;
+  line-height: 1;
+  color: var(--gray-600);
+  background: var(--white);
+  transition: all 0.2s ease;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
+}
+
+.leh-carousel-nav-btn:hover {
+  background-color: var(--leh-brand-blue) !important;
+  color: var(--white) !important;
+  border-color: var(--leh-brand-blue) !important;
+}
+
+/* Hide scrollbar for Chrome, Safari and Opera */
+.scroll-bar-hidden::-webkit-scrollbar {
+  display: none !important;
+}
+
+/* Hide scrollbar for IE, Edge and Firefox */
+.scroll-bar-hidden {
+  -ms-overflow-style: none !important;
+  /* IE and Edge */
+  scrollbar-width: none !important;
+  /* Firefox */
+}
+
+/* Instagram Image Hover Overlay effect */
+.insta-hover-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.4);
+  opacity: 0;
+  transition: opacity 0.25s ease;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+}
+
+.insta-hover-overlay:hover {
+  opacity: 1;
+}
+
+/* ==========================================================================
+   Auto-Generated Styles V3 (Tag-Level Static Inline Styles Cleaned)
+   ========================================================================== */
+
+.leh-style-auto-1001 {
+  position: fixed;
+  top: 0px;
+  left: 0px;
+  width: 100vw;
+  height: 100vh;
+  z-index: 400;
+  background-color: transparent;
+}
+
+.leh-style-auto-1002 {
+  outline: none;
+}
+
+.leh-style-auto-1003 {
+  background-color: #FF1493;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1004 {
+  flex: 1.3;
+}
+
+.leh-style-auto-1005 {
+  width: 280px;
+}
+
+.leh-style-auto-1006 {
+  width: 100%;
+  border-right: none;
+}
+
+.leh-style-auto-1007 {
+  font-size: 1.25rem;
+  white-space: nowrap;
+}
+
+.leh-style-auto-1008 {
+  top: 100%;
+  right: 0px;
+  z-index: 1000;
+  width: 280px;
+  border-radius: 12px;
+}
+
+.leh-style-auto-1009 {
+  width: 26px;
+  height: 26px;
+}
+
+
+
+.leh-style-auto-1011 {
+  top: 100%;
+  right: 0px;
+  z-index: 1000;
+  width: 200px;
+  border-radius: 12px;
+}
+
+.leh-style-auto-1012 {
+  font-size: 0.85rem;
+}
+
+.leh-style-auto-1013 {
+  min-height: 90px;
+}
+
+.leh-style-auto-1014 {
+  min-height: 80px;
+  padding: 0.8rem 1.2rem;
+}
+
+.leh-style-auto-1015 {
+  margin-top: 4px;
+  margin-bottom: 4px;
+}
+
+.leh-style-auto-1016 {
+  font-size: 0.82rem;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1017 {
+  font-size: 0.78rem;
+  padding: 5px 15px;
+}
+
+.leh-style-auto-1018 {
+  font-size: 1.25rem;
+}
+
+.leh-style-auto-1019 {
+  top: 100%;
+  right: 0px;
+  z-index: 1000;
+  width: 260px;
+  border-radius: 12px;
+}
+
+.leh-style-auto-1020 {
+  outline: none;
+  box-shadow: none;
+}
+
+.leh-style-auto-1021 {
+  margin-top: 4px;
+  margin-bottom: 4px;
+  padding: 4px 8px;
+}
+
+.leh-style-auto-1022 {
+  font-size: 0.75rem;
+}
+
+.leh-style-auto-1023 {
+  width: 280px;
+  top: 100%;
+  left: 0px;
+}
+
+.leh-style-auto-1024 {
+  height: 40px;
+}
+
+.leh-style-auto-1025 {
+  background-color: #0061ae;
+  z-index: 1040;
+  position: relative;
+}
+
+.leh-style-auto-1026 {
+  width: 38px;
+  height: 38px;
+}
+
+.leh-style-auto-1027 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: left;
+}
+
+.leh-style-auto-1028 {
+  line-height: 0.95;
+}
+
+.leh-style-auto-1029 {
+  font-weight: 800;
+}
+
+.leh-style-auto-1030 {
+  font-size: 0.65rem;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+}
+
+.leh-style-auto-1031 {
+  border-radius: 8px;
+  z-index: 1050;
+}
+
+.leh-style-auto-1032 {
+  border-radius: 8px;
+}
+
+input.leh-style-auto-1032,
+input.form-control.ps-5,
+.position-relative > input.form-control.ps-5,
+.position-relative > input.ps-5 {
+  padding-left: 45px !important;
+}
+
+input.leh-style-auto-1032,
+input.form-control.pe-5,
+.position-relative > input.form-control.pe-5,
+.position-relative > input.pe-5 {
+  padding-right: 45px !important;
+}
+
+.position-relative > span.position-absolute.start-0,
+.position-relative > span.position-absolute.end-0 {
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+  z-index: 2 !important;
+}
+
+.leh-style-auto-1033 {
+  border-radius: 8px;
+  font-size: 0.75rem;
+  width: 115px;
+  height: 34px;
+  cursor: pointer;
+  outline: none;
+  box-shadow: none;
+}
+
+.leh-style-auto-1034 {
+  min-width: 95px;
+  height: 34px;
+  border-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+  box-shadow: none;
+}
+
+.leh-style-auto-1035 {
+  margin-top: -1px;
+}
+
+.leh-style-auto-1036 {
+  min-width: 95px;
+  height: 34px;
+  border-color: rgba(255, 255, 255, 0.7);
+  transition: all 0.2s ease;
+}
+
+.leh-style-auto-1037 {
+  top: 64px;
+  left: 0px;
+  z-index: 1030;
+}
+
+.leh-style-auto-1038 {
+  width: 80px;
+  height: 80px;
+  object-fit: cover;
+}
+
+.leh-style-auto-1039 {
+  min-height: 70vh;
+}
+
+.leh-style-auto-1040 {
+  max-width: 450px;
+  border-radius: 16px;
+}
+
+.leh-style-auto-1041 {
+  min-height: 85vh;
+}
+
+.leh-style-auto-1042 {
+  max-width: 900px;
+  border-radius: 20px;
+  min-height: 520px;
+}
+
+.leh-style-auto-1043 {
+  width: 44%;
+  min-height: 100%;
+}
+
+.leh-style-auto-1044 {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leh-style-auto-1045 {
+  min-width: 0px;
+}
+
+.leh-style-auto-1046 {
+  top: 20px;
+  right: 25px;
+  padding: 0px;
+  outline: none;
+  box-shadow: none;
+}
+
+.leh-style-auto-1047 {
+  width: 46px;
+  height: 54px;
+  color: #0061ae;
+  flex-shrink: 0;
+}
+
+.leh-style-auto-1048 {
+  width: 24px;
+  height: 24px;
+  margin-top: -8px;
+}
+
+.leh-style-auto-1049 {
+  line-height: 0.9;
+}
+
+.leh-style-auto-1050 {
+  font-weight: 900;
+  color: #0061ae;
+  font-size: 2.1rem;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1051 {
+  font-size: 0.8rem;
+  letter-spacing: 2.5px;
+  font-weight: 800;
+  color: #0061ae;
+}
+
+.leh-style-auto-1052 {
+  border-radius: 10px;
+  overflow: hidden;
+}
+
+.leh-style-auto-1053 {
+  width: 55px;
+  justify-content: center;
+}
+
+.leh-style-auto-1054 {
+  border-radius: 10px;
+}
+
+.leh-style-auto-1055 {
+  cursor: pointer;
+}
+
+.leh-style-auto-1056 {
+  background-color: #0061ae;
+  border-radius: 25px;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1057 {
+  width: 55px;
+  height: 55px;
+}
+
+.leh-style-auto-1058 {
+  min-height: 75vh;
+}
+
+.leh-style-auto-1059 {
+  width: 45px;
+  height: 40px;
+}
+
+.leh-style-auto-1060 {
+  background-color: #0061ae;
+}
+
+.leh-style-auto-1061 {
+  font-size: 12px !important;
+}
+
+.leh-style-auto-1062 {
+  font-size: 9px !important;
+}
+
+.leh-style-auto-1063 {
+  max-width: 850px;
+}
+
+.leh-style-auto-1064 {
+  height: 3px;
+  top: 24px;
+  z-index: 0;
+}
+
+.leh-style-auto-1065 {
+  z-index: 1;
+  width: 120px;
+}
+
+.leh-style-auto-1066 {
+  border-radius: 6px;
+}
+
+.leh-style-auto-1067 {
+  height: 75px;
+}
+
+.leh-style-auto-1068 {
+  color: #0061ae !important;
+}
+
+.leh-style-auto-1069 {
+  width: 38px;
+  height: 38px;
+  flex-shrink: 0;
+}
+
+.leh-style-auto-1070 {
+  background-color: #ebf8ff;
+  border-radius: 8px;
+  border-left: 4px solid #3182ce;
+}
+
+.leh-style-auto-1071 {
+  border: 2px solid #e2e8f0;
+  transition: all 0.2s;
+}
+
+.leh-style-auto-1072 {
+  width: 120px;
+  height: 120px;
+  border: 1px dashed #ccc;
+  background: radial-gradient(circle, #333 10%, transparent 10%);
+  background-size: 10px 10px;
+}
+
+.leh-style-auto-1073 {
+  width: 40px;
+  height: 20px;
+}
+
+.leh-style-auto-1074 {
+  background-color: #f0fff4;
+  border-radius: 8px;
+}
+
+.leh-style-auto-1075 {
+  background-color: #0061ae;
+  font-size: 0.9rem;
+}
+
+.leh-style-auto-1076 {
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+}
+
+.leh-style-auto-1077 {
+  font-size: 0.72rem;
+}
+
+.leh-style-auto-1078 {
+  background: linear-gradient(135deg, #071e3d 0%, #00132c 100%);
+  padding: 28px 24px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.leh-style-auto-1079 {
+  background-image: url("/images/blog/blog-hero-adventure.webp");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  opacity: 0.12;
+}
+
+.leh-style-auto-1080 {
+  z-index: 1;
+}
+
+.leh-style-auto-1081 {
+  color: #a0aec0;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1082 {
+  font-size: 1.05rem;
+}
+
+.leh-style-auto-1083 {
+  color: #cbd5e0;
+}
+
+.leh-style-auto-1084 {
+  width: 85px;
+  height: 55px;
+  object-fit: cover;
+  border-radius: 6px;
+  z-index: 2;
+}
+
+.leh-style-auto-1085 {
+  width: 40px;
+  height: 40px;
+  color: #0061ae;
+  font-size: 1.25rem;
+}
+
+.leh-style-auto-1086 {
+  font-size: 0.7rem;
+}
+
+.leh-style-auto-1087 {
+  border-radius: 16px;
+  background: linear-gradient(135deg, #1a365d 0%, #2b6cb0 100%);
+}
+
+.leh-style-auto-1088 {
+  width: 90px;
+  object-fit: contain;
+}
+
+.leh-style-auto-1089 {
+  background-color: #ffb703;
+  font-size: 0.75rem;
+}
+
+.leh-style-auto-1090 {
+  border-radius: 6px 0 6px 0;
+  font-size: 0.65rem;
+  z-index: 3;
+}
+
+.leh-style-auto-1091 {
+  height: 110px;
+}
+
+.leh-style-auto-1092 {
+  background-color: #0061ae;
+  font-size: 0.85rem;
+}
+
+.leh-style-auto-1093 {
+  background-color: #fffdf0;
+  border: 1px solid #fcf6d6;
+  border-radius: 12px;
+}
+
+.leh-style-auto-1094 {
+  max-width: 750px;
+}
+
+.leh-style-auto-1095 {
+  background: linear-gradient(135deg, #071e3d 0%, #00132c 100%);
+  border-bottom: 4px solid #0061ae;
+}
+
+.leh-style-auto-1096 {
+  width: 54px;
+  height: 54px;
+  font-size: 1.5rem;
+}
+
+.leh-style-auto-1097 {
+  width: 52px;
+  height: 52px;
+  font-size: 1.3rem;
+}
+
+.leh-style-auto-1098 {
+  font-weight: 800;
+  color: #0061ae !important;
+}
+
+.leh-style-auto-1099 {
+  width: 60px;
+}
+
+.leh-style-auto-1100 {
+  max-width: 650px;
+}
+
+.leh-style-auto-1101 {
+  height: 350px;
+}
+
+.leh-style-auto-1102 {
+  line-height: 1.5;
+}
+
+.leh-style-auto-1103 {
+  width: 40px;
+  height: 40px;
+  background-color: #0061ae;
+  font-size: 0.78rem;
+}
+
+.leh-style-auto-1104 {
+  width: 1px;
+  flex-grow: 1;
+  min-height: 30px;
+}
+
+.leh-style-auto-1105 {
+  line-height: 1.4;
+}
+
+.leh-style-auto-1106 {
+  top: 80px;
+  z-index: 10;
+}
+
+.leh-style-auto-1107 {
+  font-weight: 900;
+}
+
+.leh-style-auto-1108 {
+  background-color: rgba(0, 0, 0, 0.5);
+  z-index: 1100;
+}
+
+.leh-style-auto-1109 {
+    width: 38px;
+    height: 38px;
+    font-size: 15px;
+    line-height: 38px;
+}
+
+.leh-style-auto-1110 {
+  background: linear-gradient(135deg, #f0f6ff 0%, #ffffff 100%);
+}
+
+.leh-style-auto-1111 {
+  font-size: 2.2rem;
+}
+
+.leh-style-auto-1112 {
+  color: #0061ae;
+}
+
+.leh-style-auto-1113 {
+  line-height: 1.7;
+}
+
+.leh-style-auto-1114 {
+display: none;
+}
+
+.leh-style-auto-1115 {
+  z-index: 1;
+  object-fit: cover;
+  width: 90%;
+  max-height: 350px;
+}
+
+.leh-style-auto-1116 {
+  width: 42px;
+  height: 42px;
+  border-width: 2px;
+}
+
+.leh-style-auto-1117 {
+  scroll-snap-type: x mandatory;
+  scroll-behavior: smooth;
+  -webkit-overflow-scrolling: touch;
+}
+
+.leh-style-auto-1118 {
+  width: 350px;
+  scroll-snap-align: start;
+}
+
+.leh-style-auto-1119 {
+  border-radius: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+  min-height: 380px;
+}
+
+.leh-style-auto-1120 {
+  height: 180px;
+  overflow: hidden;
+}
+
+.leh-style-auto-1121 {
+  background-color: #0061ae;
+  font-size: 0.75rem;
+}
+
+.leh-style-auto-1122 {
+  background-color: #f8fafd;
+}
+
+.leh-style-auto-1123 {
+  height: 230px;
+  transition: all 0.25s ease;
+  cursor: pointer;
+}
+
+.leh-style-auto-1124 {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+}
+
+.leh-style-auto-1125 {
+  background: linear-gradient(180deg, #f0f6ff 0%, #ffffff 100%);
+  border-top: 1px solid #e2e8f0;
+}
+
+.leh-style-auto-1126 {
+  background-image: url("/images/common/scenic-mountain-valley.webp");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  opacity: 0.05;
+}
+
+.leh-style-auto-1127 {
+  background-color: rgba(0, 85, 255, 0.08);
+  border: 1px solid rgba(0, 85, 255, 0.15);
+}
+
+.leh-style-auto-1128 {
+  font-weight: 800;
+  font-size: 2.4rem;
+}
+
+.leh-style-auto-1129 {
+  border-bottom: 3px solid #0061ae;
+  padding-bottom: 3px;
+  position: relative;
+}
+
+.leh-style-auto-1130 {
+  border-radius: 20px;
+  min-height: 290px;
+}
+
+.leh-style-auto-1131 {
+  width: 28px;
+  height: 28px;
+  background-color: #0061ae;
+}
+
+.leh-style-auto-1132 {
+  width: 84px;
+  height: 84px;
+  background-color: #f0f6ff;
+  border: 2px dashed rgba(0, 85, 255, 0.2);
+}
+
+.leh-style-auto-1133 {
+  font-size: 1.85rem;
+  z-index: 1;
+}
+
+.leh-style-auto-1134 {
+  border-bottom: 2px solid #0061ae;
+  padding-bottom: 3px;
+}
+
+.leh-style-auto-1135 {
+  line-height: 1.6;
+}
+
+.leh-style-auto-1136 {
+  width: 32px;
+  height: 32px;
+  right: -16px;
+  z-index: 10;
+  font-size: 0.85rem;
+}
+
+.leh-style-auto-1137 {
+  font-size: 1.85rem;
+  z-index: 1;
+  margin-top: 0;
+}
+
+.leh-style-auto-1138 {
+  height: 260px;
+}
+
+.leh-style-auto-1139 {
+  background-image: linear-gradient(rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75)), url("/images/banners/cta-banner-background.webp");
+  background-size: cover;
+  background-position: center;
+  min-height: 280px;
+}
+
+.leh-style-auto-1140 {
+  z-index: 2;
+}
+
+.leh-style-auto-1141 {
+  font-weight: 800;
+  font-size: 2rem;
+}
+
+.leh-style-auto-1142 {
+  max-width: 600px;
+}
+
+.leh-style-auto-1143 {
+  width: 130px;
+  opacity: 0.95;
+}
+
+.leh-style-auto-1144 {
+  min-height: 240px;
+}
+
+.leh-style-auto-1145 {
+  font-size: 0.8rem;
+  display: flex;
+  gap: 2px;
+}
+
+.leh-style-auto-1146 {
+  width: 45px;
+  height: 45px;
+  object-fit: cover;
+}
+
+.leh-style-auto-1147 {
+  border-radius: 16px;
+  min-height: 360px;
+}
+
+.leh-style-auto-1148 {
+  height: 180px;
+  object-fit: cover;
+}
+
+.leh-style-auto-1149 {
+  background-color: #d8225f;
+  border-radius: 8px;
+  outline: none;
+}
+.leh-style-auto-1149:hover {
+  background-color: #0061ae !important;
+  border-radius: 8px;
+  color: #ffffff !important;
+  outline: none;
+}
+
+
+.leh-style-auto-1150 {
+  width: 40px;
+  height: 40px;
+  border-width: 2px;
+}
+
+.leh-style-auto-1151 {
+  width: 230px;
+  scroll-snap-align: start;
+}
+
+.leh-style-auto-1152 {
+  height: 170px;
+}
+
+.leh-style-auto-1153 {
+  transition: transform 0.3s ease;
+}
+
+.leh-style-auto-1154 {
+  max-width: 800px;
+}
+
+.leh-style-auto-1155 {
+  background-color: rgba(0, 0, 0, 0.6);
+  backdrop-filter: blur(5px);
+  z-index: 1060;
+}
+
+.leh-style-auto-1156 {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+.leh-style-auto-1157 {
+  max-height: 65vh;
+  overflow-y: auto;
+}
+
+.leh-style-auto-1158 {
+  border-radius: 12px;
+  min-height: 190px;
+}
+
+.leh-style-auto-1159 {
+  width: 135px;
+  object-fit: cover;
+  flex-shrink: 0;
+}
+
+.leh-style-auto-1160 {
+  display: -webkit-box;
+  -webkit-line-clamp: 2px;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  line-height: 1.4;
+}
+
+.leh-style-auto-1161 {
+  border: 1px dashed #0061ae;
+}
+
+.leh-style-auto-1162 {
+  background-color: rgba(0, 0, 0, 0.85);
+  backdrop-filter: blur(8px);
+  z-index: 1070;
+}
+
+.leh-style-auto-1163 {
+  border-radius: 20px;
+  overflow: hidden;
+  background-color: #121212;
+}
+
+.leh-style-auto-1164 {
+  background-color: #1e1e1e;
+}
+
+.leh-style-auto-1165 {
+  color: #e1306c;
+}
+
+.leh-style-auto-1166 {
+  max-height: 75vh;
+  overflow-y: auto;
+}
+
+.leh-style-auto-1167 {
+  max-height: 55vh;
+  width: 100%;
+}
+
+.leh-style-auto-1168 {
+  max-height: 55vh;
+  width: auto;
+}
+
+.leh-style-auto-1169 {
+  width: 48px;
+  height: 48px;
+  opacity: 0.8;
+  background-color: rgba(0, 0, 0, 0.6);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  font-size: 1.25rem;
+}
+
+.leh-style-auto-1170 {
+  height: 170px;
+  transition: all 0.2s ease;
+}
+
+.leh-style-auto-1171 {
+  height: 180px;
+  width: 100%;
+  object-fit: cover;
+}
+
+.leh-style-auto-1172 {
+  max-width: 700px;
+  margin: 0 auto;
+}
+
+.leh-style-auto-1173 {
+  width: 100%;
+  height: 350px;
+  object-fit: cover;
+}
+
+.leh-style-auto-1174 {
+  width: 4px;
+  height: 22px;
+  background-color: #0061ae;
+}
+
+.leh-style-auto-1175 {
+  background-color: #f0f6ff;
+  border-radius: 12px;
+  border-left: 4px solid #0061ae;
+}
+
+.leh-style-auto-1176 {
+  font-size: 2rem;
+  color: #0061ae;
+  line-height: 1;
+  display: inline-block;
+  margin-top: -8px;
+}
+
+.leh-style-auto-1177 {
+  color: #2b6cb0 !important;
+}
+
+.leh-style-auto-1178 {
+  width: 38px;
+  height: 38px;
+  background-color: #ebf8ff !important;
+}
+
+.leh-style-auto-1179 {
+  font-size: 0.72rem;
+  line-height: 1.5;
+}
+
+.leh-style-auto-1180 {
+  width: 38px;
+  height: 38px;
+  background-color: #e6fffa !important;
+}
+
+.leh-style-auto-1181 {
+  width: 38px;
+  height: 38px;
+  background-color: #fffaf0 !important;
+}
+
+.leh-style-auto-1182 {
+  height: 90px;
+}
+
+.leh-style-auto-1183 {
+  max-width: 280px;
+}
+
+.leh-style-auto-1184 {
+  background-image: url("/images/blog/blog-hero-adventure.webp");
+  background-size: cover;
+  background-position: center;
+  z-index: 0;
+  opacity: 0.15;
+}
+
+.leh-style-auto-1185 {
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1186 {
+  font-size: 2.5rem;
+  line-height: 1.2;
+}
+
+.leh-style-auto-1187 {
+  max-width: 600px;
+  line-height: 1.6;
+}
+
+.leh-style-auto-1188 {
+  width: 310px;
+  height: 190px;
+  object-fit: cover;
+  border-radius: 12px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.leh-style-auto-1189 {
+  height: 360px;
+}
+
+.leh-style-auto-1190 {
+  width: 36px;
+  height: 36px;
+  padding: 0 !important;
+}
+
+.leh-style-auto-1191 {
+  width: 50px;
+  height: 50px;
+}
+
+.leh-style-auto-1192 {
+  width: 28px;
+  height: 28px;
+}
+
+.leh-style-auto-1193 {
+  background: linear-gradient(135deg, #0061ae 0%, #002288 100%);
+}
+
+.leh-style-auto-1194 {
+  background-image: url("/images/common/mountain-peak-backdrop.webp");
+  z-index: 0;
+}
+
+.leh-style-auto-1195 {
+  background-color: #ffb703;
+}
+
+.leh-style-auto-1196 {
+  width: 65px;
+  height: 50px;
+}
+
+.leh-style-auto-1197 {
+  transition: all 0.2s;
+  font-size: 0.78rem;
+  line-height: 1.3;
+}
+
+.leh-style-auto-1198 {
+  background-color: #ebf8ff;
+  color: #0061ae;
+  font-weight: 700;
+  font-size: 0.75rem;
+  letter-spacing: 0.5px;
+}
+
+.leh-style-auto-1199 {
+  font-weight: 800;
+  font-size: 2.5rem;
+}
+
+.leh-style-auto-1200 {
+  max-width: 900px;
+}
+
+.leh-style-auto-1201 {
+  width: 44px;
+  height: 44px;
+  background-color: #ebf8ff;
+  min-width: 44px;
+}
+
+.leh-style-auto-1202 {
+  min-height: 560px;
+}
+
+.leh-style-auto-1203 {
+  width: 40px;
+  height: 40px;
+}
+
+.leh-style-auto-1204 {
+  width: 32px;
+  height: 3px;
+  background-color: #0061ae;
+  border-radius: 2px;
+}
+
+.leh-style-auto-1205 {
+  width: 38px;
+  height: 38px;
+  min-width: 38px;
+}
+
+.leh-style-auto-1206 {
+  word-break: break-all;
+}
+
+.leh-style-auto-1207 {
+  height: 140px;
+  background-color: #ebf8ff;
+}
+
+.leh-style-auto-1208 {
+  bottom: 10px;
+  right: 25px;
+  width: 180px;
+  height: 110px;
+  object-fit: contain;
+  z-index: 3;
+}
+
+.leh-style-auto-1209 {
+  border-color: #dee2e6;
+}
+
+.leh-style-auto-1210 {
+  outline: none;
+  box-shadow: none;
+  resize: none;
+}
+
+.leh-style-auto-1211 {
+  background: linear-gradient(135deg, #e6fffa 0%, #ebf8ff 100%);
+  border: 1px solid rgba(0, 85, 255, 0.08);
+}
+
+.leh-style-auto-1212 {
+  width: 64px;
+  height: 64px;
+  min-width: 64px;
+}
+
+.leh-style-auto-1213 {
+  width: 190px;
+}
+
+.leh-style-auto-1214 {
+  width: 32px;
+  height: 32px;
+}
+
+.leh-style-auto-1215 {
+  right: 25px;
+  top: -12px;
+  transform: rotate(10deg);
+  width: 60px;
+  height: 72px;
+  border-color: #e2e8f0;
+}
+
+.leh-style-auto-1216 {
+  font-size: 0.62rem;
+}
+
+.leh-style-auto-1217 {
+  border: 0px;
+}
+
+.leh-style-auto-1218 {
+  min-height: 60vh;
+}
+
+.leh-style-auto-1219 {
+  font-size: 6rem;
+  letter-spacing: -2px;
+}
+
+.leh-style-auto-1220 {
+  max-width: 400px;
+}
+
+.leh-style-auto-1221 {
+  line-height: 1.8;
+}
+
+.leh-style-auto-1222 {
+  background: linear-gradient(135deg, #071e3d 0%, #00132c 100%);
+  padding: 60px 0 100px 0;
+}
+
+.leh-style-auto-1223 {
+  color: #63b3ed;
+  border-color: #2b6cb0;
+  background-color: rgba(43, 108, 176, 0.15);
+  border: 1px solid rgba(99, 179, 237, 0.3);
+}
+
+.leh-style-auto-1224 {
+  font-weight: 800;
+  font-size: 3rem;
+}
+
+.leh-style-auto-1225 {
+  color: #ffb703;
+  font-size: 1.4rem;
+}
+
+.leh-style-auto-1226 {
+  max-width: 650px;
+  line-height: 1.6;
+}
+
+.leh-style-auto-1227 {
+  background-color: rgba(255, 255, 255, 0.04);
+  border-color: rgba(255, 255, 255, 0.1);
+}
+
+.leh-style-auto-1228 {
+  border-radius: 20px;
+  z-index: 5;
+  position: relative;
+}
+
+.leh-style-auto-1229 {
+  color: #0061ae;
+  font-size: 2.2rem;
+  font-weight: 800;
+}
+
+.leh-style-auto-1230 {
+  background-color: #ffb703;
+  font-size: 0.9rem;
+}
+.leh-style-auto-1230:hover {
+    background: #0061ae;
+    color: #fff !important;
+}
+
+.leh-style-auto-1231 {
+  margin-top: -40px;
+  position: relative;
+  z-index: 10;
+}
+
+.leh-style-auto-1232 {
+  width: 48px;
+  height: 48px;
+  color: #0061ae;
+  font-size: 1.25rem;
+}
+
+.leh-style-auto-1233 {
+  width: 65px;
+  height: 45px;
+}
+
+.leh-style-auto-1234 {
+  border-radius: 16px;
+  background: #ffffff;
+  min-height: 230px;
+}
+
+.leh-style-auto-1235 {
+  width: 56px;
+  height: 56px;
+  background-color: #ebf8ff;
+  color: #3182ce;
+  font-size: 1.5rem;
+}
+
+.leh-style-auto-1236 {
+  border-radius: 20px;
+  background-color: #072247;
+  background-image: radial-gradient(circle at top right, #0a3060, #072247);
+}
+
+.leh-style-auto-1237 {
+  min-height: 320px;
+}
+
+.leh-style-auto-1238 {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85), transparent);
+  backdrop-filter: blur(2px);
+}
+
+.leh-style-auto-1239 {
+  color: #ffb703;
+}
+
+.leh-style-auto-1240 {
+  font-size: 0.75rem;
+  margin-left: 2px;
+}
+
+.leh-style-auto-1241 {
+  border-radius: 20px;
+  background: linear-gradient(135deg, #1a365d 0%, #2a4365 100%);
+}
+
+.leh-style-auto-1242 {
+  font-size: 3rem;
+}
+
+/* Premium Button Styles */
+.btn-premium-primary {
+  background: linear-gradient(135deg, #0061ae 0%, #0033aa 100%) !important;
+  color: var(--white) !important;
+  border: none !important;
+  border-radius: 30px !important;
+  padding: 0.65rem 1.5rem !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  transition: all var(--transition-speed) ease !important;
+  box-shadow: 0 4px 12px rgba(0, 85, 255, 0.2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.btn-premium-primary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(0, 85, 255, 0.3) !important;
+  background: linear-gradient(135deg, #0066ff 0%, #0044cc 100%) !important;
+}
+
+.btn-premium-secondary {
+  background: linear-gradient(135deg, #ffb703 0%, #e6a400 100%) !important;
+  color: var(--dark) !important;
+  border: none !important;
+  border-radius: 30px !important;
+  padding: 0.65rem 1.5rem !important;
+  font-weight: 700 !important;
+  font-size: 0.85rem !important;
+  transition: all var(--transition-speed) ease !important;
+  box-shadow: 0 4px 12px rgba(255, 183, 3, 0.2) !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+}
+
+.btn-premium-secondary:hover {
+  transform: translateY(-2px) !important;
+  box-shadow: 0 6px 16px rgba(255, 183, 3, 0.3) !important;
+  background: linear-gradient(135deg, #ffc43d 0%, #ffa800 100%) !important;
+}
+
+/* About Page Custom Styles */
+.leh-about-page {
+  background-color: var(--white);
+}
+
+/* Hero Header Card */
+.leh-about-hero-card {
+  background-image: url('/images/about/about-hero-suv.webp');
+  background-size: cover;
+  background-position: center;
+  min-height: 380px;
+}
+
+.leh-about-hero-overlay {
+  background: linear-gradient(90deg, rgba(0, 44, 155, 0.9) 0%, rgba(0, 20, 80, 0.7) 60%, rgba(0, 0, 0, 0.2) 100%);
+  z-index: 1;
+}
+
+.leh-about-hero-badge {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 10px 18px;
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  border-radius: 50px;
+  border: 1px solid rgba(255, 255, 255, 0.15);
+  min-width: 210px;
+}
+
+.leh-about-hero-badge i {
+  color: var(--warning);
+}
+
+/* Local Badges */
+.leh-about-local-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 14px 22px;
+  background: #f0f6ff;
+  border-radius: 16px;
+  border: 1px solid #dbeafe;
+  width: fit-content;
+  flex: 1 1 240px;
+}
+
+.leh-about-badge-icon-circle {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background: #dbeafe;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leh-about-mockup-img {
+  height: 380px;
+  object-fit: cover;
+  border-radius: 20px;
+}
+
+.w-90 {
+  width: 90% !important;
+}
+
+/* Core Values Section */
+.leh-about-section-divider {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 15px;
+}
+
+.leh-about-section-divider .line {
+  height: 1px;
+  width: 60px;
+  background-color: var(--gray-300);
+}
+
+.leh-about-section-divider .dots {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leh-about-value-card {
+  background: var(--white);
+  padding: 30px 24px;
+  border-radius: 20px;
+  box-shadow: 0 10px 30px rgba(0, 85, 255, 0.03);
+  border: 1px solid var(--gray-100);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+  height: 100%;
+}
+
+.leh-about-value-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 15px 40px rgba(0, 85, 255, 0.08);
+  border-color: #dbeafe;
+}
+
+.leh-about-value-icon-box {
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  background: #ebf8ff;
+  color: var(--leh-brand-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  margin: 0 auto 20px auto;
+  transition: all 0.3s ease;
+}
+
+.leh-about-value-card:hover .leh-about-value-icon-box {
+  background: var(--leh-brand-blue);
+  color: var(--white);
+  transform: rotate(360deg);
+}
+
+/* Operational Timeline */
+.leh-about-timeline {
+  position: relative;
+  max-width: 850px;
+  margin: 0 auto;
+  padding: 30px 0;
+}
+
+.leh-about-timeline::after {
+  content: '';
+  position: absolute;
+  width: 2px;
+  background-color: #dbeafe;
+  top: 40px;
+  bottom: 40px;
+  left: 50%;
+  margin-left: -1px;
+}
+
+.leh-about-timeline-item {
+  padding: 10px 50px;
+  position: relative;
+  background-color: inherit;
+  width: 50%;
+}
+
+.leh-about-timeline-item::after {
+  content: '';
+  position: absolute;
+  width: 14px;
+  height: 14px;
+  right: -7px;
+  left: auto !important;
+  background-color: var(--white);
+  border: 3px solid var(--leh-brand-blue);
+  top: 36px;
+  border-radius: 50%;
+  z-index: 1;
+  transition: all 0.3s ease;
+}
+
+.leh-about-timeline-item:hover::after {
+  background-color: var(--leh-brand-blue);
+  transform: scale(1.3);
+}
+
+.leh-about-timeline-item.left {
+  left: 0;
+}
+
+.leh-about-timeline-item.left .content {
+  text-align: right;
+}
+
+.leh-about-timeline-item.right {
+  left: 50%;
+}
+
+.leh-about-timeline-item.right::after {
+  left: -7px !important;
+  right: auto !important;
+}
+
+.leh-about-timeline-item.right .content {
+  text-align: left;
+}
+
+.leh-about-timeline-item .content {
+  padding: 24px;
+  background-color: var(--white);
+  position: relative;
+  border-radius: 16px;
+  box-shadow: 0 10px 30px rgba(0, 85, 255, 0.02);
+  border: 1px solid var(--gray-100);
+  transition: all 0.3s ease;
+}
+
+.leh-about-timeline-item:hover .content {
+  box-shadow: 0 15px 40px rgba(0, 85, 255, 0.06);
+  border-color: #dbeafe;
+}
+
+.leh-about-timeline-item .year {
+  font-weight: 800;
+  color: var(--leh-brand-blue);
+  font-size: 1.3rem;
+  display: block;
+}
+
+.timeline-icon-box {
+  width: 38px;
+  height: 38px;
+  border-radius: 8px;
+  background: #f0f6ff;
+  color: var(--leh-brand-blue);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.1rem;
+  flex-shrink: 0;
+}
+
+.leh-about-timeline-item:hover .timeline-icon-box {
+  background: var(--leh-brand-blue);
+  color: var(--white);
+}
+
+/* CTA Section */
+.leh-about-cta-banner {
+  background-image: url('/images/about/about-cta-suv.webp');
+  background-size: cover;
+  background-position: center;
+  min-height: 300px;
+}
+
+.z-index-2 {
+  position: relative !important;
+  z-index: 2 !important;
+}
+
+/* Centralized Extracted Style Classes */
+.leh-header-wrapper {
+  background-color: #0061ae !important;
+  z-index: 1040 !important;
+  position: relative !important;
+}
+
+.leh-navbar-brand {
+  outline: none !important;
+}
+
+.leh-logo-img,
+.leh-style-auto-1024,
+.leh-login-logo {
+  height: 42px !important;
+  width: auto !important;
+  max-width: 140px !important;
+  object-fit: contain !important;
+}
+
+/* LehConnect Login Modal Popup */
+.leh-login-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(0, 0, 0, 0.65);
+  backdrop-filter: blur(4px);
+  z-index: 1080;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+}
+
+.leh-login-modal-card {
+  max-width: 740px;
+  border-radius: 20px !important;
+  max-height: 92vh;
+  overflow-y: auto;
+  flex-direction: row !important;
+  width: 100%;
+}
+
+.leh-login-modal-media {
+  width: 45%;
+  min-height: 440px;
+  background-color: #0b1528;
+}
+
+.leh-login-modal-banner-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.leh-login-modal-overlay-gradient {
+  background: linear-gradient(to top, rgba(0, 0, 0, 0.85) 0%, rgba(0, 0, 0, 0) 100%);
+}
+
+.leh-login-modal-content {
+  width: 55%;
+}
+
+.leh-login-modal-close {
+  width: 36px;
+  height: 36px;
+  z-index: 10;
+}
+
+.leh-login-submit-btn {
+  background-color: #0061ae !important;
+  border-color: #0061ae !important;
+}
+
+.leh-dropdown-services {
+  border-radius: 8px !important;
+  z-index: 1050 !important;
+}
+
+.leh-dropdown-user-profile {
+  border-radius: 8px !important;
+  z-index: 1050 !important;
+}
+
+.leh-header-login-btn {
+  min-width: 95px !important;
+  height: 34px !important;
+  border-color: rgba(255, 255, 255, 0.7) !important;
+  transition: all 0.2s ease !important;
+  box-shadow: none !important;
+}
+
+.leh-header-user-icon {
+  margin-top: -1px !important;
+}
+
+/* Mobile User Profile Button & Icon Behavior */
+.leh-mobile-user-btn {
+  width: 36px !important;
+  height: 36px !important;
+  min-width: 36px !important;
+  min-height: 36px !important;
+  border-radius: 50% !important;
+  border: 1.5px solid #0061ae !important;
+  background-color: #eaf5ff !important;
+  color: #0061ae !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  padding: 0 !important;
+  transition: all 0.2s ease !important;
+  outline: none !important;
+  box-shadow: none !important;
+  cursor: pointer !important;
+  text-decoration: none !important;
+  position: relative !important;
+}
+
+.leh-mobile-user-btn:hover,
+.leh-mobile-user-btn:focus,
+.leh-mobile-user-btn:active,
+.leh-mobile-user-btn.active {
+  background-color: #0061ae !important;
+  border-color: #0061ae !important;
+  color: #ffffff !important;
+  box-shadow: none !important;
+  outline: none !important;
+}
+
+.leh-mobile-user-btn i,
+.leh-mobile-user-btn svg {
+  color: inherit !important;
+  font-size: 15px !important;
+  display: inline-block !important;
+  line-height: 1 !important;
+  pointer-events: none !important;
+}
+
+.leh-mobile-menu-dropdown {
+  top: 64px !important;
+  left: 0 !important;
+  z-index: 1030 !important;
+}
+
+.leh-mobile-menu-scrollable {
+  height: calc(100vh - 64px) !important;
+  overflow-y: auto !important;
+}
+
+.leh-mobile-services-chevron {
+  transition: transform 0.2s ease !important;
+  transform: rotate(0deg);
+}
+
+.leh-mobile-services-chevron-open {
+  transform: rotate(180deg) !important;
+}
+
+/* Cab Checkout Stepper Classes */
+.leh-checkout-progress-bar {
+  height: 3px !important;
+  top: 24px !important;
+  z-index: 0 !important;
+  transition: all 0.3s ease !important;
+}
+
+.leh-checkout-progress-bar-step-1 {
+  width: 16% !important;
+}
+
+.leh-checkout-progress-bar-step-2 {
+  width: 50% !important;
+}
+
+.leh-checkout-progress-bar-step-3 {
+  width: 84% !important;
+}
+
+.leh-checkout-step-circle {
+  width: 48px !important;
+  height: 48px !important;
+  border-radius: 50% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  border: 0 !important;
+  font-weight: bold !important;
+  transition: all 0.3s ease !important;
+  background-color: #edf2f7 !important;
+  color: #718096 !important;
+  font-size: 1rem !important;
+}
+
+.leh-checkout-step-circle-active {
+  background-color: #0061ae !important;
+  color: #fff !important;
+}
+
+.leh-checkout-step-circle-completed {
+  background-color: #0061ae !important;
+  color: #fff !important;
+  font-size: 1.25rem !important;
+}
+
+.leh-checkout-step-circle-focus {
+  box-shadow: 0 0 0 4px rgba(0, 85, 255, 0.25) !important;
+}
+
+/* Cab Listing Badge Classes */
+.leh-cab-badge {
+  border-radius: 4px !important;
+  letter-spacing: 0.5px !important;
+}
+
+.leh-cab-badge-sedan {
+  background-color: #0061ae !important;
+  color: #fff !important;
+}
+
+.leh-cab-badge-muv {
+  background-color: #805ad5 !important;
+  color: #fff !important;
+}
+
+.leh-cab-badge-hatchback {
+  background-color: #38a169 !important;
+  color: #fff !important;
+}
+
+.leh-cab-badge-suv {
+  background-color: #dd6b20 !important;
+  color: #fff !important;
+}
+
+.leh-cab-badge-default {
+  background-color: #4a5568 !important;
+  color: #fff !important;
+}
+
+/* Home Offer Classes */
+.leh-nowrap {
+  white-space: nowrap !important;
+}
+
+.leh-btn-coupon {
+  white-space: nowrap !important;
+  outline: none !important;
+  box-shadow: none !important;
+}
+
+.leh-insta-modal-detail {
+  max-width: 850px !important;
+}
+
+.leh-insta-modal-grid {
+  max-width: 1100px !important;
+}
+
+/* Service Details FAQ Classes */
+.leh-hero-blend-overlay {
+  mix-blend-mode: overlay !important;
+  z-index: 0 !important;
+}
+
+.leh-faq-btn {
+  background-color: #ffffff !important;
+  color: #1a1a1a !important;
+  border: none !important;
+  border-radius: 0 !important;
+  outline: none !important;
+  box-shadow: none !important;
+  transition: background-color 0.2s ease !important;
+}
+
+.leh-faq-btn-active {
+  background-color: #f0f6ff !important;
+}
+
+/* ==========================================================================
+   Holiday Packages Section Custom Styles
+   ========================================================================== */
+.holiday-packages-section {
+  padding: 40px 0 60px;
+  background-color: #ffffff;
+}
+
+.packages-heading {
+  margin-bottom: 24px;
+}
+
+.packages-heading h2 {
+  font-size: 28px;
+  font-weight: 800;
+  color: var(--text-color);
+  margin-bottom: 8px;
+  text-align: center;
+}
+
+.packages-heading p {
+  font-size: 14px;
+  color: var(--gray-600);
+  text-align: center;
+  margin-bottom: 0;
+}
+
+/* Sticky tabs container */
+.packages-tabs-sticky-wrapper {
+  position: sticky;
+  top: 0;
+  z-index: 1010;
+  background-color: #ffffff;
+  padding: 10px 0;
+  transition: box-shadow 0.3s ease, border-color 0.3s ease;
+  border-bottom: 1px solid transparent;
+}
+
+.packages-tabs-sticky-wrapper.is-sticky {
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  border-bottom: 1px solid var(--gray-200);
+  background-color: rgba(255, 255, 255, 0.98);
+  backdrop-filter: blur(10px);
+}
+
+.packages-tabs-inner-container {
+  position: relative;
+  display: flex;
+  align-items: center;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 15px;
+}
+
+/* Destination Tab Button */
+.package-tab-btn {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 8px 12px;
+  border: none;
+  background: none;
+  outline: none;
+  position: relative;
+  color: var(--gray-600);
+  transition: all 0.25s ease;
+  min-width: 90px;
+  max-width: 110px;
+  cursor: pointer;
+  text-align: center;
+  flex-shrink: 0;
+  margin-top: 10px;
+}
+
+.package-tab-btn:hover {
+  color: var(--primary-color);
+}
+
+.package-tab-btn i {
+  font-size: 22px;
+  color: #718096;
+  transition: color 0.25s ease, transform 0.25s ease;
+}
+
+.package-tab-btn:hover i {
+  transform: translateY(-2px);
+  color: var(--primary-color);
+}
+
+.package-tab-btn span {
+  font-size: 12px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+/* Active tab highlight */
+.package-tab-btn.active {
+  color: var(--primary-color);
+}
+
+.package-tab-btn.active i {
+  color: var(--primary-color);
+}
+
+.package-tab-btn::after {
+  content: "";
+  position: absolute;
+  bottom: -4px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 0;
+  height: 3px;
+  background-color: var(--secondary-color);
+  border-radius: 4px;
+  transition: width 0.25s ease;
+}
+
+.package-tab-btn.active::after {
+  width: 50%;
+}
+
+/* Trending badge */
+.package-tab-btn .trending-badge {
+  position: absolute;
+  top: -6px;
+  right: 50%;
+  transform: translateX(80%);
+  color: #000;
+  font-size: 7px;
+  font-weight: 800;
+  padding: 3px 5px;
+  border-radius: 4px;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  line-height: 1;
+  z-index: 5;
+  background: var(--secondary-color);
+}
+
+/* Outer Packages Swiper and Navigation */
+.packages-carousel-outer {
+  position: relative;
+  max-width: 1200px;
+  margin: 30px auto 0;
+  padding: 0 45px;
+}
+
+/* Custom Navigation Arrows overlaying the edges */
+.swiper-button-prev-custom,
+.swiper-button-next-custom {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 44px;
+  height: 44px;
+  background-color: #ffffff;
+  border: 1px solid var(--gray-200);
+  border-radius: 50%;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1A1A1A;
+  z-index: 10;
+  cursor: pointer;
+  transition: all 0.25s ease;
+}
+
+.swiper-button-prev-custom:hover,
+.swiper-button-next-custom:hover {
+  background-color: #F8FAFC;
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+  color: var(--secondary-color);
+  border-color: rgba(255, 107, 0, 0.3);
+}
+
+.swiper-button-prev-custom {
+  left: 10px;
+}
+
+.swiper-button-next-custom {
+  right: 10px;
+}
+
+.swiper-button-disabled-custom {
+  opacity: 0.4;
+  pointer-events: none;
+  box-shadow: none;
+}
+
+/* Destination details top bar */
+.destination-details-bar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  max-width: 1200px;
+  margin: 20px auto 0;
+  padding: 0 15px;
+}
+
+.destination-details-bar h3 {
+  font-size: 22px;
+  font-weight: 700;
+  color: var(--text-color);
+  margin-bottom: 0;
+}
+
+.destination-view-all-btn {
+  color: var(--primary-color);
+  font-size: 14px;
+  font-weight: 700;
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: gap 0.2s ease;
+}
+
+.destination-view-all-btn:hover {
+  color: var(--secondary-color);
+  gap: 9px;
+}
+
+.destination-view-all-btn i {
+  font-size: 12px;
+  background-color: var(--secondary-color);
+  color: #ffffff;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-style: normal;
+  font-weight: bold;
+  display: none;
+}
+
+/* Package Card Design */
+.package-card {
+  background-color: #ffffff;
+  border: 1px solid #E2E8F0;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.03);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.package-card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 16px 30px rgba(0, 0, 0, 0.08);
+}
+
+.package-card-img-container {
+  position: relative;
+  height: 240px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.package-card-img-swiper {
+  width: 100%;
+  height: 100%;
+}
+
+.package-card-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.16, 1, 0.3, 1);
+  cursor: pointer;
+}
+
+.package-card:hover .package-card-img {
+  transform: scale(1.05);
+}
+
+/* Image Swiper pagination dots */
+.package-card-img-swiper .swiper-pagination-bullets {
+  bottom: 12px !important;
+}
+
+.package-card-img-swiper .swiper-pagination-bullet {
+  background: rgba(255, 255, 255, 0.5) !important;
+  opacity: 1 !important;
+  width: 6px !important;
+  height: 6px !important;
+  margin: 0 4px !important;
+  transition: background 0.3s ease, transform 0.3s ease !important;
+}
+
+.package-card-img-swiper .swiper-pagination-bullet-active {
+  background: #ffffff !important;
+  transform: scale(1.3) !important;
+}
+
+/* Save Ribbon badge on top-left */
+.package-card-save-badge {
+  position: absolute;
+  top: 12px;
+  left: 12px;
+  background-color: rgba(0, 97, 174, 0.9);
+  color: #ffffff;
+  padding: 4px 10px;
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(2px);
+}
+
+.package-card-save-badge i {
+  font-size: 9px;
+}
+
+/* Package Card Body */
+.package-card-body {
+  padding: 16px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
+}
+
+.package-duration-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  color: var(--gray-600);
+  margin-bottom: 8px;
+  font-weight: 500;
+}
+
+.package-rating-badge {
+  color: #00a65a;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 3px;
+}
+
+.package-rating-badge i {
+  font-size: 11px;
+}
+
+.package-title {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-color);
+  line-height: 1.45;
+  margin-bottom: 12px;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  height: 40px;
+}
+
+/* Yellow Itinerary Strip */
+.package-itinerary-strip {
+  background-color: #FFFDF0;
+  border: 1px solid #FFF5C2;
+  padding: 6px 10px;
+  border-radius: 6px;
+  font-size: 11px;
+  font-weight: 500;
+  color: var(--gray-700);
+  margin-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: flex;
+  align-items: center;
+}
+
+/* Monsoon Sale Badge */
+.package-sale-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 4px;
+  overflow: hidden;
+  height: 20px;
+  margin-bottom: 12px;
+  align-self: flex-start;
+}
+
+.sale-badge-left {
+  background: linear-gradient(90deg, #ff3366, #ff9900);
+  width: 12px;
+  height: 100%;
+  clip-path: polygon(0 0, 100% 0, 65% 100%, 0 100%);
+  margin-right: -4px;
+}
+
+.sale-badge-right {
+  background-color: #00bcd4;
+  color: #ffffff;
+  font-size: 9px;
+  font-weight: 800;
+  padding: 2px 6px 2px 8px;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  letter-spacing: 0.5px;
+}
+
+/* Price Section */
+.package-price-section {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 16px;
+}
+
+.package-price-row-top {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.package-original-price {
+  font-size: 11px;
+  text-decoration: line-through;
+  color: var(--gray-600);
+}
+
+.package-discount-pill {
+  background-color: #E6FFFA;
+  color: #00a699;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 2px 6px;
+  border-radius: 2px;
+  text-transform: uppercase;
+  letter-spacing: 0.2px;
+}
+
+.package-actual-price-row {
+  font-size: 18px;
+  font-weight: 800;
+  color: var(--text-color);
+  line-height: 1.2;
+}
+
+.package-actual-price-unit {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--gray-600);
+}
+
+/* CTA Buttons Layout */
+.package-cta-section {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+  margin-top: auto;
+}
+
+.package-btn-phone {
+  width: 44px;
+  height: 44px;
+  border: 1px solid var(--primary-color);
+  border-radius: 8px;
+  background: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: var(--primary-color);
+  transition: all 0.2s ease;
+  cursor: pointer;
+  outline: none;
+  flex-shrink: 0;
+}
+
+.package-btn-phone:hover {
+  background-color: #ffcc29;
+  color: #000;
+  border-color: #ffcc29;
+}
+
+.package-btn-callback {
+  flex-grow: 1;
+  height: 44px;
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.package-btn-callback:hover {
+  background-color: #ffcc29;
+  color: #000;
+}
+
+/* Custom styles for Swiper tabs carousel */
+.packages-tabs-swiper {
+  width: 100%;
+  padding: 5px 0;
+}
+
+.packages-tabs-swiper .swiper-slide {
+  width: auto !important;
+}
+
+/* Swiper navigation overlays for Tabs */
+.tabs-nav-btn-next {
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  z-index: 10;
+  width: 32px;
+  height: 32px;
+  background: #ffffff;
+  border-radius: 50%;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  color: #475569;
+  border: 1px solid var(--gray-200);
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s;
+}
+
+.tabs-nav-btn-next:hover {
+  color: var(--secondary-color);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.tabs-nav-btn-next.swiper-button-disabled {
+  opacity: 0;
+  pointer-events: none;
+}
+
+/* Local navigation buttons for card inner image sliders */
+.card-img-prev-btn,
+.card-img-next-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 28px;
+  height: 28px;
+  background-color: rgba(255, 255, 255, 0.7);
+  backdrop-filter: blur(2px);
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #1A1A1A;
+  z-index: 12;
+  cursor: pointer;
+  transition: all 0.25s ease;
+  border: none;
+  font-size: 10px;
+  opacity: 0;
+}
+
+.package-card:hover .card-img-prev-btn,
+.package-card:hover .card-img-next-btn {
+  opacity: 1;
+}
+
+.card-img-prev-btn:hover,
+.card-img-next-btn:hover {
+  background-color: #ffffff;
+  color: var(--secondary-color);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.card-img-prev-btn {
+  left: 10px;
+}
+
+.card-img-next-btn {
+  right: 10px;
+}
+
+/* Hide disabled navigation buttons inside image container */
+.package-card-img-swiper .swiper-button-disabled {
+  opacity: 0 !important;
+  pointer-events: none;
+}
+
+/* Callback Request Expert Modal */
+.callback-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(3, 20, 36, 0.6);
+  backdrop-filter: blur(4px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 99999;
+  padding: 15px;
+}
+
+.callback-modal-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 480px;
+}
+
+.callback-modal-close-btn {
+  position: absolute;
+  top: 10px;
+  right: -12px;
+  background-color: #ffffff;
+  border-radius: 50%;
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  border: none;
+  z-index: 100001;
+  color: #555555;
+  font-size: 14px;
+  transition: all 0.2s ease;
+}
+
+.callback-modal-close-btn:hover {
+  background-color: #f1f5f9;
+  color: #000000;
+  transform: scale(1.08);
+}
+
+.callback-modal-container {
+  background-color: #ffffff;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.2);
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  animation: modalFadeIn 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  max-height: 90vh;
+}
+
+@keyframes modalFadeIn {
+  from {
+    opacity: 0;
+    transform: scale(0.95) translateY(10px);
+  }
+
+  to {
+    opacity: 1;
+    transform: scale(1) translateY(0);
+  }
+}
+
+.callback-modal-header {
+  background: #ffcc29 !important;
+  color: #000000 !important;
+  padding: 14px 20px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 12px;
+  font-weight: 700;
+  letter-spacing: 0.2px;
+}
+
+.callback-modal-timer {
+  font-family: var(--font-family-base); font-variant-numeric: tabular-nums;
+  opacity: 0.95;
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #000000 !important;
+}
+
+.callback-modal-package-info {
+  display: flex;
+  gap: 12px;
+  padding: 16px 20px;
+  border-bottom: 1px solid #f1f5f9;
+  align-items: center;
+  background-color: #fafbfc;
+}
+.ssae {
+    width: 30% !important;
+    text-align: center;
+    justify-content: center;
+}
+
+.callback-modal-pkg-img {
+  width: 56px;
+  height: 56px;
+  border-radius: 6px;
+  object-fit: cover;
+  flex-shrink: 0;
+  border: 1px solid #e2e8f0;
+}
+
+.callback-modal-pkg-details {
+  text-align: left;
+  flex-grow: 1;
+}
+
+.callback-modal-pkg-title {
+  font-size: 13px;
+  font-weight: 700;
+  color: #1e293b;
+  margin-bottom: 4px;
+  line-height: 1.3;
+  display: -webkit-box;
+  -webkit-line-clamp: 1;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.callback-modal-price-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.callback-modal-price-actual {
+  font-size: 14px;
+  font-weight: 800;
+  color: #0f172a;
+}
+
+.callback-modal-price-original {
+  font-size: 11px;
+  color: #94a3b8;
+  text-decoration: line-through;
+}
+
+.callback-modal-save-badge {
+  background-color: #ecfdf5;
+  color: #10b981;
+  border: 1px dashed #10b981;
+  font-size: 9px;
+  font-weight: 700;
+  padding: 1px 5px;
+  border-radius: 3px;
+  text-transform: uppercase;
+}
+
+.callback-modal-body {
+  padding: 20px;
+  overflow-y: auto;
+}
+
+.callback-form-row {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.callback-form-group {
+  margin-bottom: 14px;
+  text-align: left;
+}
+
+.callback-form-group-flex {
+  flex: 1;
+  text-align: left;
+}
+
+.callback-input-label {
+  display: block;
+  font-size: 11px;
+  font-weight: 600;
+  color: #64748b;
+  margin-bottom: 4px;
+}
+
+.callback-input,
+.callback-select,
+.callback-textarea {
+  width: 100%;
+  padding: 12px 14px;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #0f172a;
+  outline: none;
+  background-color: #ffffff;
+  transition: all 0.2s ease;
+}
+
+.callback-input::placeholder,
+.callback-textarea::placeholder {
+  color: #94a3b8;
+}
+
+.callback-input:focus,
+.callback-select:focus,
+.callback-textarea:focus {
+  border-color: #0e97c8;
+  box-shadow: 0 0 0 3px rgba(14, 151, 200, 0.12);
+}
+
+.callback-phone-container {
+  display: flex;
+  gap: 8px;
+}
+
+.callback-phone-prefix {
+  width: 74px;
+  text-align: center;
+  padding: 12px 0;
+  border: 1px solid #cbd5e1;
+  border-radius: 6px;
+  font-size: 13px;
+  color: #334155;
+  background-color: #f8fafc;
+  cursor: default;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+}
+
+.callback-phone-prefix i {
+  font-size: 10px;
+  color: #64748b;
+}
+
+.callback-textarea {
+  height: 80px;
+  resize: none;
+}
+
+.callback-modal-submit-btn {
+  background-color: var(--primary-color);
+  color: #ffffff;
+  border: none;
+  border-radius: 6px;
+  padding: 13px;
+  font-size: 14px;
+  font-weight: 700;
+  width: 100%;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  box-shadow: 0 4px 12px rgba(249, 115, 22, 0.15);
+  margin-top: 6px;
+}
+
+.callback-modal-submit-btn:hover {
+  background-color: var(--secondary-color);
+  box-shadow: 0 4px 14px rgba(234, 88, 12, 0.25);
+  transform: translateY(-1px);
+  color: #000000;
+}
+
+.callback-modal-submit-btn:active {
+  transform: translateY(0);
+}
+
+/* Holiday Details Page Classes */
+.breadcrumb-pkg-title {
+  max-width: 300px;
+}
+
+.details-gallery-large {
+  height: 368px;
+}
+
+.details-gallery-small {
+  height: 180px;
+}
+
+.hover-zoom-img {
+  transition: transform 0.5s ease;
+}
+
+.details-pkg-title {
+  line-height: 1.3;
+}
+
+.details-share-btn {
+  width: 40px;
+  height: 40px;
+}
+
+.details-subtabs-sticky {
+  top: 65px;
+  z-index: 9;
+}
+
+.traveler-upload-thumb {
+  width: 56px;
+  height: 56px;
+}
+
+.traveler-upload-badge {
+  width: 56px;
+  height: 56px;
+  font-size: 11px;
+}
+
+.accordion-header-bg {
+  background-color: #f8fafc;
+}
+
+.itinerary-day-img-frame {
+  max-height: 220px;
+  max-width: 400px;
+}
+
+.details-customize-banner {
+  background: var(--secondary-color);
+}
+
+.details-customize-btn {
+  color: #ea580c;
+  border-radius: 6px;
+}
+
+.csdcc {
+  background: var(--primary-color);
+}
+
+.dsecv {
+  color: var(--primary-color);
+}
+
+.details-coupon-banner {
+  background-color: var(--primary-color);
+}
+
+.reviews-star-label {
+  width: 40px;
+}
+
+.reviews-progress-bar {
+  height: 8px;
+}
+
+.reviews-progress-85 {
+  width: 85%;
+}
+
+.reviews-progress-12 {
+  width: 12%;
+}
+
+.reviews-progress-3 {
+  width: 3%;
+}
+
+.review-avatar-frame {
+  width: 40px;
+  height: 40px;
+}
+
+.details-sticky-sidebar {
+  top: 100px;
+  z-index: 10;
+}
+
+.price-card-header-bg {
+  background: #ffcc29 !important;
+  color: #000000 !important;
+}
+
+.price-card-timer-badge {
+  background-color: rgba(0, 0, 0, 0.08) !important;
+  padding: 2px 6px;
+  border-radius: 4px;
+  color: #000000 !important;
+}
+
+.btn-orange-cta {
+  background-color: #f97316;
+}
+
+.btn-orange-cta:hover {
+  background-color: #ea580c;
+}
+
+/* Helper classes to remove inline styles */
+.package-title-link {
+  text-decoration: none !important;
+  color: inherit !important;
+}
+
+.swiper-slide-auto {
+  width: auto !important;
+}
+
+/* Global primary button overrides */
+.btn-primary {
+  background-color: var(--primary-color) !important;
+  border-color: var(--primary-color) !important;
+  color: #ffffff !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active {
+  background-color: #005090 !important;
+  border-color: #005090 !important;
+  color: #ffffff !important;
+}
+/* Custom Clean-up of Tag-Level Static Inline Styles */
+.pkg-label-xs { font-size: 10px !important; letter-spacing: 0.5px !important; }
+.pkg-search-input { font-size: 13px !important; border-width: 1.5px !important; }
+.pkg-border-light { border-color: #e7e7e7 !important; }
+.pkg-min-w-180 { min-width: 180px !important; }
+.pkg-min-w-200 { min-width: 200px !important; }
+.pkg-min-w-130 { min-width: 130px !important; }
+.pkg-bg-white { background-color: #fff !important; }
+.pkg-h-220 { height: 220px !important; }
+.pkg-grad-overlay { background: linear-gradient(transparent 50%, rgba(0,0,0,0.8) 100%) !important; }
+.pkg-fs-15 { font-size: 15px !important; }
+.pkg-fs-10 { font-size: 10px !important; }
+.pkg-theme-card { transition: all 0.2s !important; border-color: #e7e7e7 !important; }
+.pkg-fs-13 { font-size: 13px !important; }
+.pkg-outline-none { outline: none !important; }
+.pkg-fs-11 { font-size: 11px !important; }
+.pkg-fs-16 { font-size: 16px !important; }
+.pkg-badge-br-8 { border-bottom-right-radius: 8px !important; }
+.pkg-title-text { font-size: 17px !important; line-height: 1.3 !important; }
+.pkg-fs-12 { font-size: 12px !important; }
+.pkg-footer-summary { background-color: #f2f2f2 !important; font-size: 11px !important; }
+.pkg-btn-blue-grad { background: linear-gradient(90deg, #0061ae, #0055ff) !important; font-size: 13px !important; }
+.pkg-border-1-light { border: 1px solid #e7e7e7 !important; }
+.pkg-fs-20 { font-size: 20px !important; }
+.pkg-accordion-header { white-space: normal !important; outline: none !important; box-shadow: none !important; }
+.pkg-fs-rem-85 { font-size: 0.85rem !important; }
+.pkg-fs-rem-78 { font-size: 0.78rem !important; }
+.pkg-mw-400 { max-width: 400px !important; }
+.pkg-img-checkout { width: 120px !important; height: 90px !important; }
+.pkg-mw-800 { max-width: 800px !important; }
+.pkg-fs-giant { font-size: 4.5rem !important; }
+.pkg-sec-tab-btn { white-space: nowrap !important; transition: all 0.2s !important; }
+.pkg-sec-transition-3 { transition: all 0.3s !important; }
+.pkg-sec-transition-5 { transition: transform 0.5s !important; }
+.pkg-sec-title { font-size: 0.95rem !important; height: 2.7rem !important; overflow: hidden !important; }
+.pkg-fs-rem-75 { font-size: 0.75rem !important; }
+.cab-progress-h { height: 8px !important; }
+.cab-progress-w-88 { width: 88% !important; }
+.cab-fs-rem-75 { font-size: 0.75rem !important; }
+.cab-white-space-normal { white-space: normal !important; }
+.cab-h-240 { height: 240px !important; }
+.cab-category-header { font-size: 0.85rem !important; line-height: 1.2 !important; }
+.cab-category-list-container { height: 160px !important; overflow-y: auto !important; scrollbar-width: thin !important; }
+.cab-fs-rem-78 { font-size: 0.78rem !important; }
+
+/* --- Migrated Component Styles --- */
+
+/* From src/layout/Header.jsx */
+
+        .leh-header-wrapper {
+          background: #ffffff !important;
+          box-shadow: 0 2px 8px rgba(0,0,0,0.08) !important;
+          border-bottom: 1px solid #e7e7e7 !important;
+          transition: all 0.3s ease;
+        }
+        .leh-header-wrapper.sticky-header {
+          position: fixed !important;
+          top: 0 !important;
+          left: 0 !important;
+          width: 100% !important;
+          z-index: 9999 !important;
+          background: #ffffff !important;
+          box-shadow: 0 4px 12px rgba(0,0,0,0.1) !important;
+          animation: slideDown 0.35s cubic-bezier(0.16, 1, 0.3, 1) forwards;
+        }
+        @keyframes slideDown {
+          from {
+            transform: translateY(-100%);
+          }
+          to {
+            transform: translateY(0);
+          }
+        }
+        .leh-nav-item {
+          color: #4a4a4a !important;
+          font-weight: 700 !important;
+          font-size: 11px !important;
+          padding: 4px 10px !important;
+          transition: all 0.2s ease;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          background: transparent;
+          border: 0;
+          outline: none !important;
+        }
+        .leh-nav-item i {
+          font-size: 16px !important;
+          color: #555555;
+          transition: all 0.2s ease;
+        }
+        .leh-nav-item:hover, .leh-nav-item.active {
+          color: #0061ae !important;
+          text-decoration: none;
+        }
+        .leh-nav-item:hover i, .leh-nav-item.active i {
+          color: #0061ae !important;
+        }
+        .leh-nav-item.active::after {
+          content: '';
+          position: absolute;
+          bottom: -8px;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background-color: #0061ae;
+          border-radius: 2px;
+        }
+        .leh-header-login-btn {
+          border: 1px solid #0061ae !important;
+          color: #0061ae !important;
+          transition: all 0.2s ease;
+          font-size: 11px !important;
+        }
+        .leh-header-login-btn:hover {
+          background-color: #0061ae !important;
+          color: #ffffff !important;
+        }
+        .form-select.leh-header-lang-select {
+          border: 1px solid #e7e7e7 !important;
+          background-color: #f8f9fa !important;
+          color: #333333 !important;
+          font-size: 11px !important;
+          border-radius: 20px;
+        }
+        /* Mobile / Tablet Horizontal Swipe Navigation */
+        .leh-mobile-nav {
+          display: flex;
+          overflow-x: auto;
+          gap: 12px;
+          padding: 4px 2px 8px 2px;
+          scrollbar-width: none;
+          -ms-overflow-style: none;
+        }
+        .leh-mobile-nav::-webkit-scrollbar {
+          display: none;
+        }
+        .leh-mobile-nav-item {
+          flex: 0 0 auto;
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          gap: 2px;
+          color: #4a4a4a !important;
+          font-weight: 700;
+          font-size: 10px;
+          background: transparent;
+          border: 0;
+          padding: 4px 8px;
+          outline: none !important;
+          position: relative;
+          min-width: 60px;
+        }
+        .leh-mobile-nav-item i {
+          font-size: 14px;
+          color: #666;
+        }
+        .leh-mobile-nav-item.active, .leh-mobile-nav-item:hover {
+          color: #0061ae !important;
+          text-decoration: none;
+        }
+        .leh-mobile-nav-item.active i, .leh-mobile-nav-item:hover i {
+          color: #0061ae !important;
+        }
+        .leh-mobile-nav-item.active::after {
+          content: '';
+          position: absolute;
+          bottom: -6px;
+          left: 0;
+          width: 100%;
+          height: 3px;
+          background-color: #0061ae;
+          border-radius: 2px;
+        }
+      
+
+/* From src/pages/holidays/HolidayDetails.jsx */
+
+        .fixed-customise-trip-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          background: #0061ae;
+          color: #ffffff !important;
+          font-weight: 700;
+          font-size: 13px;
+          padding: 12px 22px;
+          border-radius: 50px;
+          border: 0;
+          z-index: 9999;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          outline: none !important;
+        }
+        .fixed-customise-trip-btn:hover {
+          transform: scale(1.05) translateY(-2px);
+        }
+        .customise-form-input {
+          border: 1px solid #ced4da !important;
+          border-radius: 6px !important;
+          padding: 10px 12px !important;
+          transition: border-color 0.25s ease;
+        }
+        .customise-form-input:focus {
+          border-color: #7b2cbf !important;
+          box-shadow: 0 0 0 0.2rem rgba(123, 44, 191, 0.25) !important;
+        }
+      
+
+/* From src/pages/holidays/HolidayListing.jsx */
+
+        .pkg-card-img-container {
+          width: 100%;
+          height: 180px;
+        }
+
+        .leh-carousel-section {
+          background: #ffffff;
+          padding: 24px;
+          border-radius: 8px;
+          border: 1px solid #e7e7e7;
+          margin-bottom: 24px;
+          position: relative;
+        }
+        .leh-carousel-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .leh-carousel-title {
+          font-weight: 850;
+          color: #000000;
+          font-size: 22px;
+          margin-bottom: 2px;
+        }
+        .leh-carousel-subtitle {
+          color: #666666;
+          font-size: 13px;
+          margin-bottom: 0;
+        }
+        .leh-scroll-btn-group {
+          display: flex;
+          gap: 8px;
+        }
+      
+        .leh-scroll-btn:hover {
+          background: #0061ae;
+          color: #ffffff;
+        }
+        .leh-carousel-container {
+          display: flex;
+          overflow-x: auto;
+          gap: 16px;
+          padding-bottom: 8px;
+          scroll-behavior: smooth;
+        }
+        .leh-carousel-container::-webkit-scrollbar {
+          display: none;
+        }
+        .leh-carousel-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        /* LehConnect-Style Recently Viewed Card */
+        .leh-viewed-card {
+          flex: 0 0 auto;
+          width: 280px;
+          border: 1px solid #e7e7e7;
+          border-radius: 8px;
+          background: #ffffff;
+          padding: 16px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+          transition: all 0.2s ease;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          text-align: left;
+        }
+        .leh-viewed-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        /* LehConnect-Style Destination overlay card */
+        .leh-dest-overlay-card {
+          flex: 0 0 auto;
+          width: 140px;
+          height: 190px;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+          cursor: pointer;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+          transition: all 0.2s ease;
+        }
+        .leh-dest-overlay-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .leh-dest-overlay-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        .leh-dest-overlay-card:hover .leh-dest-overlay-img {
+          transform: scale(1.08);
+        }
+        .leh-dest-gradient {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0) 100%);
+        }
+        .leh-dest-name-overlay {
+          position: absolute;
+          bottom: 12px;
+          left: 12px;
+          right: 12px;
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 13px;
+          margin-bottom: 0;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+          text-align: left;
+        }
+        /* International Destination Card */
+        .leh-intl-card {
+          flex: 0 0 auto;
+          width: 160px;
+          text-align: left;
+          cursor: pointer;
+        }
+        .leh-intl-img-frame {
+          width: 100%;
+          height: 190px;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+          margin-bottom: 8px;
+        }
+        .leh-intl-card:hover .leh-dest-overlay-img {
+          transform: scale(1.08);
+        }
+        .leh-intl-name {
+          font-weight: 700;
+          color: #333333;
+          font-size: 13px;
+          margin-bottom: 2px;
+        }
+        .leh-intl-price {
+          color: #666666;
+          font-size: 11px;
+        }
+      
+
+/* From src/pages/holidays/HolidayListing.jsx */
+
+        .fixed-customise-trip-btn {
+          position: fixed;
+          bottom: 30px;
+          right: 30px;
+          background: #0061ae;
+          color: #ffffff !important;
+          font-weight: 700;
+          font-size: 13px;
+          padding: 12px 22px;
+          border-radius: 50px;
+          border: 0;
+            z-index: 9999;
+          display: flex;
+          align-items: center;
+          cursor: pointer;
+          transition: all 0.3s ease;
+          outline: none !important;
+        }
+        .fixed-customise-trip-btn:hover {
+          transform: scale(1.05) translateY(-2px);
+        }
+        .customise-form-input {
+          border: 1px solid #ced4da !important;
+          border-radius: 6px !important;
+          padding: 10px 12px !important;
+          transition: border-color 0.25s ease;
+        }
+        .customise-form-input:focus {
+          border-color: #7b2cbf !important;
+          box-shadow: 0 0 0 0.2rem rgba(123, 44, 191, 0.25) !important;
+        }
+      
+
+/* From src/pages/Home.jsx */
+
+        .leh-carousel-section {
+          background: #ffffff;
+          padding: 24px;
+          border-radius: 8px;
+          border: 1px solid #e7e7e7;
+          margin-bottom: 24px;
+          position: relative;
+        }
+        .leh-carousel-header {
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+          margin-bottom: 20px;
+        }
+        .leh-carousel-title {
+          font-weight: 850;
+          color: #000000;
+          font-size: 22px;
+          margin-bottom: 2px;
+        }
+        .leh-carousel-subtitle {
+          color: #666666;
+          font-size: 13px;
+          margin-bottom: 0;
+        }
+        .leh-scroll-btn-group {
+          display: flex;
+          gap: 8px;
+        }
+        .leh-scroll-btn{
+           width: 38px;
+          height: 38px;
+          font-size: 20px;
+          line-height: 38px;
+          border-radius: 50%;
+          background: #ffffff;
+          border: 1px solid #e7e7e7;
+        }
+      
+        .leh-scroll-btn:hover {
+          background: #0061ae;
+          color: #ffffff;
+        }
+        .leh-carousel-container {
+          display: flex;
+          overflow-x: auto;
+          gap: 16px;
+          padding-bottom: 8px;
+          scroll-behavior: smooth;
+        }
+        .leh-carousel-container::-webkit-scrollbar {
+          display: none;
+        }
+        .leh-carousel-container {
+          -ms-overflow-style: none;
+          scrollbar-width: none;
+        }
+        /* LehConnect-Style Recently Viewed Card */
+        .leh-viewed-card {
+          flex: 0 0 auto;
+          width: 280px;
+          border: 1px solid #e7e7e7;
+          border-radius: 8px;
+          background: #ffffff;
+          padding: 16px;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.04);
+          transition: all 0.2s ease;
+          position: relative;
+          display: flex;
+          flex-direction: column;
+          justify-content: space-between;
+          text-align: left;
+        }
+        .leh-viewed-card:hover {
+          transform: translateY(-2px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+        }
+        /* LehConnect-Style Destination overlay card */
+        .leh-dest-overlay-card {
+          flex: 0 0 auto;
+          width: 140px;
+          height: 190px;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+          cursor: pointer;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+          transition: all 0.2s ease;
+        }
+        .leh-dest-overlay-card:hover {
+          transform: translateY(-3px);
+          box-shadow: 0 4px 12px rgba(0,0,0,0.12);
+        }
+        .leh-dest-overlay-img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+          transition: transform 0.3s ease;
+        }
+        .leh-dest-overlay-card:hover .leh-dest-overlay-img {
+          transform: scale(1.08);
+        }
+        .leh-dest-gradient {
+          position: absolute;
+          left: 0;
+          top: 0;
+          width: 100%;
+          height: 100%;
+          background: linear-gradient(to top, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.1) 60%, rgba(0,0,0,0) 100%);
+        }
+        .leh-dest-name-overlay {
+          position: absolute;
+          bottom: 12px;
+          left: 12px;
+          right: 12px;
+          color: #ffffff;
+          font-weight: 700;
+          font-size: 13px;
+          margin-bottom: 0;
+          text-shadow: 0 1px 2px rgba(0,0,0,0.5);
+          text-align: left;
+        }
+        /* International Destination Card */
+        .leh-intl-card {
+          flex: 0 0 auto;
+          width: 160px;
+          text-align: left;
+          cursor: pointer;
+        }
+        .leh-intl-img-frame {
+          width: 100%;
+          height: 190px;
+          border-radius: 8px;
+          overflow: hidden;
+          position: relative;
+          box-shadow: 0 2px 6px rgba(0,0,0,0.05);
+          margin-bottom: 8px;
+        }
+        .leh-intl-card:hover .leh-dest-overlay-img {
+          transform: scale(1.08);
+        }
+        .leh-intl-name {
+          font-weight: 700;
+          color: #333333;
+          font-size: 13px;
+          margin-bottom: 2px;
+        }
+        .leh-intl-price {
+          color: #666666;
+          font-size: 11px;
+        }
+      
+
+/* Brand Custom Primary Color override */
+.text-brand-primary {
+  color: #0061ae !important;
+}
+
+/* Global Breadcrumb Font Size & Typography Unification */
+.leh-style-auto-1061,
+.pkg-fs-12,
+.breadcrumb,
+.breadcrumb-item,
+.breadcrumb-item a,
+.breadcrumb-item span {
+  font-size: 12px !important;
+  font-family: var(--font-family-base) !important;
+}
+
+.leh-style-auto-1062 {
+  font-size: 9px !important;
+  margin: 0 2px !important;
+}
+
+/* Global Button Theme Override to Solid Brand Blue (#0061ae) */
+.btn-primary,
+.btn-premium-primary,
+.btn-orange-cta,
+.btn-booking-action,
+.leh-search-btn-floating,
+.pkg-btn-blue-grad,
+.btn-orange,
+.btn-warning,
+.leh-style-auto-1060,
+.fixed-customise-trip-btn,
+.callback-modal-submit-btn,
+.premium-card-badge {
+  background: #0061ae !important;
+  background-color: #0061ae !important;
+  border-color: #0061ae !important;
+  color: #ffffff !important;
+  background-image: none !important;
+}
+
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary:active,
+.btn-premium-primary:hover,
+.btn-premium-primary:focus,
+.btn-premium-primary:active,
+.btn-orange-cta:hover,
+.btn-booking-action:hover,
+.leh-search-btn-floating:hover,
+.pkg-btn-blue-grad:hover,
+.btn-orange:hover,
+.btn-warning:hover,
+.leh-style-auto-1060:hover,
+.fixed-customise-trip-btn:hover,
+.callback-modal-submit-btn:hover {
+  background: #004c8c !important;
+  background-color: #004c8c !important;
+  border-color: #004c8c !important;
+  color: #ffffff !important;
+  background-image: none !important;
+}
+
+.btn-outline-primary {
+  color: #0061ae !important;
+  border-color: #0061ae !important;
+  background-color: transparent !important;
+  background-image: none !important;
+}
+
+.btn-outline-primary:hover,
+.btn-outline-primary:focus,
+.btn-outline-primary:active {
+  background-color: #0061ae !important;
+  border-color: #0061ae !important;
+  color: #ffffff !important;
+}
+
+.btn-premium-secondary {
+  background: #0061ae !important;
+  background-color: #0061ae !important;
+  border-color: #0061ae !important;
+  color: #ffffff !important;
+  background-image: none !important;
+}
+
+.btn-premium-secondary:hover {
+  background-color: #004c8c !important;
+  border-color: #004c8c !important;
+  color: #ffffff !important;
+}
+
+/* Floating Scroll to Top Arrow Button */
+.fixed-scroll-to-top-btn {
+  position: fixed;
+  bottom: 100px; /* Positioned above the customise trip button at bottom: 30px */
+  right: 30px;
+  width: 44px;
+  height: 44px;
+  background-color: #0061ae !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 50% !important;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  cursor: pointer;
+  z-index: 999;
+  transition: all 0.3s ease;
+  outline: none !important;
+}
+
+.fixed-scroll-to-top-btn:hover {
+  background-color: #004c8c !important;
+  transform: translateY(-3px);
+  box-shadow: 0 6px 16px rgba(0, 97, 174, 0.3);
+}
+
+/* ==========================================================================
+   LehConnect Style Holiday Package Details & Booking Flow (Polished Design)
+   ========================================================================== */
+
+/* Page Background & Global Wrapper */
+.leh-hld-page {
+  background-color: #f4f6f9;
+  min-height: 100vh;
+  color: #2d3748;
+  font-family: var(--font-family-base);
+}
+
+/* Breadcrumb Bar */
+.leh-breadcrumb {
+  font-size: 12px;
+  color: #718096;
+  padding: 12px 0 6px 0;
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.leh-breadcrumb a {
+  color: #4a5568;
+  text-decoration: none;
+  transition: color 0.2s ease;
+}
+
+.leh-breadcrumb a:hover {
+  color: #0061ae;
+}
+
+/* Top Search Strip */
+.leh-hld-strip {
+  background: #ffffff;
+  border-bottom: 1px solid #e2e8f0;
+  padding: 10px 0;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
+}
+
+.leh-strip-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.03);
+}
+
+.leh-strip-item {
+  padding: 8px 18px;
+  border-right: 1px solid #edf2f7;
+  display: flex;
+  flex-direction: column;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+}
+
+.leh-strip-item:hover {
+  background-color: #f8fafc;
+}
+
+.leh-strip-item:last-child {
+  border-right: none;
+}
+
+.leh-strip-label {
+  font-size: 10px;
+  font-weight: 700;
+  color: #4a5568;
+  text-transform: uppercase;
+  letter-spacing: 0.6px;
+  margin-bottom: 2px;
+}
+
+.leh-strip-value {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a202c;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* 5-Photo Collage Gallery */
+.leh-hld-gallery {
+  display: grid;
+  grid-template-columns: 1.6fr 1fr;
+  gap: 12px;
+  border-radius: 18px;
+  overflow: hidden;
+  position: relative;
+  background: #1a202c;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+}
+
+.leh-gallery-main {
+  height: 380px;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.leh-gallery-main img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.leh-gallery-main:hover img {
+  transform: scale(1.03);
+}
+
+.leh-gallery-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-template-rows: 1fr 1fr;
+  gap: 12px;
+  height: 380px;
+}
+
+.leh-gallery-thumb {
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+}
+
+.leh-gallery-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.4s ease;
+}
+
+.leh-gallery-thumb:hover img {
+  transform: scale(1.04);
+}
+
+.leh-gallery-btn {
+  position: absolute;
+  bottom: 16px;
+  right: 16px;
+  background: rgba(15, 23, 42, 0.82);
+  backdrop-filter: blur(10px);
+  color: #ffffff;
+  padding: 9px 18px;
+  border-radius: 30px;
+  font-size: 13px;
+  font-weight: 700;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  z-index: 10;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+}
+
+.leh-gallery-btn:hover {
+  background: #0061ae;
+  border-color: #0061ae;
+  transform: translateY(-1px);
+}
+
+/* Sticky Sub-Navigation Bar */
+.leh-subnav-wrapper {
+  position: sticky;
+  top: 72px;
+  z-index: 900;
+  background: #ffffff;
+  border-bottom: 2px solid #edf2f7;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.leh-subnav-list {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  overflow-x: auto;
+  white-space: nowrap;
+}
+
+.leh-subnav-btn {
+  background: none;
+  border: none;
+  padding: 15px 20px;
+  font-size: 14px;
+  font-weight: 700;
+  color: #4a5568;
+  cursor: pointer;
+  position: relative;
+  transition: all 0.2s ease;
+  border-bottom: 3px solid transparent;
+}
+
+.leh-subnav-btn:hover {
+  color: #0061ae;
+}
+
+.leh-subnav-btn.active {
+  color: #0061ae;
+  border-bottom-color: #0061ae;
+}
+
+/* Content Cards */
+.leh-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 26px;
+  margin-bottom: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.leh-card-header {
+  border-bottom: 1px solid #edf2f7;
+  padding-bottom: 14px;
+  margin-bottom: 20px;
+}
+
+.leh-card-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a202c;
+  margin: 0;
+}
+
+/* Trip Snapshot Summary */
+.leh-snapshot-grid {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+  margin-bottom: 20px;
+  align-items: stretch;
+}
+
+.leh-snapshot-item {
+  background: #f8fafc;
+  border: 1px solid #edf2f7;
+  border-radius: 12px;
+  padding: 10px 10px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  transition: all 0.2s ease;
+}
+
+.leh-snapshot-item.cursor-pointer:hover {
+  background: #ffffff;
+  border-color: #0061ae;
+  box-shadow: 0 4px 12px rgba(0, 97, 174, 0.08);
+  transform: translateY(-1px);
+}
+
+.leh-snapshot-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 9px;
+  background: #ebf8ff;
+  color: #0061ae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 16px;
+  flex-shrink: 0;
+}
+
+.leh-snapshot-text {
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.leh-snapshot-label {
+  font-size: 10px;
+  line-height: 1.2;
+  font-weight: 700;
+  color: #64748b;
+  text-transform: uppercase;
+  letter-spacing: 0.3px;
+  display: block;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-bottom: 2px;
+}
+
+.leh-snapshot-value {
+  font-size: 11.5px;
+  line-height: 1.3;
+  font-weight: 700;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  word-break: break-word;
+}
+
+/* Day-wise Itinerary Timeline */
+.leh-timeline-container {
+  position: relative;
+  padding-left: 42px;
+}
+
+.leh-timeline-container::before {
+  content: '';
+  position: absolute;
+  top: 24px;
+  bottom: 24px;
+  left: 15px;
+  width: 2px;
+  background: #e2e8f0;
+}
+
+.leh-day-node {
+  position: relative;
+  margin-bottom: 28px;
+}
+
+.leh-day-dot {
+  position: absolute;
+  left: -42px;
+  top: 14px;
+  width: 32px;
+  height: 32px;
+  background: #0061ae;
+  color: #ffffff;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  font-weight: 800;
+  box-shadow: 0 0 0 6px #ebf8ff;
+  z-index: 2;
+}
+
+.leh-day-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+  transition: all 0.2s ease;
+}
+
+.leh-day-card:hover {
+  border-color: #cbd5e1;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.06);
+}
+
+.leh-day-header {
+  padding: 18px 24px;
+  background: #f8fafc;
+  border-bottom: 1px solid #edf2f7;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.leh-day-body {
+  padding: 24px 26px;
+  background: #ffffff;
+}
+
+.leh-day-desc {
+  font-size: 14px;
+  line-height: 1.65;
+  color: #4a5568;
+  margin-bottom: 20px;
+}
+
+.leh-meals-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  margin-bottom: 22px;
+  padding: 12px 18px;
+  background: #f0fdf4;
+  border-radius: 12px;
+  border: 1px solid #dcfce7;
+}
+
+.leh-activity-list {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.leh-activity-box {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 18px 22px;
+  display: flex;
+  gap: 20px;
+  align-items: center;
+  transition: all 0.2s ease;
+}
+
+.leh-activity-box:hover {
+  background: #ffffff;
+  border-color: #cbd5e1;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.05);
+}
+
+.leh-activity-img {
+  width: 140px;
+  height: 95px;
+  border-radius: 10px;
+  object-fit: cover;
+  flex-shrink: 0;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+}
+
+/* Hotel Stay Card */
+.leh-stay-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.03);
+}
+
+.leh-stay-img {
+  width: 100%;
+  height: 220px;
+  border-radius: 12px;
+  object-fit: cover;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.06);
+}
+
+.leh-room-badge-box {
+  padding: 14px 18px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  margin: 14px 0;
+}
+
+/* Transfers Card */
+.leh-transfer-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* Inclusions & Exclusions */
+.leh-inc-box {
+  background: #f0fdf4;
+  border: 1px solid #bbf7d0;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+.leh-exc-box {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 16px;
+  padding: 24px;
+}
+
+/* Ratings & Review Cards */
+.leh-review-card {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 14px;
+  padding: 20px 22px;
+  margin-bottom: 14px;
+  transition: all 0.2s ease;
+}
+
+.leh-review-card:last-child {
+  margin-bottom: 0;
+}
+
+/* Right-Hand Sticky Booking Widget */
+.leh-price-widget {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 135px !important;
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 18px;
+  padding: 26px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  z-index: 850;
+  max-height: calc(100vh - 150px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+/* Universal Sticky Payment & Fare Summary Sidebar */
+.sticky-payment-sidebar {
+  position: -webkit-sticky;
+  position: sticky;
+  top: 90px !important;
+  z-index: 100;
+  max-height: calc(100vh - 110px);
+  overflow-y: auto;
+  scrollbar-width: thin;
+  transition: top 0.2s ease;
+}
+
+@media (max-width: 991px) {
+  .sticky-payment-sidebar {
+    position: static !important;
+    top: auto !important;
+    max-height: none !important;
+    overflow-y: visible !important;
+  }
+}
+
+.leh-price-breakup-box {
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 18px;
+  background: #f8fafc;
+  margin-bottom: 18px;
+}
+
+.leh-emi-banner {
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 10px;
+  padding: 12px 16px;
+  margin-bottom: 18px;
+  text-align: center;
+  font-size: 13px;
+  color: #4a5568;
+}
+
+.leh-urgency-banner {
+  background: #fff5f5;
+  border: 1px solid #fed7d7;
+  color: #c53030;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 8px 14px;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  margin-bottom: 16px;
+}
+
+.leh-price-badge {
+  background: #ebf8ff;
+  color: #0061ae;
+  font-size: 12px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: inline-block;
+}
+
+.leh-book-btn {
+  background-color: #0061ae !important;
+  color: #ffffff !important;
+  border: none !important;
+  border-radius: 12px !important;
+  padding: 15px 24px !important;
+  font-size: 16px !important;
+  font-weight: 900 !important;
+  letter-spacing: 0.4px !important;
+  width: 100% !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  gap: 10px !important;
+  transition: all 0.25s ease !important;
+  cursor: pointer !important;
+}
+
+.leh-book-btn:hover {
+  background-color: #004c8c !important;
+  transform: translateY(-2px);
+}
+
+/* Custom Spacing & Padding Utilities */
+.p-2\.5, .p-2-5 { padding: 0.75rem !important; }
+.p-3\.5, .p-3-5 { padding: 1.25rem !important; }
+.px-2\.5 { padding-left: 0.75rem !important; padding-right: 0.75rem !important; }
+.py-2\.5 { padding-top: 0.75rem !important; padding-bottom: 0.75rem !important; }
+.py-1\.5 { padding-top: 0.375rem !important; padding-bottom: 0.375rem !important; }
+.gap-1\.5 { gap: 0.375rem !important; }
+.gap-2\.5 { gap: 0.75rem !important; }
+.gap-3\.5 { gap: 1.25rem !important; }
+
+/* ==========================================================================
+   LehConnect Change Hotel & Change Transfer Interactive Modals
+   ========================================================================== */
+
+/* Transfer Modal Cards */
+.leh-transfer-card-modal {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 18px 22px;
+  position: relative;
+  transition: all 0.2s ease;
+}
+
+.leh-transfer-card-modal.selected {
+  border: 2px solid #0061ae !important;
+  box-shadow: 0 4px 16px rgba(0, 97, 174, 0.12);
+  background: #fbfdff;
+}
+
+.leh-transfer-selected-badge {
+  position: absolute;
+  top: 0px;
+  left: 0px;
+  background: #ff4f4f;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  padding: 4px 10px;
+  border-radius: 10px 0 10px 0;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.leh-select-btn-outline {
+  border: 1.5px solid #0061ae !important;
+  color: #0061ae !important;
+  background: transparent !important;
+  font-weight: 800 !important;
+  font-size: 13px !important;
+  padding: 6px 22px !important;
+  border-radius: 30px !important;
+  transition: all 0.2s ease !important;
+  cursor: pointer;
+}
+
+.leh-select-btn-outline:hover {
+  background-color: #0061ae !important;
+  color: #ffffff !important;
+}
+
+/* Hotel Modal Cards */
+.leh-hotel-card-modal {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.leh-hotel-card-modal.selected {
+  border: 2px solid #0061ae !important;
+  box-shadow: 0 6px 20px rgba(0, 97, 174, 0.12);
+  background: #fbfdff;
+}
+
+.leh-hotel-thumb-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 6px;
+  margin-top: 8px;
+}
+
+.leh-hotel-thumb-img {
+  width: 100%;
+  height: 38px;
+  border-radius: 6px;
+  object-fit: cover;
+  cursor: pointer;
+  transition: opacity 0.2s ease;
+}
+
+.leh-hotel-thumb-img:hover {
+  opacity: 0.85;
+}
+
+.leh-hotel-thumb-more {
+  position: relative;
+  overflow: hidden;
+  border-radius: 6px;
+  height: 38px;
+}
+
+.leh-hotel-thumb-overlay {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+}
+
+.leh-ai-summary-box {
+  background: #f0f7ff;
+  border: 1px solid #d0e7ff;
+  border-radius: 10px;
+  padding: 10px 14px;
+  font-size: 12px;
+  color: #1e3a8a;
+  margin: 10px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 8px;
+}
+
+.leh-filter-pill {
+  background: #ffffff;
+  border: 1px solid #cbd5e1;
+  color: #334155;
+  font-size: 12px;
+  font-weight: 600;
+  padding: 6px 14px;
+  border-radius: 30px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.leh-filter-pill:hover,
+.leh-filter-pill.active {
+  border-color: #0061ae;
+  color: #0061ae;
+  background: #ebf8ff;
+}
+
+.leh-modal-scrollable-body {
+  max-height: 75vh;
+  overflow-y: auto;
+  padding: 20px 24px;
+}
+
+/* Transfer & Hotel View Details Modals */
+.leh-detail-hero-box {
+  background: linear-gradient(135deg, #f8fafc 0%, #eef2f6 100%);
+  border-radius: 16px;
+  padding: 24px;
+  border: 1px solid #e2e8f0;
+}
+
+.leh-detail-spec-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 14px 16px;
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  height: 100%;
+  transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.leh-detail-spec-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
+}
+
+.leh-detail-spec-icon {
+  width: 38px;
+  height: 38px;
+  border-radius: 10px;
+  background: #e0f2fe;
+  color: #0061ae;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.leh-detail-route-timeline {
+  position: relative;
+  padding-left: 28px;
+}
+
+.leh-detail-route-timeline::before {
+  content: '';
+  position: absolute;
+  left: 10px;
+  top: 8px;
+  bottom: 8px;
+  width: 2px;
+  background: #cbd5e1;
+}
+
+.leh-detail-route-step {
+  position: relative;
+  margin-bottom: 16px;
+}
+
+.leh-detail-route-step:last-child {
+  margin-bottom: 0;
+}
+
+.leh-detail-route-dot {
+  position: absolute;
+  left: -28px;
+  top: 3px;
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  background: #0061ae;
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 0 0 3px #ffffff;
+}
+
+.leh-pill-badge {
+  background: #f1f5f9;
+  color: #334155;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 5px 12px;
+  border-radius: 20px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+/* ==========================================
+   EXACT STICKY PRICE WIDGET (Image 2 Match)
+   ========================================== */
+.leh-price-widget-card {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+  position: sticky;
+  top: 90px;
+}
+
+.leh-urgency-banner-exact {
+  background: #fff5f5;
+  border: 1px solid #ffe3e3;
+  color: #d32f2f;
+  font-weight: 700;
+  font-size: 12px;
+  padding: 8px 12px;
+  border-radius: 8px;
+  margin-bottom: 14px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.leh-sale-pill-exact {
+  background: #d32f2f;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 11px;
+  padding: 3px 10px;
+  border-radius: 50rem;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+}
+
+.leh-save-total-exact {
+  color: #0b793a;
+  font-weight: 700;
+  font-size: 13px;
+}
+
+.leh-strikethrough-exact {
+  color: #717171;
+  text-decoration: line-through;
+  font-size: 13px;
+}
+
+.leh-big-price-exact {
+  font-size: 28px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.leh-per-person-exact {
+  font-size: 13px;
+  color: #555555;
+  font-weight: 400;
+}
+
+.leh-total-tax-subtitle {
+  font-size: 12px;
+  color: #555555;
+  margin-top: 4px;
+}
+
+.leh-price-breakup-btn-exact {
+  background: #f0f7ff;
+  border: 1px solid #d9ebff;
+  border-radius: 8px;
+  padding: 10px 14px;
+  color: #0061ae ;
+  font-weight: 700;
+  font-size: 13px;
+  cursor: pointer;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background 0.2s ease;
+  margin: 14px 0;
+}
+
+.leh-price-breakup-btn-exact:hover {
+  background: #e4f1ff;
+}
+
+.leh-meta-row-exact {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  font-size: 13px;
+  padding: 5px 0;
+}
+
+.leh-meta-label-exact {
+  color: #555555;
+}
+
+.leh-meta-value-exact {
+  color: #1a1a1a;
+  font-weight: 700;
+}
+
+.leh-meta-edit-link {
+  color: #0061ae ;
+  font-weight: 700;
+  cursor: pointer;
+  text-decoration: none;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  transition: color 0.2s ease;
+}
+
+.leh-meta-edit-link:hover {
+  color: #0061ae;
+  text-decoration: underline;
+}
+
+.leh-proceed-btn-exact {
+  background: #0061ae;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 8px;
+  border: none;
+  padding: 13px 20px;
+  width: 100%;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 97, 174, 0.25);
+  transition: all 0.2s ease;
+}
+
+.leh-proceed-btn-exact:hover {
+  background: #004e8c;
+  transform: translateY(-1px);
+  box-shadow: 0 6px 18px rgba(0, 97, 174, 0.35);
+}
+
+/* ==========================================
+   EXACT CHECKOUT & COUPONS WIDGET (Image 1 Match)
+   ========================================== */
+.leh-checkout-top-box {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+  margin-bottom: 16px;
+}
+
+.leh-checkout-strike-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.leh-strike-price-checkout {
+  color: #717171;
+  text-decoration: line-through;
+  font-size: 13px;
+}
+
+.leh-discount-red-badge {
+  color: #e53935;
+  font-weight: 800;
+  font-size: 12px;
+}
+
+.leh-checkout-big-amount {
+  font-size: 32px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.leh-checkout-unit-text {
+  font-size: 14px;
+  color: #555555;
+  font-weight: 400;
+}
+
+.leh-excl-tax-text {
+  font-size: 12px;
+  color: #717171;
+  margin-top: 4px;
+  margin-bottom: 16px;
+}
+
+.leh-payment-btn-exact {
+  background: #0061ae;
+  color: #ffffff;
+  font-size: 15px;
+  font-weight: 800;
+  border-radius: 8px;
+  border: none;
+  padding: 13px 20px;
+  width: 100%;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 14px rgba(0, 97, 174, 0.25);
+  transition: all 0.2s ease;
+}
+
+.leh-payment-btn-exact:hover {
+  background: #004e8c;
+  box-shadow: 0 6px 18px rgba(0, 97, 174, 0.35);
+}
+
+.leh-coupons-panel {
+  background: #ffffff;
+  border: 1px solid #e2e8f0;
+  border-radius: 12px;
+  padding: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.04);
+}
+
+.leh-coupons-heading {
+  font-size: 17px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 14px;
+}
+
+.leh-emi-bar-exact {
+  background: #f4f4f4;
+  border-radius: 6px;
+  padding: 10px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.leh-emi-purple-pill {
+  background: #6f42c1;
+  color: #ffffff;
+  font-weight: 800;
+  font-size: 10px;
+  padding: 3px 8px;
+  border-radius: 4px;
+  letter-spacing: 0.5px;
+  flex-shrink: 0;
+}
+
+.leh-coupon-card-active {
+  border: 1.5px solid #0061ae ;
+  background: #eef6ff;
+  border-radius: 12px;
+  padding: 14px;
+  position: relative;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.leh-coupon-card-idle {
+  border: 1px solid #e2e8f0;
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 14px;
+  position: relative;
+  margin-bottom: 12px;
+  transition: all 0.2s ease;
+}
+
+.leh-coupon-card-idle:hover {
+  border-color: #cbd5e1;
+  background: #fbfdff;
+}
+
+.leh-coupon-icon-star {
+  color: #0061ae ;
+  font-size: 18px;
+  flex-shrink: 0;
+}
+
+.leh-coupon-code-title {
+  font-weight: 800;
+  font-size: 14px;
+  color: #1a1a1a;
+  letter-spacing: 0.5px;
+}
+
+.leh-coupon-discount-amt {
+  color: #0061ae ;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.leh-coupon-discount-amt-dark {
+  color: #1a1a1a;
+  font-weight: 800;
+  font-size: 14px;
+}
+
+.leh-coupon-desc-text {
+  font-size: 12px;
+  color: #666666;
+  margin-top: 4px;
+  line-height: 1.4;
+}
+
+.leh-coupon-action-link {
+  font-size: 12px;
+  font-weight: 800;
+  color: #0061ae ;
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-transform: uppercase;
+  padding: 0;
+  letter-spacing: 0.5px;
+}
+
+.leh-coupon-action-link:hover {
+  text-decoration: underline;
+}
+
+/* ==========================================================================
+   LehConnect-Style Hotel Search & Listing Page Styles
+   ========================================================================== */
+
+/* Top Sticky Search Modification Bar */
+.lehconnect-hotel-search-strip {
+  background: linear-gradient(135deg, #051329 0%, #0d274d 100%);
+  padding: 14px 0;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.15);
+  position: sticky;
+  top: 70px;
+  z-index: 99;
+}
+
+.lehconnect-search-strip-inner {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.lehconnect-search-input-box {
+  background: #ffffff;
+  border-radius: 8px;
+  padding: 8px 14px;
+  flex: 1;
+  min-width: 160px;
+  border: 1px solid #d4e3f3;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lehconnect-search-input-box:focus-within,
+.lehconnect-search-input-box:hover {
+  border-color: #0061ae ;
+  box-shadow: 0 0 0 2px rgba(0, 140, 255, 0.15);
+}
+
+.lehconnect-search-label {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  color: #757575;
+  margin-bottom: 2px;
+  letter-spacing: 0.5px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lehconnect-search-val {
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a1a1a;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.lehconnect-search-sub {
+  font-size: 11px;
+  color: #757575;
+  font-weight: 500;
+}
+
+.lehconnect-search-input-box select,
+.lehconnect-search-input-box input {
+  border: none;
+  outline: none;
+  background: transparent;
+  width: 100%;
+  font-size: 14px;
+  font-weight: 800;
+  color: #1a1a1a;
+  padding: 0;
+  cursor: pointer;
+}
+
+.lehconnect-search-update-btn {
+  background: #0061ae;
+  color: #ffffff;
+  border: none;
+  border-radius: 24px;
+  padding: 12px 28px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 2px 10px rgba(6, 90, 243, 0.35);
+  transition: all 0.25s ease;
+  white-space: nowrap;
+}
+
+.lehconnect-search-update-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 14px rgba(6, 90, 243, 0.45);
+  filter: brightness(1.05);
+}
+
+/* Breadcrumb & Results Title Bar */
+.lehconnect-hotel-header-meta {
+  padding: 16px 0 10px 0;
+}
+
+.lehconnect-hotel-breadcrumbs {
+  font-size: 12px;
+  color: #757575;
+  margin-bottom: 6px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lehconnect-hotel-breadcrumbs a {
+  color: #0061ae ;
+  text-decoration: none;
+}
+
+.lehconnect-hotel-breadcrumbs a:hover {
+  text-decoration: underline;
+}
+
+.lehconnect-hotel-heading-title {
+  font-size: 22px;
+  font-weight: 900;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+/* Horizontal Sort Bar & Quick Filter Chips */
+.lehconnect-hotel-sort-bar {
+  background: #ffffff;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  padding: 12px 18px;
+  margin-bottom: 16px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+}
+
+.lehconnect-sort-tabs-wrapper {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  flex-wrap: wrap;
+  border-bottom: 1px solid #f0f0f0;
+  padding-bottom: 10px;
+  margin-bottom: 10px;
+}
+
+.lehconnect-sort-label {
+  font-size: 12px;
+  font-weight: 800;
+  color: #757575;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.lehconnect-sort-tab-btn {
+  background: none;
+  border: none;
+  font-size: 13px;
+  font-weight: 700;
+  color: #4a4a4a;
+  padding: 6px 12px;
+  cursor: pointer;
+  border-radius: 20px;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.lehconnect-sort-tab-btn:hover {
+  color: #0061ae ;
+  background: #edf7ff;
+}
+
+.lehconnect-sort-tab-btn.active {
+  color: #ffffff;
+  background: #0061ae ;
+}
+
+.lehconnect-quick-chips-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  overflow-x: auto;
+  white-space: nowrap;
+  padding-bottom: 2px;
+}
+
+.lehconnect-quick-chip {
+  background: #ffffff;
+  border: 1px solid #dcdcdc;
+  border-radius: 20px;
+  padding: 5px 14px;
+  font-size: 12px;
+  font-weight: 600;
+  color: #4a4a4a;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+}
+
+.lehconnect-quick-chip:hover {
+  border-color: #0061ae ;
+  color: #0061ae ;
+  background: #edf7ff;
+}
+
+.lehconnect-quick-chip.active {
+  background: #eaf5ff;
+  border-color: #0061ae ;
+  color: #0061ae ;
+  font-weight: 700;
+}
+
+/* LehConnect Sidebar Filter */
+.lehconnect-filter-sidebar-box {
+  background: #ffffff;
+  border: 1px solid #e7e7e7;
+  border-radius: 8px;
+  box-shadow: 0 1px 4px rgba(0, 0, 0, 0.04);
+  overflow: hidden;
+  position: sticky;
+  top: 150px;
+}
+
+.lehconnect-filter-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 18px;
+  border-bottom: 1px solid #e7e7e7;
+  background: #fafafa;
+}
+
+.lehconnect-filter-header h5 {
+  font-size: 15px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin: 0;
+}
+
+.lehconnect-clear-all-btn {
+  background: none;
+  border: none;
+  color: #0061ae ;
+  font-size: 12px;
+  font-weight: 800;
+  text-transform: uppercase;
+  cursor: pointer;
+  padding: 0;
+}
+
+.lehconnect-clear-all-btn:hover {
+  text-decoration: underline;
+}
+
+.lehconnect-filter-group {
+  padding: 16px 18px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.lehconnect-filter-group:last-child {
+  border-bottom: none;
+}
+
+.lehconnect-filter-title {
+  font-size: 13px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.lehconnect-checkbox-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 5px 0;
+  cursor: pointer;
+  font-size: 13px;
+  color: #4a4a4a;
+  user-select: none;
+}
+
+.lehconnect-checkbox-item:hover {
+  color: #0061ae ;
+}
+
+.lehconnect-checkbox-label {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  cursor: pointer;
+}
+
+.lehconnect-checkbox-input {
+  width: 16px;
+  height: 16px;
+  accent-color: #0061ae ;
+  cursor: pointer;
+}
+
+.lehconnect-filter-count {
+  font-size: 12px;
+  color: #9b9b9b;
+}
+
+/* Custom LehConnect Hotel Listing Card */
+.lehconnect-hotel-card {
+  background: #ffffff;
+  border: 1px solid #e7e7e7;
+  border-radius: 12px;
+  padding: 18px;
+  margin-bottom: 20px;
+  box-shadow: 0 1px 6px rgba(0, 0, 0, 0.05);
+  transition: all 0.25s cubic-bezier(0.165, 0.84, 0.44, 1);
+  display: flex;
+  gap: 20px;
+  position: relative;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.lehconnect-hotel-card:hover {
+  border-color: #92c9f9;
+  box-shadow: 0 6px 22px rgba(0, 140, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+/* Column 1: Gallery */
+.lehconnect-card-gallery-col {
+  width: 270px;
+  min-width: 270px;
+  max-width: 270px;
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  flex-shrink: 0;
+  overflow: hidden;
+  box-sizing: border-box;
+}
+
+.lehconnect-hero-img-wrapper {
+  position: relative;
+  width: 100%;
+  height: 180px;
+  border-radius: 8px;
+  overflow: hidden;
+  background: #f0f0f0;
+}
+
+.lehconnect-hero-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.35s ease;
+}
+
+.lehconnect-hotel-card:hover .lehconnect-hero-img {
+  transform: scale(1.04);
+}
+
+.lehconnect-assured-badge {
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  background: linear-gradient(90deg, #ba880e, #ddb01f);
+  color: #ffffff;
+  font-size: 10px;
+  font-weight: 800;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  padding: 3px 8px;
+  border-radius: 4px;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  z-index: 2;
+}
+
+.lehconnect-wishlist-btn {
+  position: absolute;
+  top: 10px;
+  right: 10px;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.15);
+  color: #757575;
+  transition: all 0.2s ease;
+  z-index: 2;
+}
+
+.lehconnect-wishlist-btn:hover {
+  transform: scale(1.1);
+  color: #eb2026;
+  background: #ffffff;
+}
+
+.lehconnect-wishlist-btn.active {
+  color: #eb2026;
+  background: #ffffff;
+}
+
+.lehconnect-photo-count-pill {
+  position: absolute;
+  bottom: 8px;
+  right: 8px;
+  background: rgba(0, 0, 0, 0.65);
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 600;
+  padding: 2px 8px;
+  border-radius: 12px;
+  backdrop-filter: blur(2px);
+  z-index: 2;
+}
+
+.lehconnect-thumbnails-row {
+  display: flex !important;
+  gap: 6px !important;
+  width: 100% !important;
+  max-width: 100% !important;
+  overflow: hidden !important;
+  box-sizing: border-box !important;
+}
+
+.lehconnect-thumb-img,
+.lehconnect-thumbnails-row img {
+  width: calc(25% - 4.5px) !important;
+  max-width: calc(25% - 4.5px) !important;
+  height: 48px !important;
+  object-fit: cover !important;
+  border-radius: 4px !important;
+  border: 1.5px solid #e0e0e0 !important;
+  cursor: pointer !important;
+  flex: 0 0 calc(25% - 4.5px) !important;
+  min-width: 0 !important;
+  transition: all 0.2s ease !important;
+  box-sizing: border-box !important;
+}
+
+.lehconnect-thumb-img:hover,
+.lehconnect-thumb-img.active,
+.lehconnect-thumbnails-row img:hover,
+.lehconnect-thumbnails-row img.active {
+  border-color: #0061ae !important;
+  box-shadow: 0 0 0 1px #0061ae !important;
+  transform: translateY(-1px) !important;
+}
+
+/* Column 2: Details */
+.lehconnect-card-details-col {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-width: 0;
+}
+
+.lehconnect-stars-tag-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 4px;
+}
+
+.lehconnect-star-icons {
+  color: #f5a623;
+  font-size: 12px;
+  display: flex;
+  gap: 2px;
+}
+
+.lehconnect-prop-category-tag {
+  font-size: 11px;
+  font-weight: 700;
+  color: #757575;
+  text-transform: uppercase;
+}
+
+.lehconnect-hotel-name-title {
+  font-size: 18px;
+  font-weight: 800;
+  color: #1a1a1a;
+  margin-bottom: 6px;
+  cursor: pointer;
+  transition: color 0.2s ease;
+  line-height: 1.3;
+}
+
+.lehconnect-hotel-name-title:hover {
+  color: #0061ae ;
+}
+
+.lehconnect-hotel-location-text {
+  font-size: 12px;
+  color: #757575;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lehconnect-rating-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.lehconnect-rating-score-box {
+  background: #0b58b4;
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 900;
+  padding: 3px 8px;
+  border-radius: 6px;
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.lehconnect-rating-verdict-text {
+  font-size: 13px;
+  font-weight: 800;
+  color: #0b58b4;
+}
+
+.lehconnect-rating-reviews-count {
+  font-size: 12px;
+  color: #757575;
+  font-weight: 500;
+}
+
+.lehconnect-highlights-list {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-bottom: 12px;
+}
+
+.lehconnect-highlight-item {
+  font-size: 12px;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  color: #2e7d32;
+  font-weight: 600;
+}
+
+.lehconnect-highlight-item.accent-blue {
+  color: #0061ae;
+}
+
+.lehconnect-room-type-bar {
+  background: #f4f8fc;
+  border-left: 3px solid #0061ae ;
+  padding: 6px 12px;
+  border-radius: 0 6px 6px 0;
+  font-size: 12px;
+  font-weight: 600;
+  color: #333333;
+  margin-top: auto;
+}
+
+/* Column 3: Price & CTA */
+.lehconnect-card-price-col {
+  width: 220px;
+  min-width: 220px;
+  max-width: 240px;
+  border-left: 1px solid #f0f0f0;
+  padding-left: 18px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  text-align: right;
+  flex-shrink: 0;
+}
+
+.lehconnect-price-top-meta {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+}
+
+.lehconnect-strikethrough-price-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 2px;
+}
+
+.lehconnect-original-price {
+  font-size: 13px;
+  color: #9b9b9b;
+  text-decoration: line-through;
+}
+
+.lehconnect-discount-pill {
+  background: #e6f7f4;
+  color: #007e7d;
+  font-size: 11px;
+  font-weight: 800;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.lehconnect-current-price-val {
+  font-size: 26px;
+  font-weight: 900;
+  color: #1a1a1a;
+  line-height: 1.1;
+  margin-bottom: 2px;
+}
+
+.lehconnect-taxes-text {
+  font-size: 11px;
+  color: #757575;
+  margin-bottom: 4px;
+}
+
+.lehconnect-emi-text {
+  font-size: 11px;
+  color: #0061ae ;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+
+.lehconnect-urgency-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #d32f2f;
+  background: #ffebee;
+  padding: 3px 8px;
+  border-radius: 12px;
+  margin-bottom: 12px;
+}
+
+.lehconnect-select-room-btn {
+  background: #0061ae;
+  color: #ffffff;
+  border: none;
+  border-radius: 24px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  cursor: pointer;
+  box-shadow: 0 3px 12px rgba(6, 90, 243, 0.3);
+  transition: all 0.25s ease;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+}
+
+.lehconnect-select-room-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 5px 16px rgba(6, 90, 243, 0.45);
+  filter: brightness(1.06);
+}
+
+.lehconnect-login-offer-text {
+  font-size: 11px;
+  color: #555555;
+  margin-top: 8px;
+  text-align: right;
+}
+
+.lehconnect-login-offer-text span {
+  color: #0061ae ;
+  font-weight: 700;
+}
+
+/* Room Selection Modal / Drawer */
+.lehconnect-room-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.6);
+  z-index: 1050;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.2s ease;
+}
+
+.lehconnect-room-modal-content {
+  background: #ffffff;
+  border-radius: 12px;
+  max-width: 920px;
+  width: 100%;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.25);
+  position: relative;
+  display: flex;
+  flex-direction: column;
+}
+
+.lehconnect-room-modal-header {
+  padding: 18px 24px;
+  border-bottom: 1px solid #e7e7e7;
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  position: sticky;
+  top: 0;
+  background: #ffffff;
+  z-index: 10;
+}
+
+.lehconnect-room-modal-close-btn {
+  background: #f0f0f0;
+  border: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  font-size: 16px;
+  color: #4a4a4a;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.2s ease;
+}
+
+.lehconnect-room-modal-close-btn:hover {
+  background: #e0e0e0;
+  color: #000;
+}
+
+.lehconnect-room-modal-body {
+  padding: 24px;
+}
+
+.lehconnect-room-option-card {
+  border: 1px solid #e7e7e7;
+  border-radius: 10px;
+  padding: 18px;
+  margin-bottom: 20px;
+  transition: border-color 0.2s ease;
+}
+
+.lehconnect-room-option-card:hover {
+  border-color: #0061ae ;
+}
+
+.lehconnect-room-option-card.selected {
+  border: 2px solid #0061ae ;
+  background: #fafdff;
+}
+
+.lehconnect-plan-option-box {
+  background: #ffffff;
+  border: 1px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 14px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+}
+
+.lehconnect-plan-option-box:hover {
+  border-color: #0061ae ;
+}
+
+.lehconnect-plan-option-box.active {
+  border-color: #0061ae ;
+  background: #edf7ff;
+}
+
+/* Holiday Theme Category Tabs */
+.holiday-theme-tabs-scroll {
+  -ms-overflow-style: none;
+  scrollbar-width: none;
+}
+.holiday-theme-tabs-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* WCAG AA High-Contrast Accessibility Overrides */
+.text-secondary,
+.text-muted {
+  color: #4b5563 !important;
+}
+
+.text-primary {
+  color: #0b57d0 !important;
+}
+
+.text-warning {
+  color: #92400e !important;
+}
+
+.text-success {
+  color: #15803d !important;
+}
+
+.text-danger {
+  color: #b91c1c !important;
+}
+
+.badge.bg-secondary-subtle,
+.badge.bg-light {
+  color: #374151 !important;
+}
+
+.badge.bg-success-subtle {
+  color: #14532d !important;
+}
+
+.btn-outline-secondary {
+  color: #374151 !important;
+  border-color: #6b7280 !important;
+}
+
+.btn-outline-secondary:hover {
+  color: #fff !important;
+  background-color: #374151 !important;
+}
+
+.premium-footer .footer-bottom a.text-warning,
+.footer-bottom a.text-warning {
+  color: #fbbf24 !important;
+}
+button.btn.btn-primary.rounded-pill.px-4.py-2.fs-8.fw-bold.border-0.leh-style-auto-1060.sada,
+.sada,
+button.sada,
+button.leh-style-auto-1060.sada {
+  display: none !important;
+}
+
+/* ==========================================================================
+   LehConnect Unified Global Breadcrumb Bar (Fully Responsive)
+   ========================================================================== */
+.leh-global-breadcrumb-nav {
+  background-color: #f8fafc !important;
+  border-bottom: 1px solid #e2e8f0 !important;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.02);
+  z-index: 10;
+  position: relative;
+}
+
+.leh-global-breadcrumb-nav .breadcrumb {
+  --bs-breadcrumb-divider: '' !important;
+  list-style: none !important;
+  display: flex !important;
+  align-items: center !important;
+  flex-wrap: nowrap !important;
+  overflow-x: auto !important;
+  white-space: nowrap !important;
+  -webkit-overflow-scrolling: touch !important;
+  scrollbar-width: none !important;
+  -ms-overflow-style: none !important;
+  padding: 2px 0 !important;
+  margin: 0 !important;
+}
+
+.leh-global-breadcrumb-nav .breadcrumb::-webkit-scrollbar {
+  display: none !important;
+  width: 0 !important;
+  height: 0 !important;
+}
+
+.leh-global-breadcrumb-nav .breadcrumb-item::before {
+  display: none !important;
+  content: none !important;
+}
+
+.leh-global-breadcrumb-link {
+  color: #4b5563 !important;
+  text-decoration: none !important;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  border-radius: 4px !important;
+  cursor: pointer !important;
+  transition: all 0.15s ease-in-out !important;
+}
+
+.leh-global-breadcrumb-link:hover {
+  color: #0061ae !important;
+  background-color: rgba(0, 97, 174, 0.06) !important;
+}
+
+.leh-global-breadcrumb-active {
+  color: #1e293b !important;
+  font-size: 12.5px !important;
+  font-weight: 600 !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  padding: 4px 6px !important;
+  cursor: default !important;
+}
+
+.leh-global-breadcrumb-separator {
+  color: #94a3b8 !important;
+  font-size: 10px !important;
+  margin: 0 2px !important;
+  display: inline-flex !important;
+  align-items: center !important;
+  flex-shrink: 0 !important;
+}
+
+.leh-global-breadcrumb-label {
+  display: inline-block !important;
+  max-width: 220px;
+  overflow: hidden !important;
+  text-overflow: ellipsis !important;
+  white-space: nowrap !important;
+  vertical-align: middle !important;
+}
+
+@media (min-width: 768px) {
+  .leh-global-breadcrumb-nav .breadcrumb {
+    flex-wrap: wrap !important;
+    overflow-x: visible !important;
+    white-space: normal !important;
+  }
+  .leh-global-breadcrumb-label {
+    max-width: 450px !important;
+  }
+}
+
+@media (min-width: 1200px) {
+  .leh-global-breadcrumb-label {
+    max-width: 650px !important;
+  }
+}
