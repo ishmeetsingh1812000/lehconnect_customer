@@ -16,7 +16,13 @@ import { useSearchParams } from "next/navigation";
 export const CabListing = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const { searchParams, setCheckoutItem, updateSearchParams } = useBooking();
+  const {
+    searchParams,
+    setCheckoutItem,
+    updateSearchParams,
+    isLoggedIn,
+    openLoginModal,
+  } = useBooking();
   const { pickup, drop, date, time, tripType } = searchParams.cabs || {};
 
   const hourlyPackages = [
@@ -285,7 +291,22 @@ export const CabListing = () => {
       return 0; // recommended default
     });
 
+  const requireLogin = () => {
+    const hasCustomerToken =
+      typeof window !== "undefined" &&
+      Boolean(localStorage.getItem("customerToken"));
+
+    if (!isLoggedIn && !hasCustomerToken) {
+      openLoginModal();
+      return false;
+    }
+
+    return true;
+  };
+
   const handleBook = (cab) => {
+    if (!requireLogin()) return;
+
     const computedPrice = isHourly
       ? Math.round(cab.hourlyPrice * currentPkg.multiplier)
       : cab.price;
@@ -316,6 +337,8 @@ export const CabListing = () => {
   };
 
   const handleRouteBook = (item) => {
+    if (!requireLogin()) return;
+
     const parts = item.route.replace(" Cabs", "").split(" to ");
     const startCity = parts[0] || "Jaipur";
     const endCity = parts[1] || "Ajmer";
