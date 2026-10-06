@@ -10,6 +10,7 @@ import {
   getCabBookingPreview,
   getDistance,
   verifyCabBookingPayment,
+  getCoupons,
 } from "../../APIs/api";
 import toast from "react-hot-toast";
 
@@ -103,6 +104,10 @@ export const CabCheckout = () => {
   const [preview, setPreview] = useState(null);
   const [previewLoading, setPreviewLoading] = useState(false);
   const [previewError, setPreviewError] = useState(null);
+
+  const [coupons, setCoupons] = useState([]);
+  const [couponsLoading, setCouponsLoading] = useState(false);
+  const [applyingCode, setApplyingCode] = useState(null);
 
   const isHourly = !!(
     checkoutItem?.isHourly || checkoutItem?.tripType === "hourly"
@@ -213,24 +218,26 @@ export const CabCheckout = () => {
   const progressStep = isPaying ? 3 : activeStep;
 
   // ---------- Coupons (validated by the server) ----------
-  const handleApplyCoupon = async (e) => {
-    e.preventDefault();
-    const code = couponCode.trim();
-    if (!code) return;
+  const applyCouponCode = async (rawCode) => {
+    const code = String(rawCode || "").trim(); // no toUpperCase here
+    if (!code || applyingCode) return;
 
     if (!vehicleToken || !distanceKm) {
       toast.error("Fare is not ready yet. Please try again in a moment.");
       return;
     }
 
+    setApplyingCode(code);
     try {
       const res = await getCabBookingPreview(buildPreviewPayload(code));
       const data = unwrap(res);
+      console.log("coupon preview", code, data?.promo); // see the real reason
 
       if (data?.promo?.applied) {
-        setAppliedPromo(code.toUpperCase()); // effect above refreshes the preview
+        setAppliedPromo(code);
+        setCouponCode("");
         toast.success(
-          `Coupon applied successfully! You saved ₹${Number(data.fare_summary?.discount || 0).toLocaleString()}`,
+          `Coupon applied! You saved ₹${Number(data.fare_summary?.discount || 0).toLocaleString()}`,
         );
       } else {
         toast.error(data?.promo?.message || "Invalid Coupon Code.");
@@ -241,7 +248,14 @@ export const CabCheckout = () => {
           err?.message ||
           "Could not apply coupon.",
       );
+    } finally {
+      setApplyingCode(null);
     }
+  };
+
+  const handleApplyCoupon = (e) => {
+    e.preventDefault();
+    applyCouponCode(couponCode);
   };
 
   const handleRemoveCoupon = () => {
@@ -505,6 +519,29 @@ export const CabCheckout = () => {
     wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
     ...(promo ? { promo_code: promo } : {}),
   });
+
+  useEffect(() => {
+    let cancelled = false;
+    setCouponsLoading(true);
+
+    (async () => {
+      try {
+        const res = await getCoupons();
+        const data = unwrap(res);
+        const list = Array.isArray(data) ? data : (data?.coupons ?? []);
+        if (!cancelled) setCoupons(list);
+      } catch (err) {
+        console.error("getCoupons failed", err);
+        if (!cancelled) setCoupons([]); // coupons are optional; fail silently
+      } finally {
+        if (!cancelled) setCouponsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // ---------- Render ----------
   return (
@@ -982,6 +1019,7 @@ export const CabCheckout = () => {
                   <i className="fa-solid fa-ticket text-primary me-1"></i> Apply
                   Promo Code
                 </h6>
+
                 {appliedPromo ? (
                   <div className="d-flex justify-content-between align-items-center border border-success p-2.5 rounded bg-success-subtle">
                     <div>
@@ -1002,22 +1040,92 @@ export const CabCheckout = () => {
                     </button>
                   </div>
                 ) : (
-                  <form onSubmit={handleApplyCoupon} className="input-group">
-                    <input
-                      type="text"
-                      className="form-control fs-8 py-2.5 text-uppercase"
-                      placeholder="Enter Code (e.g. LEHWELCOME)"
-                      value={couponCode}
-                      onChange={(e) => setCouponCode(e.target.value)}
-                    />
-                    <button
-                      type="submit"
-                      className="btn btn-primary fs-8 fw-bold px-3 border-0 leh-style-auto-1060"
-                    >
-                      Apply
-                    </button>
-                  </form>
+                  <>
+                    <form onSubmit={handleApplyCoupon} className="input-group">
+                      <input
+                        type="text"
+                        className="form-control fs-8 py-2.5 text-uppercase"
+                        placeholder="Enter Code (e.g. LEHWELCOME)"
+                        value={couponCode}
+                        onChange={(e) => setCouponCode(e.target.value)}
+                      />
+                      <button
+                        type="submit"
+                        disabled={!!applyingCode || !couponCode.trim()}
+                        className="btn btn-primary fs-8 fw-bold px-3 border-0 leh-style-auto-1060"
+                      >
+                        {applyingCode && applyingCode === couponCode.trim()
+                          ? "..."
+                          : "Apply"}
+                      </button>
+                    </form>
+
+                    {/* Available coupons */}
+                    {couponsLoading && (
+                      <small className="text-muted fs-9 d-block mt-3">
+                        Loading offers...
+                      </small>
+                    )}
+
+                    {!couponsLoading && coupons.length > 0 && (
+                      <div className="mt-3">
+                        <small className="text-muted fw-bold fs-9 text-uppercase d-block mb-2">
+                          Available Coupons
+                        </small>
+                        <div
+                          className="d-flex flex-column gap-2"
+                          style={{ maxHeight: 220, overflowY: "auto" }}
+                        >
+                          {coupons.map((c) => {
+                            const code =
+                              c.code || c.coupon_code || c.promo_code;
+                            const minAmount = Number(
+                              c.min_order_amount ?? c.min_amount ?? 0,
+                            );
+                            const belowMin =
+                              minAmount > 0 && Number(basePrice) < minAmount;
+                            const isApplying = applyingCode === String(code);
+
+                            return (
+                              <div
+                                key={c.id ?? code}
+                                className="border border-dashed rounded-3 p-2 d-flex justify-content-between align-items-center gap-2"
+                                style={{ opacity: belowMin ? 0.6 : 1 }}
+                              >
+                                <div className="flex-grow-1">
+                                  <span className="fw-bold text-primary fs-8 d-block">
+                                    {code}
+                                  </span>
+                                  <small className="text-muted fs-9 d-block">
+                                    {c.title ||
+                                      c.description ||
+                                      "Special offer"}
+                                  </small>
+                                  {belowMin && (
+                                    <small className="text-danger fs-9 d-block">
+                                      Min. booking ₹{minAmount.toLocaleString()}
+                                    </small>
+                                  )}
+                                </div>
+                                <button
+                                  type="button"
+                                  disabled={
+                                    belowMin || !!applyingCode || isPaying
+                                  }
+                                  onClick={() => applyCouponCode(code)}
+                                  className="btn btn-sm btn-outline-primary fw-bold fs-9 rounded-pill px-3"
+                                >
+                                  {isApplying ? "..." : "Apply"}
+                                </button>
+                              </div>
+                            );
+                          })}
+                        </div>
+                      </div>
+                    )}
+                  </>
                 )}
+
                 {appliedPromo && discount > 0 && (
                   <small className="text-success fw-bold d-block mt-2 fs-8">
                     <i className="fa-solid fa-check me-1.5"></i> Awesome! You

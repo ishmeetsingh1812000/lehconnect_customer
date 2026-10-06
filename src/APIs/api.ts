@@ -238,3 +238,8 @@ export const getCabBookingPreview = async (payload) => {
   ); // use your axios instance
   return data;
 };
+
+export const getCoupons = async () => {
+  const res = await apiClient.get("/customer/coupons"); // -> /v1/api/customer/coupons
+  return res.data;
+};
