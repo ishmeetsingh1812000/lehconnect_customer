@@ -22,6 +22,25 @@ const unwrap = (body) => {
   return body?.results ?? body;
 };
 
+const extractCouponList = (payload) => {
+  if (Array.isArray(payload)) return payload;
+  if (!payload || typeof payload !== "object") return null;
+
+  for (const key of ["coupons", "rows", "items", "results", "data"]) {
+    const list = extractCouponList(payload[key]);
+    if (list) return list;
+  }
+
+  return null;
+};
+
+const getCouponCode = (coupon) =>
+  coupon?.code ||
+  coupon?.coupon_code ||
+  coupon?.couponCode ||
+  coupon?.promo_code ||
+  coupon?.promoCode;
+
 const loadRazorpay = () =>
   new Promise((resolve) => {
     if (typeof window === "undefined") return resolve(false);
@@ -84,7 +103,12 @@ const toYMD = (input) => {
 
 export const CabCheckout = () => {
   const navigate = useNavigate();
-  const { checkoutItem, user, addBooking, updateProfile } = useBooking();
+  const {
+    checkoutItem,
+    user,
+    addBooking,
+    updateProfile,
+  } = useBooking();
 
   // ---------- ALL HOOKS FIRST (before any early return) ----------
   const [activeStep, setActiveStep] = useState(1); // 1: Review, 2: Traveler Info + Pay
@@ -107,6 +131,7 @@ export const CabCheckout = () => {
 
   const [coupons, setCoupons] = useState([]);
   const [couponsLoading, setCouponsLoading] = useState(false);
+  const [couponsLoadError, setCouponsLoadError] = useState("");
   const [applyingCode, setApplyingCode] = useState(null);
 
   const isHourly = !!(
@@ -116,6 +141,39 @@ export const CabCheckout = () => {
   const vehicleToken =
     checkoutItem?.vehicle_token ||
     String(checkoutItem?.itemId || "").split("-")[0];
+
+  useEffect(() => {
+    let cancelled = false;
+    setCouponsLoading(true);
+
+    (async () => {
+      try {
+        const res = await getCoupons();
+        const data = unwrap(res);
+        const list = extractCouponList(data);
+        if (!cancelled) {
+          setCoupons((list ?? []).filter((coupon) => getCouponCode(coupon)));
+          setCouponsLoadError("");
+        }
+      } catch (err) {
+        console.error("getCoupons failed", err);
+        if (!cancelled) {
+          setCoupons([]);
+          setCouponsLoadError(
+            err?.response?.data?.message ||
+              err?.message ||
+              "Could not load coupons from the server.",
+          );
+        }
+      } finally {
+        if (!cancelled) setCouponsLoading(false);
+      }
+    })();
+
+    return () => {
+      cancelled = true;
+    };
+  }, []);
 
   // Resolve distance (km) once; needed by both the preview and the booking
   useEffect(() => {
@@ -363,7 +421,7 @@ export const CabCheckout = () => {
           vehicle_token: vehicleToken,
           trip_type: isHourly
             ? "local"
-            : checkoutItem.tripType === "round_trip"
+            : ["roundtrip", "round_trip"].includes(checkoutItem.tripType)
               ? "round_trip"
               : "oneway",
           from_location: checkoutItem.pickup,
@@ -374,7 +432,7 @@ export const CabCheckout = () => {
           contact: travelerPhone.replace(/\D/g, "").slice(-10),
           total_distance: distanceKm,
           wallet_amount: walletApplied,
-          coupon_code: appliedPromo,
+          promo_code: appliedPromo,
           from_web: true,
           traveller_details: {
             name: travelerName,
@@ -519,29 +577,6 @@ export const CabCheckout = () => {
     wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
     ...(promo ? { promo_code: promo } : {}),
   });
-
-  useEffect(() => {
-    let cancelled = false;
-    setCouponsLoading(true);
-
-    (async () => {
-      try {
-        const res = await getCoupons();
-        const data = unwrap(res);
-        const list = Array.isArray(data) ? data : (data?.coupons ?? []);
-        if (!cancelled) setCoupons(list);
-      } catch (err) {
-        console.error("getCoupons failed", err);
-        if (!cancelled) setCoupons([]); // coupons are optional; fail silently
-      } finally {
-        if (!cancelled) setCouponsLoading(false);
-      }
-    })();
-
-    return () => {
-      cancelled = true;
-    };
-  }, []);
 
   // ---------- Render ----------
   return (
@@ -1077,8 +1112,7 @@ export const CabCheckout = () => {
                           style={{ maxHeight: 220, overflowY: "auto" }}
                         >
                           {coupons.map((c) => {
-                            const code =
-                              c.code || c.coupon_code || c.promo_code;
+                            const code = getCouponCode(c);
                             const minAmount = Number(
                               c.min_order_amount ?? c.min_amount ?? 0,
                             );
@@ -1122,6 +1156,13 @@ export const CabCheckout = () => {
                           })}
                         </div>
                       </div>
+                    )}
+
+                    {!couponsLoading && coupons.length === 0 && (
+                      <small className="text-muted fs-9 d-block mt-3">
+                        {couponsLoadError ||
+                          "No coupons available right now."}
+                      </small>
                     )}
                   </>
                 )}
