@@ -135,12 +135,13 @@ export const CabCheckout = () => {
   const [applyingCode, setApplyingCode] = useState(null);
 
   const isHourly = !!(
-    checkoutItem?.isHourly || checkoutItem?.tripType === "hourly"
+    checkoutItem?.isHourly ||
+    ["hourly", "local"].includes(checkoutItem?.tripType)
   );
   // vehicle token = itemId without the "-0-0" suffix
   const vehicleToken =
     checkoutItem?.vehicle_token ||
-    String(checkoutItem?.itemId || "").split("-")[0];
+    String(checkoutItem?.itemId || "").replace(/-\d+-\d+$/, "");
 
   useEffect(() => {
     let cancelled = false;

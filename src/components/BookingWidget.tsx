@@ -284,8 +284,15 @@ export const BookingWidget = ({
   const depDayName = departureDate
     ? departureDate.toLocaleString("en-US", { weekday: "long" })
     : "";
-  const [retDateText, setRetDateText] = useState("5 Jul'26");
-  const [retDayName, setRetDayName] = useState("Sunday");
+  const [returnDate, setReturnDate] = useState(() => {
+    const nextDay = new Date();
+    nextDay.setDate(nextDay.getDate() + 1);
+    return nextDay;
+  });
+  const retDateText = `${returnDate.getDate()} ${returnDate.toLocaleString("en-US", { month: "short" })}'${String(returnDate.getFullYear()).slice(-2)}`;
+  const retDayName = returnDate.toLocaleString("en-US", {
+    weekday: "long",
+  });
   const [pickupTimeVal, setPickupTimeVal] = useState("11:40PM");
 
   // States matching screenshots for Hotels
@@ -1105,7 +1112,77 @@ export const BookingWidget = ({
   const selectDepartureCalendarDay = (day: number) => {
     if (isDepartureCalendarDayInPast(day)) return;
 
-    setDepartureDate(
+    const selectedDate = new Date(
+      departureCalendarDate.getFullYear(),
+      departureCalendarDate.getMonth(),
+      day,
+    );
+    setDepartureDate(selectedDate);
+
+    const minimumReturnDate = new Date(selectedDate);
+    minimumReturnDate.setDate(minimumReturnDate.getDate() + 1);
+    const selectedReturnDay = new Date(returnDate);
+    selectedReturnDay.setHours(0, 0, 0, 0);
+    if (selectedReturnDay <= selectedDate) setReturnDate(minimumReturnDate);
+
+    setOpenPicker(null);
+  };
+
+  const selectTodayForDeparture = () => {
+    const today = new Date();
+    setDepartureDate(today);
+    const minimumReturnDate = new Date(today);
+    minimumReturnDate.setDate(minimumReturnDate.getDate() + 1);
+    const selectedReturnDay = new Date(returnDate);
+    selectedReturnDay.setHours(0, 0, 0, 0);
+    const todayDate = new Date(today);
+    todayDate.setHours(0, 0, 0, 0);
+    if (selectedReturnDay <= todayDate) setReturnDate(minimumReturnDate);
+    setDepartureCalendarDate(
+      new Date(today.getFullYear(), today.getMonth(), 1),
+    );
+    setOpenPicker(null);
+  };
+
+  const getMinimumReturnDate = () => {
+    const minimumDate = departureDate ? new Date(departureDate) : new Date();
+    minimumDate.setHours(0, 0, 0, 0);
+    minimumDate.setDate(minimumDate.getDate() + 1);
+    return minimumDate;
+  };
+
+  const getReturnCalendarDays = (): (number | null)[] => {
+    const year = departureCalendarDate.getFullYear();
+    const month = departureCalendarDate.getMonth();
+    const firstWeekday = new Date(year, month, 1).getDay();
+    const daysInMonth = new Date(year, month + 1, 0).getDate();
+    const days: (number | null)[] = Array(firstWeekday).fill(null);
+
+    for (let day = 1; day <= daysInMonth; day += 1) {
+      days.push(day);
+    }
+
+    return days;
+  };
+
+  const isReturnCalendarDaySelected = (day: number) =>
+    returnDate.getDate() === day &&
+    returnDate.getMonth() === departureCalendarDate.getMonth() &&
+    returnDate.getFullYear() === departureCalendarDate.getFullYear();
+
+  const isReturnCalendarDayBeforeMinimum = (day: number) => {
+    const calendarDay = new Date(
+      departureCalendarDate.getFullYear(),
+      departureCalendarDate.getMonth(),
+      day,
+    );
+    return calendarDay < getMinimumReturnDate();
+  };
+
+  const selectReturnCalendarDay = (day: number) => {
+    if (isReturnCalendarDayBeforeMinimum(day)) return;
+
+    setReturnDate(
       new Date(
         departureCalendarDate.getFullYear(),
         departureCalendarDate.getMonth(),
@@ -1115,13 +1192,20 @@ export const BookingWidget = ({
     setOpenPicker(null);
   };
 
-  const selectTodayForDeparture = () => {
-    const today = new Date();
-    setDepartureDate(today);
+  const selectMinimumReturnDate = () => {
+    const minimumDate = getMinimumReturnDate();
+    setReturnDate(minimumDate);
     setDepartureCalendarDate(
-      new Date(today.getFullYear(), today.getMonth(), 1),
+      new Date(minimumDate.getFullYear(), minimumDate.getMonth(), 1),
     );
     setOpenPicker(null);
+  };
+
+  const openReturnDatePicker = () => {
+    setDepartureCalendarDate(
+      new Date(returnDate.getFullYear(), returnDate.getMonth(), 1),
+    );
+    setOpenPicker("return");
   };
 
   const selectHotelTabMode = (mode) => {
@@ -1599,7 +1683,7 @@ export const BookingWidget = ({
                 {searchParams.cabs.tripType === "roundtrip" && (
                   <div
                     className="leh-input-card position-relative"
-                    onClick={() => setOpenPicker("return")}
+                    onClick={openReturnDatePicker}
                   >
                     <div className="leh-input-card-header">
                       <span className="leh-input-card-label">Return</span>
@@ -1669,58 +1753,32 @@ export const BookingWidget = ({
                             <span>Sa</span>
                           </div>
                           <div className="leh-calendar-grid-days">
-                            <span></span>
-                            <span></span>
-                            <span></span>
-                            {Array.from(
-                              { length: 31 },
-                              (_, idx) => idx + 1,
-                            ).map((day) => (
-                              <span
-                                key={day}
-                                className={`leh-calendar-day-cell ${day === getActiveDayNum("return") ? "active" : ""}`}
-                                onClick={() => {
-                                  setRetDateText(`${day} Jul'26`);
-                                  const daysOfWeek = [
-                                    "Sunday",
-                                    "Monday",
-                                    "Tuesday",
-                                    "Wednesday",
-                                    "Thursday",
-                                    "Friday",
-                                    "Saturday",
-                                  ];
-                                  const dayNameIndex = (3 + day - 1) % 7;
-                                  setRetDayName(daysOfWeek[dayNameIndex]);
-                                  setOpenPicker(null);
-                                }}
-                              >
-                                {day}
-                              </span>
-                            ))}
+                            {getReturnCalendarDays().map((day, idx) =>
+                              day === null ? (
+                                <span key={`empty-return-${idx}`}></span>
+                              ) : (
+                                <span
+                                  key={day}
+                                  className={`leh-calendar-day-cell ${isReturnCalendarDaySelected(day) ? "active" : ""} ${isReturnCalendarDayBeforeMinimum(day) ? "disabled" : ""}`}
+                                  aria-disabled={isReturnCalendarDayBeforeMinimum(
+                                    day,
+                                  )}
+                                  onClick={() =>
+                                    selectReturnCalendarDay(day)
+                                  }
+                                >
+                                  {day}
+                                </span>
+                              ),
+                            )}
                           </div>
                           <div className="leh-datepicker-footer">
                             <button
                               type="button"
                               className="leh-datepicker-footer-btn"
-                              onClick={() => {
-                                setRetDateText("");
-                                setRetDayName("");
-                                setOpenPicker(null);
-                              }}
+                              onClick={selectMinimumReturnDate}
                             >
-                              Clear
-                            </button>
-                            <button
-                              type="button"
-                              className="leh-datepicker-footer-btn"
-                              onClick={() => {
-                                setRetDateText("22 Jul'26");
-                                setRetDayName("Wednesday");
-                                setOpenPicker(null);
-                              }}
-                            >
-                              Today
+                              Next day
                             </button>
                           </div>
                         </div>

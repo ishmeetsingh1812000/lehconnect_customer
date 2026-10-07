@@ -52,10 +52,13 @@ export const CabListing = () => {
   ];
 
   const nextSearchParams = useSearchParams();
-  const urlTripType = nextSearchParams ? nextSearchParams.get("trip_type") : null;
+  const urlTripType = nextSearchParams
+    ? nextSearchParams.get("trip_type")
+    : null;
 
-  let defaultPickup = pickup;
-  let defaultDrop = drop;
+  let defaultPickup =
+    pickup || nextSearchParams?.get("from_location") || undefined;
+  let defaultDrop = drop || nextSearchParams?.get("to_location") || undefined;
   let defaultTripType = urlTripType || tripType || "oneway";
 
   if (!defaultPickup || !defaultDrop) {
@@ -77,6 +80,11 @@ export const CabListing = () => {
         defaultPickup = formatCity(slug.replace("-hourly-rental", ""));
         defaultDrop = "Local Rental";
         defaultTripType = "hourly";
+      } else if (slug.endsWith("-local-rental")) {
+        defaultPickup =
+          defaultPickup || formatCity(slug.replace(/-local-rental$/, ""));
+        defaultDrop = defaultDrop || "Local Rental (2 hr 40 kms)";
+        defaultTripType = urlTripType || "local";
       } else if (slug.includes("-to-")) {
         const parts = slug.split("-to-");
         defaultPickup = formatCity(parts[0]);
@@ -96,7 +104,7 @@ export const CabListing = () => {
   const [activePackage, setActivePackage] = useState(
     searchParams.cabs?.package || "4_40",
   );
-  const isHourly = currentTripType === "hourly";
+  const isHourly = ["hourly", "local"].includes(currentTripType);
   const currentPkg =
     hourlyPackages.find((p) => p.id === activePackage) || hourlyPackages[0];
 
@@ -147,7 +155,14 @@ export const CabListing = () => {
         let mappedTripType = currentTripType;
         if (mappedTripType === "oneway") mappedTripType = "ONE_WAY";
         if (mappedTripType === "roundtrip") mappedTripType = "ROUND_TRIP";
-        if (mappedTripType === "hourly") mappedTripType = "LOCAL";
+        if (["local", "hourly"].includes(mappedTripType.toLowerCase())) {
+          mappedTripType = "LOCAL";
+        }
+        const normalizedTripType = (value) =>
+          String(value || "")
+            .trim()
+            .toUpperCase()
+            .replace(/[\s-]+/g, "_");
 
         const parseDate = (dStr) => {
           if (!dStr) return new Date().toISOString();
@@ -187,12 +202,19 @@ export const CabListing = () => {
               Array.isArray(routeObj.vehicle_cards)
             ) {
               routeObj.vehicle_cards.forEach((card, i) => {
-                if (card.trip_type && card.trip_type !== mappedTripType) {
+                if (
+                  card.trip_type &&
+                  normalizedTripType(card.trip_type) !==
+                    normalizedTripType(mappedTripType)
+                ) {
                   return; // Skip vehicles that do not match the selected trip type
                 }
                 const v = card.vehicle_details || {};
+                const vehicleToken =
+                  card.vehicle_token || v.token || v.id || "cab-api";
                 allVehicles.push({
-                  id: `${card.vehicle_token || v.token || v.id || "cab-api"}-${routeIdx}-${i}`,
+                  id: `${vehicleToken}-${routeIdx}-${i}`,
+                  vehicle_token: vehicleToken,
                   name: v.name || v.type || "Cab",
                   category: (v.type || "sedan").toLowerCase(),
                   passengers: v.seater || v.capacity || 4,
@@ -313,6 +335,7 @@ export const CabListing = () => {
     setCheckoutItem({
       type: "cab",
       itemId: cab.id,
+      vehicle_token: cab.vehicle_token,
       title: cab.name,
       category: cab.category,
       price: computedPrice,
@@ -320,7 +343,7 @@ export const CabListing = () => {
       drop: isHourly ? `Local Rental (${currentPkg.label})` : dropLoc,
       date: dateVal,
       time: timeVal,
-      tripType: isHourly ? "hourly" : currentTripType,
+      tripType: currentTripType,
       isHourly: isHourly,
       packageId: currentPkg.id,
       packageDuration: currentPkg.duration,
@@ -1428,38 +1451,6 @@ export const CabListing = () => {
                   <option value="rating">Rating</option>
                 </select>
               </div>
-
-              {/* Planning a Round Trip? sidebar banner */}
-              <div className="p-3 text-white text-center position-relative overflow-hidden leh-style-auto-1087">
-                <div className="position-relative leh-style-auto-1080">
-                  <h6 className="fw-bold text-white mb-2 fs-7">
-                    Planning a Round Trip?
-                  </h6>
-                  <p className="text-white-50 fs-9 px-2 mb-3">
-                    Get special discounts on round trip bookings.
-                  </p>
-
-                  <div className="my-3 d-flex justify-content-center">
-                    <img
-                      src="/images/home/cab-driving-scenic.webp"
-                      alt="Round Trip Cab"
-                      className="leh-style-auto-1088"
-                      loading="lazy"
-                      decoding="async"
-                    />
-                  </div>
-
-                  <button
-                    onClick={() => navigate("/")}
-                    className="btn btn-warning btn-sm w-100 rounded-pill py-2 fw-bold text-dark border-0 leh-style-auto-1089"
-                  >
-                    Explore Round Trip{" "}
-                    <span>
-                      <i className="fa-solid fa-arrow-right ms-1"></i>
-                    </span>
-                  </button>
-                </div>
-              </div>
             </div>
           </div>
 
@@ -1693,7 +1684,8 @@ export const CabListing = () => {
             {/* Ratings & Reviews Box */}
             <div className="card border-0 shadow-sm p-4 mb-4 bg-white text-start rounded-4">
               <h4 className="fw-bold text-dark mb-3">
-                What Travellers Say About Jaipur to Delhi Cabs on Lehconnect
+                What Travellers Say About {shortPickup || "Jaipur"} to{" "}
+                {shortDrop || "Delhi"} Cabs on Lehconnect
               </h4>
               <div className="row g-4 align-items-center">
                 <div className="col-md-4 text-center border-end pe-md-4">
@@ -2023,9 +2015,6 @@ export const CabListing = () => {
 
             {/* 8 Accordion SEO sections */}
             <div className="mb-4 text-start">
-              <h4 className="fw-bold text-dark mb-3">
-                Jaipur to Delhi Cab Booking Guide on Lehconnect
-              </h4>
               <div
                 className="accordion d-flex flex-column gap-2"
                 id="seoAccordions"
