@@ -4,10 +4,6 @@ import React, { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "../../hooks/useAppNavigation";
 import { useBooking } from "../../context/BookingContext";
 import { ROUTES } from "../../constants/routes";
-import {
-  topRoutesFromJaipur,
-  topRoutesToDelhi,
-} from "../../constants/routesData";
 import { interlinksData } from "../../constants/interlinksData";
 import { searchCabs, getDistance, getPopularCabRoutes } from "../../APIs/api";
 import toast from "react-hot-toast";
@@ -16,13 +12,7 @@ import { useSearchParams } from "next/navigation";
 export const CabListing = () => {
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    searchParams,
-    setCheckoutItem,
-    updateSearchParams,
-    isLoggedIn,
-    openLoginModal,
-  } = useBooking();
+  const { searchParams, setCheckoutItem, updateSearchParams } = useBooking();
   const { pickup, drop, date, time, tripType } = searchParams.cabs || {};
 
   const hourlyPackages = [
@@ -313,22 +303,7 @@ export const CabListing = () => {
       return 0; // recommended default
     });
 
-  const requireLogin = () => {
-    const hasCustomerToken =
-      typeof window !== "undefined" &&
-      Boolean(localStorage.getItem("customerToken"));
-
-    if (!isLoggedIn && !hasCustomerToken) {
-      openLoginModal();
-      return false;
-    }
-
-    return true;
-  };
-
   const handleBook = (cab) => {
-    if (!requireLogin()) return;
-
     const computedPrice = isHourly
       ? Math.round(cab.hourlyPrice * currentPkg.multiplier)
       : cab.price;
@@ -360,8 +335,6 @@ export const CabListing = () => {
   };
 
   const handleRouteBook = (item) => {
-    if (!requireLogin()) return;
-
     const parts = item.route.replace(" Cabs", "").split(" to ");
     const startCity = parts[0] || "Jaipur";
     const endCity = parts[1] || "Ajmer";

@@ -574,6 +574,11 @@ export const CabCheckout = () => {
 
   const buildPreviewPayload = (promo) => ({
     vehicle_token: vehicleToken,
+    trip_type: isHourly
+      ? "local"
+      : ["roundtrip", "round_trip"].includes(checkoutItem?.tripType)
+        ? "round_trip"
+        : "oneway",
     total_distance: distanceKm,
     wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
     ...(promo ? { promo_code: promo } : {}),
@@ -608,7 +613,6 @@ export const CabCheckout = () => {
                 </small>
               </div>
             </div>
-
             {/* Step 2 */}
             <div className="position-relative d-flex flex-column align-items-center leh-style-auto-1065">
               <div
@@ -913,7 +917,9 @@ export const CabCheckout = () => {
                           Traveler Contact Details
                         </h4>
                         <small className="text-muted fs-8">
-                          Please provide the lead traveler details
+                          {user
+                            ? "Please confirm the lead traveler details for your booking"
+                            : "Guest checkout: enter your traveler details to book and pay"}
                         </small>
                       </div>
                     </div>
@@ -1177,34 +1183,36 @@ export const CabCheckout = () => {
               </div>
 
               {/* Pay using Wallet Card */}
-              <div className="card shadow-sm border rounded-4 p-3 mb-3 bg-white text-start">
-                <div className="form-check d-flex align-items-center justify-content-between p-0">
-                  <label
-                    className="form-check-label d-flex align-items-center gap-2.5 fs-7 fw-semibold cursor-pointer"
-                    htmlFor="walletPayCheckbox"
-                  >
-                    <i className="fa-solid fa-wallet text-primary"></i>
-                    <div>
-                      <span className="text-dark">Pay using Wallet</span>
-                      <small className="text-muted fs-8 d-block mt-0.5">
-                        Available Balance: ₹
-                        {Number(walletBalance).toLocaleString()}
-                      </small>
+              {user && (
+                <div className="card shadow-sm border rounded-4 p-3 mb-3 bg-white text-start">
+                  <div className="form-check d-flex align-items-center justify-content-between p-0">
+                    <label
+                      className="form-check-label d-flex align-items-center gap-2.5 fs-7 fw-semibold cursor-pointer"
+                      htmlFor="walletPayCheckbox"
+                    >
+                      <i className="fa-solid fa-wallet text-primary"></i>
+                      <div>
+                        <span className="text-dark">Pay using Wallet</span>
+                        <small className="text-muted fs-8 d-block mt-0.5">
+                          Available Balance: ₹
+                          {Number(walletBalance).toLocaleString()}
+                        </small>
+                      </div>
+                    </label>
+                    <div className="form-check form-switch p-0 mb-0">
+                      <input
+                        className="form-check-input ms-0 cursor-pointer leh-style-auto-1073"
+                        type="checkbox"
+                        role="switch"
+                        id="walletPayCheckbox"
+                        checked={useWallet}
+                        disabled={isPaying}
+                        onChange={() => setUseWallet(!useWallet)}
+                      />
                     </div>
-                  </label>
-                  <div className="form-check form-switch p-0 mb-0">
-                    <input
-                      className="form-check-input ms-0 cursor-pointer leh-style-auto-1073"
-                      type="checkbox"
-                      role="switch"
-                      id="walletPayCheckbox"
-                      checked={useWallet}
-                      disabled={isPaying}
-                      onChange={() => setUseWallet(!useWallet)}
-                    />
                   </div>
                 </div>
-              </div>
+              )}
 
               {/* Fare Summary Breakdown Card */}
               <div className="card shadow-sm border rounded-4 p-3 bg-white text-start">

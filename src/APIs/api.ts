@@ -40,8 +40,12 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    const hasCustomerToken =
+      typeof window !== "undefined" &&
+      Boolean(localStorage.getItem("customerToken"));
     if (
       error.response?.status === 401 &&
+      hasCustomerToken &&
       !originalRequest._retry &&
       originalRequest.url !== "/refresh-token"
     ) {
