@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useState, useRef, useEffect } from "react";
+import React, { useState, useRef, useEffect, useCallback } from "react";
 import { useNavigate } from "../../hooks/useAppNavigation";
 import { useBooking } from "../../context/BookingContext";
 import { ROUTES } from "../../constants/routes";
@@ -120,6 +120,7 @@ export const CabCheckout = () => {
   const [travelerEmail, setTravelerEmail] = useState(user?.email ?? "");
   const [pickupLandmark, setPickupLandmark] = useState("");
   const [useWallet, setUseWallet] = useState(false);
+  const [paymentOption, setPaymentOption] = useState("FULL");
   const [couponCode, setCouponCode] = useState("");
   const [appliedPromo, setAppliedPromo] = useState(null); // validated promo code string
 
@@ -142,6 +143,29 @@ export const CabCheckout = () => {
   const vehicleToken =
     checkoutItem?.vehicle_token ||
     String(checkoutItem?.itemId || "").replace(/-\d+-\d+$/, "");
+  const buildPreviewPayload = useCallback(
+    (promo) => ({
+      vehicle_token: vehicleToken,
+      trip_type: isHourly
+        ? "local"
+        : ["roundtrip", "round_trip"].includes(checkoutItem?.tripType)
+          ? "round_trip"
+          : "oneway",
+      total_distance: distanceKm,
+      wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
+      payment_option: paymentOption,
+      ...(promo ? { promo_code: promo } : {}),
+    }),
+    [
+      vehicleToken,
+      isHourly,
+      checkoutItem?.tripType,
+      distanceKm,
+      useWallet,
+      user?.walletBalance,
+      paymentOption,
+    ],
+  );
 
   useEffect(() => {
     let cancelled = false;
@@ -202,7 +226,7 @@ export const CabCheckout = () => {
     };
   }, [checkoutItem, isHourly]);
 
-  // Server-side fare preview. Re-runs when wallet toggle / promo / distance changes.
+  // Server-side fare preview. Re-runs when wallet, payment option, promo, or distance changes.
   useEffect(() => {
     if (!vehicleToken || !distanceKm) return;
     let cancelled = false;
@@ -232,7 +256,15 @@ export const CabCheckout = () => {
     return () => {
       cancelled = true;
     };
-  }, [vehicleToken, distanceKm, useWallet, appliedPromo, user?.walletBalance]);
+  }, [
+    vehicleToken,
+    distanceKm,
+    useWallet,
+    paymentOption,
+    appliedPromo,
+    user?.walletBalance,
+    buildPreviewPayload,
+  ]);
 
   // ---------- Early return AFTER hooks ----------
   if (!checkoutItem) {
@@ -272,6 +304,15 @@ export const CabCheckout = () => {
     preview?.wallet?.available_balance ?? user?.walletBalance ?? 0;
   const walletApplied = useWallet ? (preview?.wallet?.amount_used ?? 0) : 0;
   const grandTotal = preview?.payable_amount ?? checkoutItem.price;
+  const finalFare = Number(fare?.total_fare ?? checkoutItem.price);
+  const upfrontAmount =
+    preview?.payment?.due_now_amount ??
+    (paymentOption === "PARTIAL"
+      ? Math.ceil((Math.round(finalFare * 100) * 30) / 100) / 100
+      : finalFare);
+  const balanceDue =
+    preview?.payment?.balance_due ??
+    Math.max(0, Number((finalFare - upfrontAmount).toFixed(2)));
 
   // Stepper: show step 3 (Payment) as active while Razorpay is open
   const progressStep = isPaying ? 3 : activeStep;
@@ -346,8 +387,13 @@ export const CabCheckout = () => {
       extraKmRate: checkoutItem.extraKmRate,
       extraHrRate: checkoutItem.extraHrRate,
       pickupLandmark: pickupLandmark || "Main City Center",
-      paidAmount: payment?.razorpay_amount ?? grandTotal,
+      paidAmount:
+        payment?.due_now_amount ??
+        (Number(payment?.razorpay_amount ?? grandTotal) +
+          Number(payment?.wallet_amount_used ?? walletApplied)),
       walletDebited: payment?.wallet_amount_used ?? walletApplied,
+      balanceDue: payment?.balance_due ?? balanceDue,
+      paymentOption: payment?.payment_option ?? paymentOption,
       razorpayOrderId: serverBooking.razorpay_order_id || null,
       razorpayPaymentId: serverBooking.razorpay_payment_id || null,
       status: "confirmed",
@@ -359,7 +405,13 @@ export const CabCheckout = () => {
     }
 
     addBooking(newBooking);
-    toast.success("Booking Successful! Enjoy your luxury cab ride.");
+    if (payment?.payment_option === "PARTIAL") {
+      toast.success(
+        `30% payment received. Remaining balance: ₹${Number(payment.balance_due ?? balanceDue).toLocaleString()}.`,
+      );
+    } else {
+      toast.success("Booking Successful! Enjoy your luxury cab ride.");
+    }
     navigate(ROUTES.CAB_SUCCESS, { state: { booking: newBooking } });
   };
 
@@ -388,6 +440,7 @@ export const CabCheckout = () => {
         vehicleToken,
         distanceKm,
         walletApplied,
+        paymentOption,
         appliedPromo || "",
         travelerName,
         travelerPhone,
@@ -433,6 +486,7 @@ export const CabCheckout = () => {
           contact: travelerPhone.replace(/\D/g, "").slice(-10),
           total_distance: distanceKm,
           wallet_amount: walletApplied,
+          payment_option: paymentOption,
           promo_code: appliedPromo,
           from_web: true,
           traveller_details: {
@@ -571,18 +625,6 @@ export const CabCheckout = () => {
     }
     handlePayment();
   };
-
-  const buildPreviewPayload = (promo) => ({
-    vehicle_token: vehicleToken,
-    trip_type: isHourly
-      ? "local"
-      : ["roundtrip", "round_trip"].includes(checkoutItem?.tripType)
-        ? "round_trip"
-        : "oneway",
-    total_distance: distanceKm,
-    wallet_amount: useWallet ? Number(user?.walletBalance ?? 0) : 0,
-    ...(promo ? { promo_code: promo } : {}),
-  });
 
   // ---------- Render ----------
   return (
@@ -1183,6 +1225,42 @@ export const CabCheckout = () => {
               </div>
 
               {/* Pay using Wallet Card */}
+              <div className="card shadow-sm border rounded-4 p-3 mb-3 bg-white text-start">
+                <h6 className="fw-bold text-dark mb-2 fs-7">Choose Payment Option</h6>
+                <label className="d-flex align-items-start gap-2.5 border rounded-3 p-3 mb-2 cursor-pointer">
+                  <input
+                    className="form-check-input mt-1"
+                    type="radio"
+                    name="cabPaymentOption"
+                    value="FULL"
+                    checked={paymentOption === "FULL"}
+                    disabled={isPaying}
+                    onChange={() => setPaymentOption("FULL")}
+                  />
+                  <span>
+                    <span className="fw-semibold text-dark d-block">Full payment</span>
+                    <small className="text-muted">Pay the full fare now.</small>
+                  </span>
+                </label>
+                <label className="d-flex align-items-start gap-2.5 border rounded-3 p-3 mb-0 cursor-pointer">
+                  <input
+                    className="form-check-input mt-1"
+                    type="radio"
+                    name="cabPaymentOption"
+                    value="PARTIAL"
+                    checked={paymentOption === "PARTIAL"}
+                    disabled={isPaying}
+                    onChange={() => setPaymentOption("PARTIAL")}
+                  />
+                  <span>
+                    <span className="fw-semibold text-dark d-block">Partial payment (30%)</span>
+                    <small className="text-muted">
+                      Pay 30% of the fare now; ₹{Number(balanceDue).toLocaleString()} remains.
+                    </small>
+                  </span>
+                </label>
+              </div>
+
               {user && (
                 <div className="card shadow-sm border rounded-4 p-3 mb-3 bg-white text-start">
                   <div className="form-check d-flex align-items-center justify-content-between p-0">
@@ -1236,7 +1314,7 @@ export const CabCheckout = () => {
 
                 {walletApplied > 0 && (
                   <div className="d-flex justify-content-between fs-8 mb-2.5   fw-bold">
-                    <span>Wallet Debited</span>
+                    <span>Wallet applied today</span>
                     <span>- ₹{walletApplied.toLocaleString()}</span>
                   </div>
                 )}
@@ -1253,14 +1331,21 @@ export const CabCheckout = () => {
                 <hr className="my-3" />
 
                 <div className="d-flex justify-content-between fw-bold text-dark fs-6">
-                  <span>Grand Total</span>
+                  <span>{paymentOption === "PARTIAL" ? "30% due today" : "Due today"}</span>
                   <span
                     className="fs-5 fw-black   leh-style-auto-1068"
                     style={{ opacity: previewLoading ? 0.5 : 1 }}
                   >
-                    ₹{Number(grandTotal).toLocaleString()}
+                    ₹{Number(upfrontAmount).toLocaleString()}
                   </span>
                 </div>
+
+                {paymentOption === "PARTIAL" && (
+                  <div className="d-flex justify-content-between fs-8 mt-2 text-secondary">
+                    <span>Remaining balance</span>
+                    <span className="fw-semibold">₹{Number(balanceDue).toLocaleString()}</span>
+                  </div>
+                )}
 
                 {discount > 0 && (
                   <div className="p-2 mt-3 text-center border-0 text-success fw-semibold fs-8 leh-style-auto-1074">
@@ -1293,7 +1378,7 @@ export const CabCheckout = () => {
                   ) : previewLoading ? (
                     "Calculating fare..."
                   ) : grandTotal > 0 ? (
-                    `Pay ₹${Number(grandTotal).toLocaleString()}`
+                    `Pay ₹${Number(grandTotal).toLocaleString()} now`
                   ) : (
                     "Confirm Booking"
                   )}

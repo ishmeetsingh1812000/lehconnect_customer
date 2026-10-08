@@ -101,13 +101,23 @@ export const CabSuccess = () => {
 
               <div className="d-flex justify-content-between align-items-center bg-light p-3 rounded-3">
                 <div>
-                  <span className="fw-bold text-dark fs-7">Total Paid Amount</span>
+                  <span className="fw-bold text-dark fs-7">
+                    {booking.paymentOption === 'PARTIAL' ? 'Paid Today (30%)' : 'Total Paid Amount'}
+                  </span>
                   <small className="text-muted d-block leh-style-auto-1062">All tolls and taxes included</small>
                 </div>
                 <h4 className="fw-black   mb-0 leh-style-auto-1098">
                   ₹{(booking.paidAmount ?? booking.price ?? 0).toLocaleString()}
                 </h4>
               </div>
+              {booking.paymentOption === 'PARTIAL' && Number(booking.balanceDue) > 0 && (
+                <div className="d-flex justify-content-between align-items-center border border-warning-subtle bg-warning-subtle p-3 rounded-3 mt-2">
+                  <span className="fw-bold text-dark fs-7">Remaining Balance</span>
+                  <span className="fw-bold text-dark fs-7">
+                    ₹{Number(booking.balanceDue).toLocaleString()}
+                  </span>
+                </div>
+              )}
             </div>
 
             {/* Action buttons */}
@@ -132,4 +142,3 @@ export const CabSuccess = () => {
 };
 
 export default CabSuccess;
-
