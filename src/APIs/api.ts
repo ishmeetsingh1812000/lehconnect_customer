@@ -173,6 +173,19 @@ export const logoutUser = async (fcmToken = "") => {
   return response.data;
 };
 
+export const getCustomerProfile = async () => {
+  const response = await apiClient.get("/customer/get-profile");
+  return response.data;
+};
+
+export const updateCustomerProfile = async (profileData) => {
+  const response = await apiClient.put(
+    "/customer/update-basic-details",
+    profileData,
+  );
+  return response.data;
+};
+
 export const searchCabs = async (searchData) => {
   const response = await apiClient.get(
     `/customer/cab/route/${searchData.slug}`,

@@ -1,6 +1,7 @@
 'use client';
 
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useState, useEffect, useCallback } from 'react';
+import { getCustomerProfile } from '../APIs/api';
 
 const defaultBookingState = {
   user: {
@@ -100,6 +101,8 @@ export const BookingProvider = ({ children }: { children: React.ReactNode }) => 
     ]
   });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [profileLoaded, setProfileLoaded] = useState(false);
+  const [profileLoadError, setProfileLoadError] = useState(false);
 
   useEffect(() => {
     if (typeof window !== 'undefined') {
@@ -444,14 +447,72 @@ export const BookingProvider = ({ children }: { children: React.ReactNode }) => 
     setNotifications(prev => prev.map(n => n.id === id ? { ...n, read: true } : n));
   };
 
-  const updateProfile = (profileData) => {
+  const updateProfile = useCallback((profileData) => {
     setUser(prev => ({ ...prev, ...profileData }));
-  };
+  }, []);
+
+  useEffect(() => {
+    if (!isLoggedIn) {
+      setProfileLoaded(false);
+      setProfileLoadError(false);
+      return;
+    }
+
+    let active = true;
+    setProfileLoaded(false);
+    setProfileLoadError(false);
+
+    getCustomerProfile()
+      .then((response) => {
+        const profile = response?.results ?? response?.data?.results ?? response?.data;
+        if (!profile || typeof profile !== 'object') {
+          throw new Error('Customer profile response was empty.');
+        }
+
+        if (active) {
+          const firstName = profile.first_name || '';
+          const lastName = profile.last_name || '';
+          const address = {
+            street: profile.address || '',
+            city: profile.city || '',
+            state: profile.state || '',
+            pincode: profile.pincode || '',
+            country: profile.country || '',
+          };
+          updateProfile({
+            firstName,
+            lastName,
+            name: [firstName, lastName].filter(Boolean).join(' ') || 'Your profile',
+            email: profile.email || '',
+            phone: profile.contact || '',
+            ...(profile.profile_image ? { avatar: profile.profile_image } : {}),
+            address,
+            savedAddresses: Object.values(address).some(Boolean)
+              ? [{ id: 1, type: 'Home', ...address, isDefault: true }]
+              : [],
+          });
+          setProfileLoaded(true);
+        }
+      })
+      .catch((error) => {
+        console.error('Customer profile fetch failed:', error);
+        if (active) {
+          setProfileLoadError(true);
+          setProfileLoaded(true);
+        }
+      });
+
+    return () => {
+      active = false;
+    };
+  }, [isLoggedIn, updateProfile]);
 
   return (
     <BookingContext.Provider
       value={{
         user,
+        profileLoaded,
+        profileLoadError,
         isLoggedIn,
         setIsLoggedIn,
         searchParams,

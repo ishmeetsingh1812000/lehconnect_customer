@@ -1,17 +1,25 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../layout/Sidebar';
 import { useBooking } from '../../context/BookingContext';
 import Link from '../../components/Link';
 import { ROUTES } from '../../constants/routes';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { getProfileCompletion } from '../../utils/profileCompletion';
+import { updateCustomerProfile } from '../../APIs/api';
 
 export const DashboardOverview = () => {
-  const { user, updateProfile, bookings, tickets, setIsLoggedIn } = useBooking();
+  const { user, updateProfile, bookings, tickets, setIsLoggedIn, profileLoaded, profileLoadError } = useBooking();
   const router = useRouter();
   const [copied, setCopied] = useState(false);
+  const profileCompletion = getProfileCompletion(user);
+  const completionLabel = profileLoadError
+    ? 'Unavailable'
+    : profileLoaded
+      ? `${profileCompletion.percentage}% Complete`
+      : 'Loading...';
 
   // Address Update State
   const [showAddressModal, setShowAddressModal] = useState(false);
@@ -20,6 +28,15 @@ export const DashboardOverview = () => {
   const [editState, setEditState] = useState(user.address?.state || 'Ladakh (UT)');
   const [editPincode, setEditPincode] = useState(user.address?.pincode || '194101');
   const [editCountry, setEditCountry] = useState(user.address?.country || 'India');
+
+  useEffect(() => {
+    if (!profileLoaded || profileLoadError) return;
+    setEditStreet(user.address?.street || '');
+    setEditCity(user.address?.city || '');
+    setEditState(user.address?.state || '');
+    setEditPincode(user.address?.pincode || '');
+    setEditCountry(user.address?.country || '');
+  }, [profileLoaded, profileLoadError, user.address]);
 
   const referralCode = 'LEH500VIKRAM';
 
@@ -50,23 +67,42 @@ export const DashboardOverview = () => {
     toast.success(`₹${amt.toLocaleString()} added to your wallet!`);
   };
 
-  const handleSaveAddress = (e) => {
+  const handleSaveAddress = async (e) => {
     e.preventDefault();
-    if (!editStreet || !editCity || !editPincode) {
-      toast.error('Please enter street address, city, and pincode.');
+    if (!editStreet.trim() || !editCity.trim() || !editState.trim() || !editPincode.trim() || !editCountry.trim()) {
+      toast.error('Please complete all address fields.');
       return;
     }
-    updateProfile({
-      address: {
-        street: editStreet,
-        city: editCity,
-        state: editState,
-        pincode: editPincode,
-        country: editCountry
-      }
-    });
-    setShowAddressModal(false);
-    toast.success('Address updated successfully!');
+    if (!user.firstName?.trim() || !user.lastName?.trim()) {
+      toast.error('Please add your first and last name before saving your address.');
+      return;
+    }
+    try {
+      await updateCustomerProfile({
+        first_name: user.firstName,
+        last_name: user.lastName,
+        email: user.email || undefined,
+        country: editCountry.trim(),
+        state: editState.trim(),
+        city: editCity.trim(),
+        pincode: editPincode.trim(),
+        address: editStreet.trim(),
+      });
+      updateProfile({
+        address: {
+          street: editStreet.trim(),
+          city: editCity.trim(),
+          state: editState.trim(),
+          pincode: editPincode.trim(),
+          country: editCountry.trim(),
+        },
+      });
+      setShowAddressModal(false);
+      toast.success('Address updated successfully!');
+    } catch (error) {
+      console.error('Customer address update failed:', error);
+      toast.error(error.response?.data?.message || 'Could not update your address.');
+    }
   };
 
   const activeCount = bookings.filter(b => b.status === 'confirmed').length;
@@ -116,12 +152,14 @@ export const DashboardOverview = () => {
                 <div>
                   <div className="d-flex align-items-center gap-2">
                     <h5 className="fw-bold text-dark mb-0">Profile Completion</h5>
-                    <span className={`badge ${user.address?.street ? 'bg-success' : 'bg-primary'} text-white rounded-pill px-2.5 py-1 fs-9 fw-bold`}>
-                      {user.address?.street ? '100% Complete' : '75% Complete'}
+                    <span className={`badge ${profileCompletion.percentage === 100 && profileLoaded && !profileLoadError ? 'bg-success' : 'bg-primary'} text-white rounded-pill px-2.5 py-1 fs-9 fw-bold`}>
+                      {completionLabel}
                     </span>
                   </div>
                   <p className="text-muted fs-8 mb-0 mt-1">
-                    Complete your profile to unlock 1-click checkout and faster Ladakh permit processing.
+                    {profileLoadError
+                      ? 'We could not load your profile details. Please try again later.'
+                      : 'Complete your profile to unlock 1-click checkout and faster Ladakh permit processing.'}
                   </p>
                 </div>
                 <Link to={ROUTES.PROFILE} className="btn btn-primary rounded-pill px-3 py-1.5 fs-8 fw-bold text-decoration-none">
@@ -132,10 +170,10 @@ export const DashboardOverview = () => {
               {/* Progress Bar */}
               <div className="progress my-2.5" style={{ height: '7px' }}>
                 <div 
-                  className={`progress-bar ${user.address?.street ? 'bg-success' : 'bg-primary'} progress-bar-striped progress-bar-animated`} 
+                  className={`progress-bar ${profileCompletion.percentage === 100 && profileLoaded && !profileLoadError ? 'bg-success' : 'bg-primary'} progress-bar-striped progress-bar-animated`} 
                   role="progressbar" 
-                  style={{ width: user.address?.street ? '100%' : '75%' }} 
-                  aria-valuenow={user.address?.street ? 100 : 75} 
+                  style={{ width: profileLoaded && !profileLoadError ? `${profileCompletion.percentage}%` : '0%' }} 
+                  aria-valuenow={profileLoaded && !profileLoadError ? profileCompletion.percentage : 0} 
                   aria-valuemin={0} 
                   aria-valuemax={100}
                 ></div>
@@ -143,48 +181,23 @@ export const DashboardOverview = () => {
 
               {/* Profile Checklist Steps (Responsive 4 Columns on Desktop, 2x2 Grid on Mobile/Tablet) */}
               <div className="row g-2 pt-1">
-                <div className="col-6 col-lg-3">
-                  <div className="profile-step-pill completed">
-                    <i className="fa-solid fa-circle-check text-success flex-shrink-0"></i>
-                    <div className="text-truncate">
-                      <div className="fs-8 fw-bold text-dark">Basic Info</div>
-                      <small className="text-muted fs-10">Name, Gender & DOB</small>
+                {profileCompletion.steps.map((step) => (
+                  <div className="col-6 col-lg-3" key={step.key}>
+                    <div className={`profile-step-pill ${profileLoaded && !profileLoadError && step.complete ? 'completed' : 'pending'}`}>
+                      {profileLoaded && !profileLoadError && step.complete ? (
+                        <i className="fa-solid fa-circle-check text-success flex-shrink-0"></i>
+                      ) : (
+                        <i className="fa-solid fa-circle-exclamation text-warning flex-shrink-0"></i>
+                      )}
+                      <div className="text-truncate">
+                        <div className="fs-8 fw-bold text-dark">{step.label}</div>
+                        <small className={step.complete ? 'text-muted fs-10' : 'text-warning-emphasis fs-10 fw-bold'}>
+                          {profileLoadError ? 'Unavailable' : profileLoaded ? step.detail : 'Loading...'}
+                        </small>
+                      </div>
                     </div>
                   </div>
-                </div>
-                <div className="col-6 col-lg-3">
-                  <div className="profile-step-pill completed">
-                    <i className="fa-solid fa-circle-check text-success flex-shrink-0"></i>
-                    <div className="text-truncate">
-                      <div className="fs-8 fw-bold text-dark">Mobile Verified</div>
-                      <small className="text-muted fs-10">{user.phone}</small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-6 col-lg-3">
-                  <div className="profile-step-pill completed">
-                    <i className="fa-solid fa-circle-check text-success flex-shrink-0"></i>
-                    <div className="text-truncate">
-                      <div className="fs-8 fw-bold text-dark">Email Verified</div>
-                      <small className="text-muted fs-10">Active Account</small>
-                    </div>
-                  </div>
-                </div>
-                <div className="col-6 col-lg-3">
-                  <div className={`profile-step-pill ${user.address?.street ? 'completed' : 'pending'}`}>
-                    {user.address?.street ? (
-                      <i className="fa-solid fa-circle-check text-success flex-shrink-0"></i>
-                    ) : (
-                      <i className="fa-solid fa-circle-exclamation text-warning flex-shrink-0"></i>
-                    )}
-                    <div className="text-truncate">
-                      <div className="fs-8 fw-bold text-dark">Saved Address</div>
-                      <small className={user.address?.street ? 'text-muted fs-10' : 'text-warning-emphasis fs-10 fw-bold'}>
-                        {user.address?.street ? `${user.address.city}, ${user.address.pincode}` : 'Pending (+25%)'}
-                      </small>
-                    </div>
-                  </div>
-                </div>
+                ))}
               </div>
             </div>
 
@@ -539,5 +552,3 @@ export const DashboardOverview = () => {
 };
 
 export default DashboardOverview;
-
-

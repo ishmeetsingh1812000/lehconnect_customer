@@ -1,9 +1,10 @@
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Sidebar } from '../../layout/Sidebar';
 import { useBooking } from '../../context/BookingContext';
 import toast from 'react-hot-toast';
+import { updateCustomerProfile } from '../../APIs/api';
 
 export interface SavedAddress {
   id: number;
@@ -17,7 +18,7 @@ export interface SavedAddress {
 }
 
 export const Profile = () => {
-  const { user, updateProfile } = useBooking();
+  const { user, updateProfile, profileLoaded, profileLoadError } = useBooking();
 
   // Extract first and last name from user
   const initialFirstName = user.firstName || (user.name ? user.name.split(' ')[0] : '');
@@ -27,7 +28,7 @@ export const Profile = () => {
   const [firstName, setFirstName] = useState(initialFirstName);
   const [lastName, setLastName] = useState(initialLastName);
   const [email, setEmail] = useState(user.email || '');
-  const phone = user.phone || '+91 98765 43210'; // Non-editable once logged in
+  const phone = user.phone || '';
 
   // Addresses State (Multiple Addresses)
   const defaultSavedAddresses: SavedAddress[] = user.savedAddresses?.length
@@ -36,16 +37,24 @@ export const Profile = () => {
         {
           id: 1,
           type: 'Home',
-          street: user.address?.street || 'Flat 402, Himalayan Heights, Fort Road',
-          city: user.address?.city || 'Leh',
-          state: user.address?.state || 'Ladakh (UT)',
-          pincode: user.address?.pincode || '194101',
-          country: user.address?.country || 'India',
+          street: user.address?.street || '',
+          city: user.address?.city || '',
+          state: user.address?.state || '',
+          pincode: user.address?.pincode || '',
+          country: user.address?.country || '',
           isDefault: true
         }
       ];
 
   const [addresses, setAddresses] = useState<SavedAddress[]>(defaultSavedAddresses);
+
+  useEffect(() => {
+    if (!profileLoaded || profileLoadError) return;
+    setFirstName(user.firstName || '');
+    setLastName(user.lastName || '');
+    setEmail(user.email || '');
+    setAddresses(user.savedAddresses || []);
+  }, [profileLoaded, profileLoadError, user.firstName, user.lastName, user.email, user.savedAddresses]);
 
   // New Address Form State
   const [newAddressType, setNewAddressType] = useState('Home');
@@ -66,21 +75,39 @@ export const Profile = () => {
   });
 
   // Handle Update Personal Details
-  const handleUpdateProfile = (e: React.FormEvent) => {
+  const handleUpdateProfile = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!firstName.trim()) {
-      toast.error('First Name is required');
+    if (!firstName.trim() || firstName.trim().length < 3 || !lastName.trim() || lastName.trim().length < 3) {
+      toast.error('First and last names must each be at least 3 characters.');
+      return;
+    }
+    if (!user.address?.country || !user.address?.state || !user.address?.city) {
+      toast.error('Add your country, state, and city before saving your profile.');
       return;
     }
     const fullName = `${firstName.trim()} ${lastName.trim()}`.trim();
-    updateProfile({
-      firstName: firstName.trim(),
-      lastName: lastName.trim(),
-      name: fullName,
-      email: email.trim(),
-      phone: user.phone // Locked, not editable by user
-    });
-    toast.success('Personal details updated successfully!');
+    try {
+      await updateCustomerProfile({
+        first_name: firstName.trim(),
+        last_name: lastName.trim(),
+        email: email.trim() || undefined,
+        country: user.address.country,
+        state: user.address.state,
+        city: user.address.city,
+        pincode: user.address.pincode || '',
+        address: user.address.street || '',
+      });
+      updateProfile({
+        firstName: firstName.trim(),
+        lastName: lastName.trim(),
+        name: fullName,
+        email: email.trim(),
+      });
+      toast.success('Personal details updated successfully!');
+    } catch (error) {
+      console.error('Customer profile update failed:', error);
+      toast.error(error.response?.data?.message || 'Could not update your profile.');
+    }
   };
 
   // Handle Add New Address

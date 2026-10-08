@@ -6,10 +6,13 @@ import { useBooking } from '../context/BookingContext';
 import { ROUTES } from '../constants/routes';
 import { useRouter } from 'next/navigation';
 import toast from 'react-hot-toast';
+import { getProfileCompletion } from '../utils/profileCompletion';
 
 export const Sidebar = () => {
-  const { user, setIsLoggedIn } = useBooking();
+  const { user, setIsLoggedIn, profileLoaded, profileLoadError } = useBooking();
   const router = useRouter();
+  const profileCompletion = getProfileCompletion(user);
+  const completionValue = profileLoaded && !profileLoadError ? profileCompletion.percentage : 0;
 
   const handleLogout = () => {
     setIsLoggedIn(false);
@@ -41,21 +44,23 @@ export const Sidebar = () => {
       <div className="sidebar-completion-box text-start">
         <div className="d-flex justify-content-between align-items-center mb-1">
           <span className="fs-9 fw-bold text-dark">Profile Completion</span>
-          <span className="badge bg-primary-subtle text-primary fw-bold fs-9">75%</span>
+          <span className="badge bg-primary-subtle text-primary fw-bold fs-9">
+            {profileLoadError ? 'N/A' : profileLoaded ? `${profileCompletion.percentage}%` : '...'}
+          </span>
         </div>
         <div className="progress mb-1" style={{ height: '5px' }}>
           <div 
             className="progress-bar bg-primary progress-bar-striped progress-bar-animated" 
             role="progressbar" 
-            style={{ width: '75%' }} 
-            aria-valuenow={75} 
+            style={{ width: `${completionValue}%` }} 
+            aria-valuenow={completionValue} 
             aria-valuemin={0} 
             aria-valuemax={100}
           ></div>
         </div>
         <div className="text-end">
           <NavLink to={ROUTES.PROFILE} className="fs-10 text-primary fw-bold text-decoration-none">
-            Complete Profile <i className="fa-solid fa-arrow-right ms-1"></i>
+            {profileLoadError ? 'Retry later' : profileCompletion.percentage === 100 ? 'Profile Complete' : 'Complete Profile'} <i className="fa-solid fa-arrow-right ms-1"></i>
           </NavLink>
         </div>
       </div>
