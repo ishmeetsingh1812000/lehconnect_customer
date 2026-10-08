@@ -67,12 +67,16 @@ export const LoginModal = () => {
       setIsLoading(true);
       try {
         const res = await verifyOtp(phone, otp, 'customer');
-        if (res?.results?.token) {
-          localStorage.setItem('customerToken', res.results.token);
-          if (res.results.refreshToken) {
-            localStorage.setItem('customerRefreshToken', res.results.refreshToken);
-          }
+        const token = res?.results?.token;
+        const refreshToken = res?.results?.refreshToken;
+        if (!token || !refreshToken) {
+          throw new Error(
+            res?.message || 'Login response did not include a valid session.'
+          );
         }
+
+        localStorage.setItem('customerToken', token);
+        localStorage.setItem('customerRefreshToken', refreshToken);
         setIsLoggedIn(true);
         toast.success('Successfully logged in!');
         closeLoginModal();
@@ -81,7 +85,9 @@ export const LoginModal = () => {
         setOtp('');
         setStep('phone');
       } catch (error: any) {
-        toast.error(error.response?.data?.message || 'Invalid OTP.');
+        toast.error(
+          error.response?.data?.message || error.message || 'Invalid OTP.'
+        );
       } finally {
         setIsLoading(false);
       }

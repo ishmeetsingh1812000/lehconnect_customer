@@ -107,6 +107,16 @@ export const BookingProvider = ({ children }: { children: React.ReactNode }) => 
       if (token) setIsLoggedIn(true);
     }
   }, []);
+
+  useEffect(() => {
+    const handleSessionExpired = () => setIsLoggedIn(false);
+    window.addEventListener('customer-session-expired', handleSessionExpired);
+    return () =>
+      window.removeEventListener(
+        'customer-session-expired',
+        handleSessionExpired
+      );
+  }, []);
   const [activeTab, setActiveTab] = useState('cabs');
   const [language, setLanguage] = useState('en');
   const [isLoginModalOpen, setIsLoginModalOpen] = useState(false);

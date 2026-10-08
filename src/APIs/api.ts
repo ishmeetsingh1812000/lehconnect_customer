@@ -1,5 +1,14 @@
 import axios from "axios";
 
+declare module "axios" {
+  interface AxiosRequestConfig {
+    allowGuestRetry?: boolean;
+    skipCustomerAuth?: boolean;
+    _retry?: boolean;
+    _guestRetry?: boolean;
+  }
+}
+
 const BASE_URL =
   process.env.NEXT_PUBLIC_API_URL || "http://localhost:3001/v1/api";
 const AccessToken =
@@ -23,7 +32,10 @@ apiClient.interceptors.request.use(
       typeof window !== "undefined"
         ? localStorage.getItem("customerRefreshToken")
         : null;
-    if (token && config.headers) {
+    if (config.skipCustomerAuth && config.headers) {
+      delete config.headers.Authorization;
+      delete config.headers["x-refresh-token"];
+    } else if (token && config.headers) {
       config.headers.Authorization = `Bearer ${token}`;
       if (refreshToken) {
         config.headers["x-refresh-token"] = refreshToken;
@@ -40,6 +52,8 @@ apiClient.interceptors.response.use(
   (response) => response,
   async (error) => {
     const originalRequest = error.config;
+    if (!originalRequest) return Promise.reject(error);
+
     const hasCustomerToken =
       typeof window !== "undefined" &&
       Boolean(localStorage.getItem("customerToken"));
@@ -52,26 +66,33 @@ apiClient.interceptors.response.use(
       originalRequest._retry = true;
       try {
         const res = await refreshUserToken();
-        if (res?.results) {
-          const newToken = res.results.token;
-          const newRefreshToken = res.results.refreshToken;
-          if (newToken && typeof window !== "undefined") {
-            localStorage.setItem("customerToken", newToken);
-            originalRequest.headers.Authorization = `Bearer ${newToken}`;
-          }
-          if (newRefreshToken && typeof window !== "undefined") {
-            localStorage.setItem("customerRefreshToken", newRefreshToken);
-            originalRequest.headers["x-refresh-token"] = newRefreshToken;
-          }
-          return apiClient(originalRequest);
+        const newToken = res?.results?.token;
+        const newRefreshToken = res?.results?.refreshToken;
+        if (!newToken || !newRefreshToken) {
+          throw new Error("Session refresh response did not include valid tokens.");
         }
-      } catch (err) {
+
+        localStorage.setItem("customerToken", newToken);
+        localStorage.setItem("customerRefreshToken", newRefreshToken);
+        originalRequest.headers.Authorization = `Bearer ${newToken}`;
+        originalRequest.headers["x-refresh-token"] = newRefreshToken;
+        return apiClient(originalRequest);
+      } catch (refreshError) {
         if (typeof window !== "undefined") {
           localStorage.removeItem("customerToken");
           localStorage.removeItem("customerRefreshToken");
-          window.location.href = "/";
+          window.dispatchEvent(new Event("customer-session-expired"));
         }
-        return Promise.reject(err);
+
+        if (originalRequest.allowGuestRetry && !originalRequest._guestRetry) {
+          originalRequest._guestRetry = true;
+          originalRequest.skipCustomerAuth = true;
+          delete originalRequest.headers.Authorization;
+          delete originalRequest.headers["x-refresh-token"];
+          return apiClient(originalRequest);
+        }
+
+        return Promise.reject(refreshError);
       }
     }
     return Promise.reject(error);
@@ -212,6 +233,7 @@ export const createCabBooking = async (payload) => {
   const response = await apiClient.post(
     "/customer/cab/booking/create",
     payload,
+    { allowGuestRetry: true },
   );
   console.log("createCabBooking response", response);
   return response.data;
@@ -221,6 +243,7 @@ export const createCabBookingOrder = async (payload) => {
   const response = await apiClient.post(
     "/customer/cab/booking/create-order",
     payload,
+    { allowGuestRetry: true },
   );
   console.log("createCabBookingOrder response", response);
   return response.data;
@@ -230,6 +253,7 @@ export const verifyCabBookingPayment = async (payload) => {
   const response = await apiClient.post(
     "/customer/cab/booking/verify-payment",
     payload,
+    { allowGuestRetry: true },
   );
   console.log("verifyCabBookingPayment response", response);
   return response.data;
@@ -239,6 +263,7 @@ export const getCabBookingPreview = async (payload) => {
   const { data } = await apiClient.post(
     "/customer/cab/booking/preview",
     payload,
+    { allowGuestRetry: true },
   ); // use your axios instance
   return data;
 };
