@@ -9,12 +9,19 @@ export const metadata: Metadata = {
 };
 
 interface PageProps {
-  searchParams?: Promise<{ search?: string; [key: string]: any }>;
+  searchParams?: Promise<{ search?: string }>;
 }
 
-export default async function FlightListingPage({ searchParams }: PageProps): Promise<JSX.Element> {
+export default async function FlightListingPage({
+  searchParams,
+}: PageProps): Promise<JSX.Element> {
   const resolved = searchParams ? await searchParams : {};
-  return (
-    <Home initialTab="flights" />
-  );
+  if (resolved.search === 'results') {
+    return (
+      <Suspense fallback={null}>
+        <FlightListing />
+      </Suspense>
+    );
+  }
+  return <Home initialTab="flights" />;
 }

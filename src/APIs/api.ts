@@ -195,6 +195,11 @@ export const searchCabs = async (searchData) => {
   return response.data;
 };
 
+export const searchFlights = async (searchData) => {
+  const response = await apiClient.post("/flights/search", searchData);
+  return response.data;
+};
+
 export const refreshUserToken = async (
   fcmToken = "",
   device_id = "",

@@ -15,9 +15,42 @@ import {
   submitVisaEnquiry,
   submitInsuranceEnquiry,
   searchLocations,
+  searchFlights,
   getCabPackages,
 } from "../APIs/api";
 import { generateSlug } from "../utils/stringUtils";
+
+const getIataCode = (location) => {
+  const value = String(location || "").trim();
+  const parenthesizedCode = value.match(/\(([A-Za-z]{3})\)\s*$/);
+  const code = parenthesizedCode?.[1] || value;
+  return /^[A-Za-z]{3}$/.test(code) ? code.toUpperCase() : null;
+};
+
+const toFlightApiDate = (value) => {
+  const text = String(value || "").trim();
+  const isoDate = text.match(/^(\d{4})-(\d{2})-(\d{2})$/);
+  if (isoDate) return text;
+
+  const displayDate = text.match(/^(\d{1,2})\s+([A-Za-z]{3,9})'?(\d{2}|\d{4})$/);
+  if (!displayDate) return null;
+  const months = [
+    "jan", "feb", "mar", "apr", "may", "jun",
+    "jul", "aug", "sep", "oct", "nov", "dec",
+  ];
+  const month = months.indexOf(displayDate[2].slice(0, 3).toLowerCase());
+  if (month < 0) return null;
+  const year =
+    displayDate[3].length === 2 ? `20${displayDate[3]}` : displayDate[3];
+  return `${year}-${String(month + 1).padStart(2, "0")}-${String(displayDate[1]).padStart(2, "0")}`;
+};
+
+const getLocalFlightDate = (date = new Date()) => {
+  const year = date.getFullYear();
+  const month = String(date.getMonth() + 1).padStart(2, "0");
+  const day = String(date.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
+};
 
 const LocationAutocomplete = ({
   value,
@@ -150,6 +183,177 @@ const LocationAutocomplete = ({
               No results for "{query}".
             </li>
           ) : null}
+        </ul>
+      )}
+    </div>
+  );
+};
+
+type FlightAirport = {
+  id: string;
+  name: string;
+  city: string;
+  countryCode: string;
+  code: string;
+};
+
+type FlightAirportAutocompleteProps = {
+  value: string;
+  onChange: (value: string) => void;
+  placeholder: string;
+  className: string;
+  subtext?: string;
+  setSubtext?: (value: string) => void;
+};
+
+const FlightAirportAutocomplete = ({
+  value,
+  onChange,
+  placeholder,
+  className,
+  setSubtext,
+}: FlightAirportAutocompleteProps) => {
+  const [query, setQuery] = useState(value);
+  const [airports, setAirports] = useState<FlightAirport[]>([]);
+  const [show, setShow] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
+  const [hasError, setHasError] = useState(false);
+
+  React.useEffect(() => {
+    setQuery(value);
+  }, [value]);
+
+  React.useEffect(() => {
+    const searchQuery = String(query || "")
+      .replace(/\s*\([A-Za-z]{3}\)\s*$/, "")
+      .trim();
+
+    if (!show || searchQuery.length < 2) {
+      setAirports([]);
+      setHasError(false);
+      setIsLoading(false);
+      return;
+    }
+
+    const controller = new AbortController();
+    const debounce = setTimeout(async () => {
+      setIsLoading(true);
+      setHasError(false);
+
+      try {
+        const response = await fetch(
+          `/api/flights/airports?q=${encodeURIComponent(searchQuery)}`,
+          { signal: controller.signal },
+        );
+        if (!response.ok) {
+          throw new Error("Airport suggestions could not be loaded.");
+        }
+
+        const data = await response.json();
+        setAirports(Array.isArray(data.airports) ? data.airports : []);
+      } catch (error) {
+        if (!controller.signal.aborted) {
+          console.error("Failed to load flight airport suggestions:", error);
+          setAirports([]);
+          setHasError(true);
+        }
+      } finally {
+        if (!controller.signal.aborted) {
+          setIsLoading(false);
+        }
+      }
+    }, 200);
+
+    return () => {
+      clearTimeout(debounce);
+      controller.abort();
+    };
+  }, [query, show]);
+
+  const handleSelect = (airport: FlightAirport) => {
+    const airportLabel = `${airport.city} (${airport.code})`;
+    setQuery(airportLabel);
+    onChange(airportLabel);
+    setSubtext?.(`${airport.name} · ${airport.countryCode}`);
+    setShow(false);
+  };
+
+  return (
+    <div style={{ position: "relative", width: "100%" }}>
+      <input
+        type="text"
+        className={className}
+        placeholder={placeholder}
+        value={query}
+        onChange={(event) => {
+          setQuery(event.target.value);
+          onChange(event.target.value);
+          setSubtext?.("");
+          setShow(true);
+        }}
+        onFocus={() => setShow(true)}
+        onBlur={() => setTimeout(() => setShow(false), 200)}
+        autoComplete="off"
+        required
+      />
+      {show && query?.trim().length >= 2 && (
+        <ul
+          style={{
+            position: "absolute",
+            top: "100%",
+            left: 0,
+            right: 0,
+            background: "white",
+            zIndex: 9999,
+            listStyle: "none",
+            padding: 0,
+            margin: 0,
+            boxShadow: "0 4px 6px rgba(0,0,0,0.1)",
+            maxHeight: "300px",
+            overflowY: "auto",
+            borderRadius: "4px",
+          }}
+        >
+          {airports.map((airport) => (
+            <li
+              key={airport.id}
+              style={{
+                padding: "8px 12px",
+                cursor: "pointer",
+                borderBottom: "1px solid #eee",
+                fontSize: "14px",
+                color: "black",
+                background: "white",
+              }}
+              onMouseDown={(event) => {
+                event.preventDefault();
+                handleSelect(airport);
+              }}
+            >
+              <div className="d-flex justify-content-between gap-2">
+                <strong>{airport.city}</strong>
+                <span className="badge bg-primary-subtle text-primary">
+                  {airport.code}
+                </span>
+              </div>
+              <small className="text-muted">
+                {airport.name} · {airport.countryCode}
+              </small>
+            </li>
+          ))}
+          {isLoading && (
+            <li className="p-2 small text-muted">Searching airports…</li>
+          )}
+          {!isLoading && hasError && (
+            <li className="p-2 small text-danger">
+              Airport suggestions are unavailable. Enter a 3-letter airport code.
+            </li>
+          )}
+          {!isLoading && !hasError && airports.length === 0 && (
+            <li className="p-2 small text-muted">
+              No matching airports. Enter a 3-letter airport code.
+            </li>
+          )}
         </ul>
       )}
     </div>
@@ -311,31 +515,42 @@ export const BookingWidget = ({
   const [flightFromState, setFlightFromState] = useState("");
   const [flightToCity, setFlightToCity] = useState("");
   const [flightToState, setFlightToState] = useState("");
-  const [flightDepDate, setFlightDepDate] = useState("10 Aug'26");
-  const [flightDepDay, setFlightDepDay] = useState("Monday");
-  const [flightRetDate, setFlightRetDate] = useState("15 Aug'26");
-  const [flightRetDay, setFlightRetDay] = useState("Saturday");
+  const [flightDepDate, setFlightDepDate] = useState(() =>
+    getLocalFlightDate(),
+  );
+  const [flightDepDay, setFlightDepDay] = useState("");
+  const [flightRetDate, setFlightRetDate] = useState(() => {
+    const tomorrow = new Date();
+    tomorrow.setDate(tomorrow.getDate() + 1);
+    return getLocalFlightDate(tomorrow);
+  });
+  const [flightRetDay, setFlightRetDay] = useState("");
   const [flightTravellers, setFlightTravellers] = useState(1);
   const [flightClass, setFlightClass] = useState("Economy");
   const [flightFareType, setFlightFareType] = useState("Regular");
+  const [flightTravelType, setFlightTravelType] = useState("DOMESTIC");
 
   // Multi-City flight rows state
   const [multiCityFlights, setMultiCityFlights] = useState([
     {
-      fromCity: "Delhi",
+      fromCity: "Delhi (DEL)",
       fromState: "Delhi, India",
-      toCity: "Mumbai",
+      toCity: "Mumbai (BOM)",
       toState: "Mumbai, India",
-      date: "10 Aug'26",
-      day: "Monday",
+      date: getLocalFlightDate(),
+      day: "",
     },
     {
-      fromCity: "Mumbai",
+      fromCity: "Mumbai (BOM)",
       fromState: "Mumbai, India",
-      toCity: "Bengaluru",
+      toCity: "Bengaluru (BLR)",
       toState: "Bengaluru, India",
-      date: "15 Aug'26",
-      day: "Saturday",
+      date: (() => {
+        const tomorrow = new Date();
+        tomorrow.setDate(tomorrow.getDate() + 1);
+        return getLocalFlightDate(tomorrow);
+      })(),
+      day: "",
     },
   ]);
 
@@ -664,6 +879,138 @@ export const BookingWidget = ({
           "Failed to submit flight enquiry. Please check the details.";
         toast.error(errorMsg);
         console.error("Enquiry API Error:", error.response?.data || error);
+      }
+      return;
+    }
+    if (activeTab === "flights" && flightMode === "booking") {
+      const segments =
+        flightTripTab === "multicity"
+          ? multiCityFlights.map((flight) => ({
+              origin: getIataCode(flight.fromCity),
+              destination: getIataCode(flight.toCity),
+              departureDate: toFlightApiDate(flight.date),
+            }))
+          : [
+              {
+                origin: getIataCode(flightFromCity),
+                destination: getIataCode(flightToCity),
+                departureDate: toFlightApiDate(flightDepDate),
+              },
+              ...(flightTripTab === "roundtrip"
+                ? [
+                    {
+                      origin: getIataCode(flightToCity),
+                      destination: getIataCode(flightFromCity),
+                      departureDate: toFlightApiDate(flightRetDate),
+                    },
+                  ]
+                : []),
+            ];
+
+      if (
+        segments.some(
+          (segment) =>
+            !segment.origin ||
+            !segment.destination ||
+            !segment.departureDate,
+        )
+      ) {
+        toast.error(
+          "Enter a 3-letter airport code (for example DEL or Delhi (DEL)) and select a departure date for every flight segment.",
+        );
+        return;
+      }
+      if (segments.some((segment) => segment.origin === segment.destination)) {
+        toast.error("Each flight segment must have different origin and destination airports.");
+        return;
+      }
+      const today = getLocalFlightDate();
+      if (segments.some((segment) => segment.departureDate < today)) {
+        toast.error("Flight departure dates cannot be in the past.");
+        return;
+      }
+      if (
+        flightTripTab === "roundtrip" &&
+        segments[1].departureDate <= segments[0].departureDate
+      ) {
+        toast.error("Return date must be after departure date.");
+        return;
+      }
+
+      const classOfTravel = {
+        Economy: "ECONOMY",
+        "Premium Economy": "PREMIUM_ECONOMY",
+        Business: "BUSINESS",
+        "First Class": "FIRST",
+      }[flightClass] || "ECONOMY";
+      const payload = {
+        tripType:
+          flightTripTab === "oneway"
+            ? "ONE_WAY"
+            : flightTripTab === "roundtrip"
+              ? "ROUND_TRIP"
+              : "MULTI_CITY",
+        travelType: flightTravelType,
+        segments,
+        passengers: {
+          adults: Number(flightTravellers) || 1,
+          children: 0,
+          infants: 0,
+        },
+        classOfTravel,
+        fareOptions: {
+          seniorCitizen: flightFareType === "Senior Citizen",
+          studentFare: flightFareType === "Student",
+          defenceFare: flightFareType === "Armed Forces",
+        },
+        inventoryType: 0,
+        sourceType: 0,
+        airlines: [],
+      };
+
+      setIsSearching(true);
+      try {
+        const response = await searchFlights(payload);
+        const searchData = response?.data ?? response?.results?.data;
+        if (
+          response?.success === false ||
+          !searchData ||
+          !Array.isArray(searchData.tripDetails)
+        ) {
+          throw new Error(
+            response?.message || "The flight search response was invalid.",
+          );
+        }
+
+        updateSearchParams("flights", {
+          from: segments[0].origin,
+          to: segments[0].destination,
+          departDate: segments[0].departureDate,
+          returnDate:
+            flightTripTab === "roundtrip" ? segments[1].departureDate : "",
+          passengers: Number(flightTravellers) || 1,
+          travelClass: flightClass,
+          tripType: payload.tripType,
+          travelType: flightTravelType,
+          segments,
+          searchId: searchData.searchId,
+          searchKey: searchData.searchKey,
+          totalFlights: searchData.totalFlights,
+          tripDetails: searchData.tripDetails,
+          searchResults: searchData.tripDetails.flatMap((trip) =>
+            Array.isArray(trip.flights) ? trip.flights : [],
+          ),
+        });
+        router.push(`${ROUTES.FLIGHT_SEARCH}?search=results`);
+      } catch (error) {
+        console.error("Flight search API error:", error);
+        toast.error(
+          error.response?.data?.message ||
+            error.message ||
+            "Could not search flights. Please try again.",
+        );
+      } finally {
+        setIsSearching(false);
       }
       return;
     }
@@ -1225,9 +1572,9 @@ export const BookingWidget = ({
       setMultiCityFlights([
         ...multiCityFlights,
         {
-          fromCity: "Bengaluru",
+          fromCity: "Bengaluru (BLR)",
           fromState: "Karnataka, India",
-          toCity: "Delhi",
+          toCity: "Delhi (DEL)",
           toState: "Delhi, India",
           date: "18 Aug'26",
           day: "Tuesday",
@@ -2575,13 +2922,13 @@ export const BookingWidget = ({
                       <span className="leh-input-card-label">From</span>
                     </div>
                     <div className="leh-inner-box">
-                      <input
-                        type="text"
+                      <FlightAirportAutocomplete
                         className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                        placeholder="Enter City or Airport"
+                        placeholder="City or airport code (e.g. Delhi (DEL))"
                         value={flightFromCity}
-                        onChange={(e) => setFlightFromCity(e.target.value)}
-                        required
+                        onChange={setFlightFromCity}
+                        subtext={flightFromState}
+                        setSubtext={setFlightFromState}
                       />
                     </div>
                     <span className="leh-input-card-subtext">
@@ -2595,13 +2942,13 @@ export const BookingWidget = ({
                       <span className="leh-input-card-label">To</span>
                     </div>
                     <div className="leh-inner-box">
-                      <input
-                        type="text"
+                      <FlightAirportAutocomplete
                         className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                        placeholder="Enter City or Airport"
+                        placeholder="City or airport code (e.g. Mumbai (BOM))"
                         value={flightToCity}
-                        onChange={(e) => setFlightToCity(e.target.value)}
-                        required
+                        onChange={setFlightToCity}
+                        subtext={flightToState}
+                        setSubtext={setFlightToState}
                       />
                     </div>
                     <span className="leh-input-card-subtext">
@@ -2749,19 +3096,17 @@ export const BookingWidget = ({
                           )}
                         </div>
                         <div className="leh-inner-box">
-                          <input
-                            type="text"
+                          <FlightAirportAutocomplete
                             className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                            placeholder="Enter City or Airport"
+                            placeholder="City or airport code (e.g. Delhi (DEL))"
                             value={flight.fromCity}
-                            onChange={(e) =>
-                              updateMultiCityFlight(
-                                idx,
-                                "fromCity",
-                                e.target.value,
-                              )
+                            onChange={(value) =>
+                              updateMultiCityFlight(idx, "fromCity", value)
                             }
-                            required
+                            subtext={flight.fromState}
+                            setSubtext={(value) =>
+                              updateMultiCityFlight(idx, "fromState", value)
+                            }
                           />
                         </div>
                         <span className="leh-input-card-subtext">
@@ -2775,19 +3120,17 @@ export const BookingWidget = ({
                           <span className="leh-input-card-label">To</span>
                         </div>
                         <div className="leh-inner-box">
-                          <input
-                            type="text"
+                          <FlightAirportAutocomplete
                             className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                            placeholder="Enter City or Airport"
+                            placeholder="City or airport code (e.g. Mumbai (BOM))"
                             value={flight.toCity}
-                            onChange={(e) =>
-                              updateMultiCityFlight(
-                                idx,
-                                "toCity",
-                                e.target.value,
-                              )
+                            onChange={(value) =>
+                              updateMultiCityFlight(idx, "toCity", value)
                             }
-                            required
+                            subtext={flight.toState}
+                            setSubtext={(value) =>
+                              updateMultiCityFlight(idx, "toState", value)
+                            }
                           />
                         </div>
                         <span className="leh-input-card-subtext">
@@ -2798,7 +3141,6 @@ export const BookingWidget = ({
                       {/* Departure Card */}
                       <div
                         className="leh-input-card position-relative leh-style-auto-1013"
-                        onClick={() => setOpenPicker(`multicity-dep-${idx}`)}
                       >
                         <div className="leh-input-card-header">
                           <span className="leh-input-card-label">
@@ -2806,13 +3148,24 @@ export const BookingWidget = ({
                           </span>
                         </div>
                         <div className="leh-inner-box">
-                          <span className="fw-bold text-dark">
-                            {flight.date}
-                          </span>
-                          <i className="fa-regular fa-calendar-days text-muted fs-7"></i>
+                          <input
+                            type="date"
+                            className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
+                            value={toFlightApiDate(flight.date) || ""}
+                            min={getLocalFlightDate()}
+                            onChange={(e) =>
+                              updateMultiCityFlight(idx, "date", e.target.value)
+                            }
+                            required
+                          />
                         </div>
                         <span className="leh-input-card-subtext">
-                          {flight.day}
+                          {flight.date
+                            ? new Date(`${flight.date}T12:00:00`).toLocaleDateString(
+                                "en-US",
+                                { weekday: "long" },
+                              )
+                            : "Select date"}
                         </span>
 
                         {openPicker === `multicity-dep-${idx}` && (
@@ -2987,13 +3340,13 @@ export const BookingWidget = ({
                       <span className="leh-input-card-label">From</span>
                     </div>
                     <div className="leh-inner-box">
-                      <input
-                        type="text"
+                      <FlightAirportAutocomplete
                         className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                        placeholder="Enter City or Airport"
+                        placeholder="City or airport code (e.g. DEL)"
                         value={flightFromCity}
-                        onChange={(e) => setFlightFromCity(e.target.value)}
-                        required
+                        onChange={setFlightFromCity}
+                        subtext={flightFromState}
+                        setSubtext={setFlightFromState}
                       />
                     </div>
                     <span className="leh-input-card-subtext">
@@ -3007,13 +3360,13 @@ export const BookingWidget = ({
                       <span className="leh-input-card-label">To</span>
                     </div>
                     <div className="leh-inner-box">
-                      <input
-                        type="text"
+                      <FlightAirportAutocomplete
                         className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
-                        placeholder="Enter City or Airport"
+                        placeholder="City or airport code (e.g. BOM)"
                         value={flightToCity}
-                        onChange={(e) => setFlightToCity(e.target.value)}
-                        required
+                        onChange={setFlightToCity}
+                        subtext={flightToState}
+                        setSubtext={setFlightToState}
                       />
                     </div>
                     <span className="leh-input-card-subtext">
@@ -3023,18 +3376,54 @@ export const BookingWidget = ({
 
                   {/* 3. Departure Card */}
                   <div
-                    className="leh-input-card position-relative"
-                    onClick={() => setOpenPicker("flightdep")}
+                    className="leh-input-card"
                   >
                     <div className="leh-input-card-header">
                       <span className="leh-input-card-label">Departure</span>
                     </div>
                     <div className="leh-inner-box">
-                      <span className="fw-bold text-dark">{flightDepDate}</span>
-                      <i className="fa-regular fa-calendar-days text-muted fs-7"></i>
+                      <input
+                        type="date"
+                        className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
+                        value={toFlightApiDate(flightDepDate) || ""}
+                        min={getLocalFlightDate()}
+                        onChange={(e) => {
+                          setFlightDepDate(e.target.value);
+                          setFlightDepDay(
+                            e.target.value
+                              ? new Date(`${e.target.value}T12:00:00`).toLocaleDateString(
+                                  "en-US",
+                                  { weekday: "long" },
+                                )
+                              : "",
+                          );
+                          if (
+                            e.target.value &&
+                            flightRetDate <= e.target.value
+                          ) {
+                            const nextDay = new Date(
+                              `${e.target.value}T12:00:00`,
+                            );
+                            nextDay.setDate(nextDay.getDate() + 1);
+                            const nextReturnDate = getLocalFlightDate(nextDay);
+                            setFlightRetDate(nextReturnDate);
+                            setFlightRetDay(
+                              nextDay.toLocaleDateString("en-US", {
+                                weekday: "long",
+                              }),
+                            );
+                          }
+                        }}
+                        required
+                      />
                     </div>
                     <span className="leh-input-card-subtext">
-                      {flightDepDay}
+                      {flightDepDate
+                        ? new Date(`${flightDepDate}T12:00:00`).toLocaleDateString(
+                            "en-US",
+                            { weekday: "long" },
+                          )
+                        : flightDepDay}
                     </span>
 
                     {openPicker === "flightdep" && (
@@ -3150,20 +3539,48 @@ export const BookingWidget = ({
                   {/* 4. Return Card (Visible in Round Trip) */}
                   {flightTripTab === "roundtrip" && (
                     <div
-                      className="leh-input-card position-relative"
-                      onClick={() => setOpenPicker("flightret")}
+                      className="leh-input-card"
                     >
                       <div className="leh-input-card-header">
                         <span className="leh-input-card-label">Return</span>
                       </div>
                       <div className="leh-inner-box">
-                        <span className="fw-bold text-dark">
-                          {flightRetDate}
-                        </span>
-                        <i className="fa-regular fa-calendar-days text-muted fs-7"></i>
+                        <input
+                          type="date"
+                          className="border-0 p-0 fw-bold text-dark bg-transparent w-100 leh-style-auto-1002"
+                          value={toFlightApiDate(flightRetDate) || ""}
+                          min={
+                            flightDepDate
+                              ? getLocalFlightDate(
+                                  new Date(
+                                    new Date(
+                                      `${flightDepDate}T12:00:00`,
+                                    ).getTime() + 86400000,
+                                  ),
+                                )
+                              : getLocalFlightDate()
+                          }
+                          onChange={(e) => {
+                            setFlightRetDate(e.target.value);
+                            setFlightRetDay(
+                              e.target.value
+                                ? new Date(`${e.target.value}T12:00:00`).toLocaleDateString(
+                                    "en-US",
+                                    { weekday: "long" },
+                                  )
+                                : "",
+                            );
+                          }}
+                          required
+                        />
                       </div>
                       <span className="leh-input-card-subtext">
-                        {flightRetDay}
+                        {flightRetDate
+                          ? new Date(`${flightRetDate}T12:00:00`).toLocaleDateString(
+                              "en-US",
+                              { weekday: "long" },
+                            )
+                          : flightRetDay}
                       </span>
 
                       {openPicker === "flightret" && (
@@ -3311,6 +3728,19 @@ export const BookingWidget = ({
 
               {/* Select Fare Type Row at the bottom */}
               <div className="leh-undercard-row justify-content-start mt-3 gap-2 align-items-center">
+                {flightMode === "booking" && (
+                  <label className="d-flex align-items-center gap-2 fw-semibold text-muted fs-8">
+                    Travel Type
+                    <select
+                      className="form-select form-select-sm w-auto"
+                      value={flightTravelType}
+                      onChange={(e) => setFlightTravelType(e.target.value)}
+                    >
+                      <option value="DOMESTIC">Domestic</option>
+                      <option value="INTERNATIONAL">International</option>
+                    </select>
+                  </label>
+                )}
                 <span className="fw-extrabold text-muted me-2 leh-style-auto-1016">
                   Select Fare Type :
                 </span>

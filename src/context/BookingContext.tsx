@@ -27,7 +27,7 @@ const defaultBookingState = {
   searchParams: {
     cabs: { pickup: '', drop: '', date: '', returnDate: '', tripType: 'oneway', cabType: 'all', time: '', package: '4_40', packageDuration: '4 hr', packageDistance: '40 kms' },
     hotels: { city: 'Leh', checkIn: '2026-08-15', checkOut: '2026-08-18', guests: '2 Adults, 1 Room', roomType: 'all' },
-    flights: { from: 'Delhi (DEL)', to: 'Leh (IXL)', departDate: '2026-08-15', returnDate: '', tripType: 'oneway', class: 'Economy', travellers: 1 },
+    flights: { from: 'Delhi (DEL)', to: 'Leh (IXL)', departDate: '2026-08-15', returnDate: '', tripType: 'ONE_WAY', passengers: 1, travelClass: 'Economy', searchId: '', searchKey: '', totalFlights: 0, tripDetails: [], searchResults: [] },
     holidays: { destination: 'all', duration: 'all', budget: 350000, theme: 'all' },
     bus: { from: 'Delhi', to: 'Manali', date: '2026-08-15' },
     train: { pnr: '2456789012' },
@@ -248,7 +248,7 @@ export const BookingProvider = ({ children }: { children: React.ReactNode }) => 
   const [searchParams, setSearchParams] = useState({
     cabs: { pickup: '', drop: '', date: '', time: '', type: 'outstation', tripType: 'oneway', package: '4_40', packageDuration: '4 hr', packageDistance: '40 kms' },
     hotels: { city: 'Leh', checkIn: '2026-08-10', checkOut: '2026-08-15', guests: 2, rooms: 1 },
-    flights: { from: 'Delhi (DEL)', to: 'Leh (IXL)', departDate: '2026-08-10', returnDate: '', tripType: 'oneway', passengers: 1, travelClass: 'Economy' },
+    flights: { from: 'Delhi (DEL)', to: 'Leh (IXL)', departDate: '2026-08-10', returnDate: '', tripType: 'ONE_WAY', passengers: 1, travelClass: 'Economy', searchId: '', searchKey: '', totalFlights: 0, tripDetails: [], searchResults: [] },
     holidays: { destination: 'Ladakh Explorer Pack', duration: '6 Days', guests: 2 },
     bus: { from: 'Manali', to: 'Leh', date: '2026-07-28' },
     train: { pnr: '2345678901', from: 'Delhi', to: 'Kalka', date: '2026-07-25', trainNum: '12011' },
