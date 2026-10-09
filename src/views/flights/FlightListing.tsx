@@ -4,6 +4,7 @@ import React, { useState } from "react";
 import { useNavigate } from "../../hooks/useAppNavigation";
 import { useBooking } from "../../context/BookingContext";
 import { ROUTES } from "../../constants/routes";
+import FlightReprice from "./FlightReprice";
 
 type FlightSegment = {
   segmentId?: number;
@@ -145,11 +146,14 @@ const getTripTypeLabel = (tripType?: string) => {
 
 export const FlightListing = () => {
   const navigate = useNavigate();
-  const { searchParams } = useBooking();
+  const { searchParams, setCheckoutItem } = useBooking();
   const flightSearch = searchParams.flights;
   const [filterAirline, setFilterAirline] = useState("all");
   const [filterPriceRange, setFilterPriceRange] = useState("all");
-
+  const [repriceSelection, setRepriceSelection] = useState<{
+    flight: FlightSearchResult;
+    fare: FlightFare;
+  } | null>(null);
   const [selectedFares, setSelectedFares] = useState<Record<string, string>>(
     {},
   );
@@ -211,8 +215,15 @@ export const FlightListing = () => {
         "http://localhost:3001/v1/api/flights/fare-rule",
         {
           method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ searchKey, flightKey, fareId }),
+          headers: {
+            "Content-Type": "application/json",
+            Accept: "application/json",
+          },
+          body: JSON.stringify({
+            searchKey,
+            flightKey,
+            fareId,
+          }),
         },
       );
       const result = await response.json();
@@ -238,6 +249,71 @@ export const FlightListing = () => {
       setLoadingFlightRules((prev) => ({ ...prev, [flightKey]: false }));
     }
   };
+
+  if (repriceSelection) {
+    return (
+      <FlightReprice
+        flight={repriceSelection.flight}
+        fare={{
+          ...repriceSelection.fare,
+          fareDetails: repriceSelection.fare.fareDetails?.map((detail) => ({
+            ...detail,
+            fareClasses: detail.fareClasses ?? [],
+          })),
+        }}
+        searchKey={flightSearch.searchKey || flightSearch.searchId || ""}
+        onBack={() => setRepriceSelection(null)}
+        onContinue={({ flight, fare, repricedResponse }) => {
+          const fareAmount = (fare.fareDetails ?? []).reduce(
+            (sum, detail) => sum + (Number(detail.totalAmount) || 0),
+            0,
+          );
+          const bookingData = {
+            type: "flight",
+            status: "pending",
+            flight,
+            fare,
+            repricedResponse,
+            totalAmount: fareAmount,
+            flightKey: flight.flightKey,
+            flightId: flight.flightId,
+            fareId: fare.fareId,
+            searchKey: flightSearch.searchKey || flightSearch.searchId || "",
+            searchParams: flightSearch,
+            requiredPassengerDetails:
+              repricedResponse?.Required_PAX_Details ?? [],
+            createdAt: new Date().toISOString(),
+          };
+
+          if (!bookingData.flightKey || !bookingData.fareId) {
+            console.error(
+              "Cannot continue: flight key or fare ID is missing.",
+              {
+                flight,
+                fare,
+              },
+            );
+            return;
+          }
+
+          if (!bookingData.totalAmount || bookingData.totalAmount <= 0) {
+            console.error(
+              "Cannot continue: repriced fare amount is invalid.",
+              fare,
+            );
+            return;
+          }
+
+          // Preserve the repriced fare for the next booking screen.
+          setCheckoutItem(bookingData);
+
+          // Navigate to the passenger-details step.
+          // Use the exact route constant defined in your project.
+          navigate(ROUTES.PASSENGER_DETAILS);
+        }}
+      />
+    );
+  }
 
   return (
     <div
@@ -602,23 +678,43 @@ export const FlightListing = () => {
                                     </strong>
                                   </span>
                                 </div>
+                                <div className="d-flex align-items-center gap-3">
+                                  <button
+                                    className="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary"
+                                    onClick={() =>
+                                      fetchFlightFareRules(
+                                        flightKey,
+                                        currentSelectedFareId,
+                                      )
+                                    }
+                                    disabled={loadingFlightRules[flightKey]}
+                                  >
+                                    {loadingFlightRules[flightKey]
+                                      ? "Loading Rules..."
+                                      : showFlightRules[flightKey]
+                                        ? "Hide Fare Rules"
+                                        : "View Fare Rules ▾"}
+                                  </button>
+                                  <button
+                                    className="btn btn-primary btn-sm px-4 fw-bold rounded-pill shadow-xs"
+                                    onClick={() => {
+                                      if (!activeFare || !flight.flightKey) {
+                                        console.error(
+                                          "Cannot reprice: selected flight key or fare is missing.",
+                                        );
+                                        return;
+                                      }
 
-                                <button
-                                  className="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary"
-                                  onClick={() =>
-                                    fetchFlightFareRules(
-                                      flightKey,
-                                      currentSelectedFareId,
-                                    )
-                                  }
-                                  disabled={loadingFlightRules[flightKey]}
-                                >
-                                  {loadingFlightRules[flightKey]
-                                    ? "Loading Rules..."
-                                    : showFlightRules[flightKey]
-                                      ? "Hide Fare Rules"
-                                      : "View Fare Rules ▾"}
-                                </button>
+                                      setRepriceSelection({
+                                        flight,
+                                        fare: activeFare,
+                                      });
+                                    }}
+                                    disabled={!activeFare || !flight.flightKey}
+                                  >
+                                    Book Now
+                                  </button>
+                                </div>
                               </div>
                             )}
 
