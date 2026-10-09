@@ -61,6 +61,7 @@ type FlightFare = {
 type FlightSearchResult = {
   id?: string | number;
   flightId?: string;
+  flightKey?: string;
   flightNumbers?: string;
   airlineCode?: string;
   isLcc?: boolean;
@@ -119,11 +120,10 @@ const getFareClass = (fare: FlightFare) => {
   const fareDetail = fare.fareDetails?.[0];
   const fareClass = fareDetail?.fareClasses?.[0];
   return {
-    cabin:
-      fareClass?.CabinClass?.replaceAll("_", " ") || "Cabin class unavailable",
+    cabin: fareClass?.CabinClass?.replaceAll("_", " ") || "Economy",
     name:
       fareClass?.Class_Desc ||
-      (fare.productClass ? `Fare ${fare.productClass}` : "Fare option"),
+      (fare.productClass ? `Fare ${fare.productClass}` : "Standard Fare"),
   };
 };
 
@@ -150,10 +150,19 @@ export const FlightListing = () => {
   const [filterAirline, setFilterAirline] = useState("all");
   const [filterPriceRange, setFilterPriceRange] = useState("all");
 
-  // Track selected fare ID per flight item
   const [selectedFares, setSelectedFares] = useState<Record<string, string>>(
     {},
   );
+
+  const [flightRulesData, setFlightRulesData] = useState<
+    Record<string, string>
+  >({});
+  const [loadingFlightRules, setLoadingFlightRules] = useState<
+    Record<string, boolean>
+  >({});
+  const [showFlightRules, setShowFlightRules] = useState<
+    Record<string, boolean>
+  >({});
 
   const trips: FlightTrip[] = Array.isArray(flightSearch.tripDetails)
     ? flightSearch.tripDetails
@@ -184,14 +193,63 @@ export const FlightListing = () => {
     : [];
   const hasSearch = Boolean(flightSearch.searchId || displayedTrips.length);
 
+  const fetchFlightFareRules = async (flightKey: string, fareId: string) => {
+    const searchKey = flightSearch.searchKey || flightSearch.searchId || "";
+    if (!fareId) return;
+
+    if (flightRulesData[flightKey]) {
+      setShowFlightRules((prev) => ({
+        ...prev,
+        [flightKey]: !prev[flightKey],
+      }));
+      return;
+    }
+
+    setLoadingFlightRules((prev) => ({ ...prev, [flightKey]: true }));
+    try {
+      const response = await fetch(
+        "http://localhost:3001/v1/api/flights/fare-rule",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ searchKey, flightKey, fareId }),
+        },
+      );
+      const result = await response.json();
+      const ruleDesc =
+        result.success && result.data?.FareRules?.[0]?.FareRuleDesc;
+
+      setFlightRulesData((prev) => ({
+        ...prev,
+        [flightKey]:
+          ruleDesc ||
+          '<p class="text-muted">No fare rules available for this flight.</p>',
+      }));
+      setShowFlightRules((prev) => ({ ...prev, [flightKey]: true }));
+    } catch (err) {
+      console.error("Failed to fetch fare rules", err);
+      setFlightRulesData((prev) => ({
+        ...prev,
+        [flightKey]:
+          '<p class="text-danger">Failed to load fare rules. Please try again later.</p>',
+      }));
+      setShowFlightRules((prev) => ({ ...prev, [flightKey]: true }));
+    } finally {
+      setLoadingFlightRules((prev) => ({ ...prev, [flightKey]: false }));
+    }
+  };
+
   return (
-    <div className="container py-4">
+    <div
+      className="container py-4"
+      style={{ backgroundColor: "#f4f6f9", minHeight: "100vh" }}
+    >
+      {/* Search Header Banner */}
       <div className="card shadow-sm border-0 p-3 p-md-4 mb-4 rounded-4 bg-white">
         <div className="d-flex flex-wrap align-items-center justify-content-between gap-3">
           <div>
             <div className="d-flex align-items-center gap-2 mb-2">
-              <i className="fa-solid fa-plane-departure text-primary"></i>
-              <span className="badge bg-primary-subtle text-primary">
+              <span className="badge bg-primary px-2 py-1 text-uppercase fs-9 fw-bold">
                 {getTripTypeLabel(flightSearch.tripType)}
               </span>
               {flightSearch.travelType && (
@@ -220,35 +278,11 @@ export const FlightListing = () => {
                 </>
               )}
             </div>
-            <div className="d-flex flex-wrap gap-2 mt-2">
-              {flightSearch.departDate && (
-                <span className="badge bg-light text-secondary border fw-normal">
-                  <i className="fa-regular fa-calendar me-1"></i>
-                  {flightSearch.departDate}
-                </span>
-              )}
-              {flightSearch.returnDate && (
-                <span className="badge bg-light text-secondary border fw-normal">
-                  <i className="fa-solid fa-rotate-left me-1"></i>
-                  Return {flightSearch.returnDate}
-                </span>
-              )}
-              <span className="badge bg-light text-secondary border fw-normal">
-                <i className="fa-solid fa-user me-1"></i>
-                {flightSearch.passengers} adult(s)
-              </span>
-              {flightSearch.travelClass && (
-                <span className="badge bg-light text-secondary border fw-normal">
-                  <i className="fa-solid fa-chair me-1"></i>
-                  {flightSearch.travelClass}
-                </span>
-              )}
-            </div>
           </div>
           <div>
             <button
               onClick={() => navigate(ROUTES.HOME)}
-              className="btn btn-sm btn-outline-primary px-3 rounded-pill"
+              className="btn btn-sm btn-outline-primary px-4 rounded-pill fw-semibold"
             >
               Modify Search
             </button>
@@ -264,28 +298,23 @@ export const FlightListing = () => {
           <h5 className="fw-bold text-dark">
             Search for flights to see results
           </h5>
-          <p className="text-secondary fs-8">
-            Enter airport codes in the flight search form to find available
-            flights.
-          </p>
-          <button
-            onClick={() => navigate(ROUTES.HOME)}
-            className="btn btn-primary rounded-pill px-4 py-2 mt-2 mx-auto border-0 fw-bold fs-8"
-          >
-            Search Flights
-          </button>
         </div>
       ) : (
         <div className="row g-4">
+          {/* Filters Sidebar */}
           <div className="col-lg-3">
-            <div className="filter-sidebar">
-              <h5 className="fw-bold mb-3 border-bottom pb-2 fs-6">
-                Filter Flights
-              </h5>
+            <div
+              className="card border-0 shadow-sm p-3 rounded-4 bg-white sticky-top"
+              style={{ top: "20px" }}
+            >
+              <h6 className="fw-bold mb-3 border-bottom pb-2 text-dark">
+                Filters
+              </h6>
 
-              {/* Airline Filter */}
-              <div className="filter-section mb-3">
-                <h6 className="filter-title">Airline</h6>
+              <div className="mb-3">
+                <label className="form-label small fw-bold text-muted text-uppercase">
+                  Airlines
+                </label>
                 <select
                   className="form-select form-select-sm"
                   value={filterAirline}
@@ -300,9 +329,10 @@ export const FlightListing = () => {
                 </select>
               </div>
 
-              {/* Price Range Filter */}
-              <div className="filter-section">
-                <h6 className="filter-title">Price Range</h6>
+              <div>
+                <label className="form-label small fw-bold text-muted text-uppercase">
+                  Price Range
+                </label>
                 <select
                   className="form-select form-select-sm"
                   value={filterPriceRange}
@@ -318,17 +348,12 @@ export const FlightListing = () => {
             </div>
           </div>
 
+          {/* Flight Cards Listing */}
           <div className="col-lg-9">
-            <div className="d-flex justify-content-between align-items-center mb-3">
-              <h5 className="fw-bold mb-0">Available Flights</h5>
-              <span className="text-muted fs-8">
-                {flightSearch.totalFlights ??
-                  displayedTrips.reduce(
-                    (total, trip) => total + (trip.flights?.length || 0),
-                    0,
-                  )}{" "}
-                result(s)
-              </span>
+            <div className="d-flex justify-content-between align-items-center mb-3 px-1">
+              <h6 className="fw-bold text-secondary mb-0">
+                Showing available flights
+              </h6>
             </div>
 
             {displayedTrips.map((trip, tripIndex) => {
@@ -364,433 +389,261 @@ export const FlightListing = () => {
 
               return (
                 <section className="mb-4" key={trip.tripId ?? tripIndex}>
-                  {displayedTrips.length > 1 && (
-                    <h6 className="fw-bold text-dark mb-3">
-                      Flight {tripIndex + 1}
-                      {segments[tripIndex]
-                        ? ` · ${segments[tripIndex].origin} to ${segments[tripIndex].destination}`
-                        : ""}
-                    </h6>
-                  )}
+                  {tripFlights.map((flight, flightIndex) => {
+                    const flightKey = String(
+                      flight.flightKey ||
+                        flight.flightId ||
+                        flight.id ||
+                        flightIndex,
+                    );
+                    const flightSegments = flight.segments || [];
+                    const flightName =
+                      flightSegments[0]?.airlineName ||
+                      flight.airlineCode ||
+                      "Airline";
+                    const fares = flight.fares || [];
+                    const firstSegment = flightSegments[0];
+                    const lastSegment =
+                      flightSegments[flightSegments.length - 1];
 
-                  {tripFlights.length === 0 ? (
-                    <div className="card p-4 border text-center rounded-3 bg-white">
-                      <span className="text-secondary fs-8">
-                        No flights match your filter criteria.
-                      </span>
-                    </div>
-                  ) : (
-                    tripFlights.map((flight, flightIndex) => {
-                      const flightKey = String(
-                        flight.flightId || flight.id || flightIndex,
-                      );
-                      const flightSegments = flight.segments || [];
-                      const flightName =
-                        flightSegments[0]?.airlineName ||
-                        flight.airlineCode ||
-                        "Airline";
-                      const fares = flight.fares || [];
-                      const firstSegment = flightSegments[0];
-                      const lastSegment =
-                        flightSegments[flightSegments.length - 1];
-                      const totalDuration = flightSegments.reduce(
-                        (total, segment) => {
-                          const [hours = 0, minutes = 0] = (
-                            segment.duration || ""
-                          )
-                            .split(":")
-                            .map(Number);
-                          return total + hours * 60 + minutes;
-                        },
-                        0,
-                      );
+                    const currentSelectedFareId =
+                      selectedFares[flightKey] || fares[0]?.fareId || "";
+                    const activeFare =
+                      fares.find((f) => f.fareId === currentSelectedFareId) ||
+                      fares[0];
 
-                      const currentSelectedFareId =
-                        selectedFares[flightKey] || fares[0]?.fareId || "";
-                      const activeFare =
-                        fares.find((f) => f.fareId === currentSelectedFareId) ||
-                        fares[0];
-
-                      return (
-                        <article
-                          className="card border-0 shadow-sm mb-4 rounded-4 overflow-hidden"
-                          key={flightKey}
-                        >
-                          <div className="card-body p-0">
-                            <div className="d-flex flex-wrap justify-content-between align-items-center gap-3 px-3 px-md-4 py-3 border-bottom">
-                              <div className="d-flex align-items-center gap-3">
-                                <div
-                                  className="rounded-3 bg-primary-subtle text-primary d-flex align-items-center justify-content-center"
-                                  style={{ width: 48, height: 48 }}
-                                >
-                                  <i className="fa-solid fa-plane fs-5"></i>
-                                </div>
-                                <div>
-                                  <h6 className="fw-bold text-dark mb-1">
-                                    {flightName}
-                                  </h6>
-                                  <span className="text-muted fs-8">
-                                    {flight.airlineCode || ""} ·{" "}
-                                    {flight.flightNumbers ||
-                                      flightSegments
-                                        .map((segment) => segment.flightNumber)
-                                        .filter(Boolean)
-                                        .join(" / ") ||
-                                      flight.flightId}
-                                  </span>
-                                </div>
+                    return (
+                      <article
+                        className="card border-0 shadow-sm mb-3 rounded-4 overflow-hidden bg-white"
+                        key={flightKey}
+                      >
+                        <div className="card-body p-4">
+                          {/* Top Airline Info Row */}
+                          <div className="d-flex align-items-center justify-content-between pb-3 border-bottom">
+                            <div className="d-flex align-items-center gap-3">
+                              <div
+                                className="rounded-circle bg-light border d-flex align-items-center justify-content-center text-primary"
+                                style={{ width: 40, height: 40 }}
+                              >
+                                <i className="fa-solid fa-plane"></i>
                               </div>
-                              <div className="d-flex flex-wrap align-items-center gap-2">
-                                <span className="badge bg-light text-dark border">
-                                  {flight.isLcc ? "Low-cost" : "Full service"}
-                                </span>
-                                {flight.blockTicketAllowed && (
-                                  <span className="badge bg-success-subtle text-success">
-                                    Ticket block available
-                                  </span>
-                                )}
+                              <div>
+                                <h6 className="fw-bold text-dark mb-0">
+                                  {flightName}
+                                </h6>
+                                <small className="text-muted">
+                                  {flight.airlineCode || ""} -{" "}
+                                  {flight.flightNumbers || flight.flightId}
+                                </small>
                               </div>
                             </div>
+                            <span className="badge bg-light text-secondary border fw-normal">
+                              {flight.isLcc
+                                ? "Low-cost Carrier"
+                                : "Full Service"}
+                            </span>
+                          </div>
 
-                            <div className="p-3 p-md-4">
-                              {firstSegment && lastSegment ? (
-                                <>
-                                  <div className="row align-items-center g-3 mb-4">
-                                    <div className="col-5 col-md-4">
-                                      <div className="fw-bold text-dark fs-5">
-                                        {formatDateTime(
-                                          firstSegment.departureDateTime,
-                                        ).split(" · ")[1] || "—"}
-                                      </div>
-                                      <div className="fw-semibold text-dark">
-                                        {firstSegment.origin || "—"}
-                                      </div>
-                                      <small className="text-muted">
-                                        {firstSegment.originCity || ""}
-                                      </small>
-                                      {firstSegment.originTerminal && (
-                                        <small className="text-muted d-block">
-                                          Terminal {firstSegment.originTerminal}
-                                        </small>
-                                      )}
-                                    </div>
-                                    <div className="col-2 col-md-4 text-center">
-                                      <small className="text-muted d-block">
-                                        {totalDuration
-                                          ? `${Math.floor(totalDuration / 60)}h ${totalDuration % 60}m`
-                                          : firstSegment.duration || "—"}
-                                      </small>
-                                      <div className="d-flex align-items-center gap-2 my-2">
-                                        <span className="border-top flex-grow-1" />
-                                        <i className="fa-solid fa-plane text-primary fs-8"></i>
-                                        <span className="border-top flex-grow-1" />
-                                      </div>
-                                      <small className="text-muted d-block">
-                                        {flightSegments.length > 1
-                                          ? flightSegments
-                                              .slice(0, -1)
-                                              .map(
-                                                (segment) =>
-                                                  segment.destination,
-                                              )
-                                              .filter(Boolean)
-                                              .join(" · ") || "Connecting"
-                                          : "Non-stop"}
-                                      </small>
-                                    </div>
-                                    <div className="col-5 col-md-4 text-end">
-                                      <div className="fw-bold text-dark fs-5">
-                                        {formatDateTime(
-                                          lastSegment.arrivalDateTime,
-                                        ).split(" · ")[1] || "—"}
-                                      </div>
-                                      <div className="fw-semibold text-dark">
-                                        {lastSegment.destination || "—"}
-                                      </div>
-                                      <small className="text-muted">
-                                        {lastSegment.destinationCity || ""}
-                                      </small>
-                                      {lastSegment.destinationTerminal && (
-                                        <small className="text-muted d-block">
-                                          Terminal{" "}
-                                          {lastSegment.destinationTerminal}
-                                        </small>
-                                      )}
-                                    </div>
-                                    <div className="col-12">
-                                      <div className="small text-muted border-top pt-3">
-                                        {
-                                          formatDateTime(
-                                            firstSegment.departureDateTime,
-                                          ).split(" · ")[0]
+                          {/* Flight Schedule Row */}
+                          {firstSegment && lastSegment && (
+                            <div className="row align-items-center py-4 g-3">
+                              <div className="col-4">
+                                <h5 className="fw-bold text-dark mb-1">
+                                  {formatDateTime(
+                                    firstSegment.departureDateTime,
+                                  ).split(" · ")[1] || "—"}
+                                </h5>
+                                <div className="fw-semibold text-secondary">
+                                  {firstSegment.origin}
+                                </div>
+                                <small className="text-muted">
+                                  {firstSegment.originCity}
+                                </small>
+                              </div>
+
+                              <div className="col-4 text-center">
+                                <small className="text-muted d-block mb-1">
+                                  {firstSegment.duration || "Non-stop"}
+                                </small>
+                                <div className="position-relative d-flex align-items-center justify-content-center">
+                                  <hr className="w-100 border-secondary opacity-25" />
+                                  <i className="fa-solid fa-plane text-primary position-absolute bg-white px-2"></i>
+                                </div>
+                                <small className="text-success fw-semibold d-block mt-1">
+                                  {flightSegments.length > 1
+                                    ? `${flightSegments.length - 1} Stop(s)`
+                                    : "Non-stop"}
+                                </small>
+                              </div>
+
+                              <div className="col-4 text-end">
+                                <h5 className="fw-bold text-dark mb-1">
+                                  {formatDateTime(
+                                    lastSegment.arrivalDateTime,
+                                  ).split(" · ")[1] || "—"}
+                                </h5>
+                                <div className="fw-semibold text-secondary">
+                                  {lastSegment.destination}
+                                </div>
+                                <small className="text-muted">
+                                  {lastSegment.destinationCity}
+                                </small>
+                              </div>
+                            </div>
+                          )}
+
+                          {/* MMT Style Fare Selector Tabs */}
+                          <div className="bg-light p-3 rounded-3 mt-2">
+                            <div className="small fw-bold text-uppercase text-secondary mb-2">
+                              Select Fare Type
+                            </div>
+
+                            {fares.length > 0 ? (
+                              <div className="row g-2">
+                                {fares.map((fare, fareIdx) => {
+                                  const fareId =
+                                    fare.fareId || `fare_${fareIdx}`;
+                                  const isSelected =
+                                    currentSelectedFareId === fareId;
+                                  const amt = getFareAmount(fare);
+                                  const cur =
+                                    fare.fareDetails?.[0]?.currency || "INR";
+                                  const fc = getFareClass(fare);
+
+                                  return (
+                                    <div
+                                      className="col-12 col-md-4"
+                                      key={fareId}
+                                    >
+                                      <div
+                                        onClick={() =>
+                                          setSelectedFares((prev) => ({
+                                            ...prev,
+                                            [flightKey]: fareId,
+                                          }))
                                         }
-                                        {firstSegment.aircraftType
-                                          ? ` · Aircraft ${firstSegment.aircraftType}`
-                                          : ""}
-                                      </div>
-                                    </div>
-                                  </div>
-                                  {flightSegments.length > 1 && (
-                                    <div className="border rounded-3 p-3 mb-4 bg-light">
-                                      <div className="small fw-bold text-secondary text-uppercase mb-2">
-                                        Segment details
-                                      </div>
-                                      {flightSegments.map(
-                                        (segment, segmentIndex) => (
-                                          <div
-                                            className={`d-flex flex-wrap justify-content-between gap-2 ${segmentIndex > 0 ? "border-top pt-2 mt-2" : ""}`}
-                                            key={`${segment.segmentId ?? segmentIndex}-${segment.flightNumber ?? ""}`}
-                                          >
-                                            <span className="small text-dark">
-                                              {segment.airlineName ||
-                                                segment.airlineCode}{" "}
-                                              {segment.flightNumber}
+                                        className={`p-3 rounded-3 border bg-white h-100 d-flex flex-column justify-content-between transition-all ${
+                                          isSelected
+                                            ? "border-primary ring-1 ring-primary shadow-xs"
+                                            : "border-light"
+                                        }`}
+                                        style={{
+                                          cursor: "pointer",
+                                          borderWidth: isSelected
+                                            ? "2px"
+                                            : "1px",
+                                          borderColor: isSelected
+                                            ? "#0d6efd"
+                                            : "#dee2e6",
+                                        }}
+                                      >
+                                        <div className="d-flex justify-content-between align-items-start">
+                                          <div>
+                                            <span
+                                              className={`fw-bold fs-7 ${isSelected ? "text-primary" : "text-dark"}`}
+                                            >
+                                              {fc.name}
                                             </span>
-                                            <span className="small text-muted">
-                                              {segment.origin} →{" "}
-                                              {segment.destination}
-                                            </span>
-                                            <span className="small text-muted">
-                                              {segment.duration} ·{" "}
-                                              {formatDateTime(
-                                                segment.departureDateTime,
-                                              )}
-                                            </span>
+                                            <div className="text-muted fs-9">
+                                              {fc.cabin}
+                                            </div>
                                           </div>
-                                        ),
-                                      )}
-                                    </div>
-                                  )}
-                                </>
-                              ) : (
-                                <div className="text-muted fs-8 mb-3">
-                                  Flight details:{" "}
-                                  {flight.flightNumbers || flight.flightId}
-                                </div>
-                              )}
-
-                              {/* Modern Interactive Fare Selector Cards */}
-                              <div className="border-top pt-3">
-                                <div className="d-flex align-items-center justify-content-between mb-3">
-                                  <div>
-                                    <h6 className="fw-bold text-dark mb-0">
-                                      Select Fare Option
-                                    </h6>
-                                    <small className="text-muted">
-                                      Choose your preferred tier for baggage and
-                                      cancellation perks
-                                    </small>
-                                  </div>
-                                  <span className="badge bg-light text-secondary border">
-                                    {fares.length} Available
-                                  </span>
-                                </div>
-
-                                {fares.length > 0 ? (
-                                  <div className="row g-2 mb-3">
-                                    {fares.map((fare, fareIdx) => {
-                                      const fareId =
-                                        fare.fareId || String(fareIdx);
-                                      const isSelected =
-                                        (selectedFares[flightKey] ||
-                                          fares[0]?.fareId) === fareId;
-                                      const amt = getFareAmount(fare);
-                                      const cur =
-                                        fare.fareDetails?.[0]?.currency ||
-                                        "INR";
-                                      const fc = getFareClass(fare);
-
-                                      return (
-                                        <div
-                                          className="col-12 col-md-4"
-                                          key={fareId}
-                                        >
-                                          <div
-                                            onClick={() =>
-                                              setSelectedFares((prev) => ({
-                                                ...prev,
-                                                [flightKey]: fareId,
-                                              }))
-                                            }
-                                            className={`p-3 rounded-3 border transition-all cursor-pointer h-100 d-flex flex-column justify-content-between ${
-                                              isSelected
-                                                ? "border-primary bg-primary-subtle bg-opacity-10 shadow-sm"
-                                                : "border-light bg-light hover-border-secondary"
-                                            }`}
-                                            style={{
-                                              cursor: "pointer",
-                                              borderWidth: isSelected
-                                                ? "2px"
-                                                : "1px",
-                                            }}
-                                          >
-                                            <div>
-                                              <div className="d-flex justify-content-between align-items-start gap-2 mb-1">
-                                                <span
-                                                  className={`fw-bold fs-7 ${isSelected ? "text-primary" : "text-dark"}`}
-                                                >
-                                                  {fc.name}
-                                                </span>
-                                                <div className="form-check m-0">
-                                                  <input
-                                                    className="form-check-input"
-                                                    type="radio"
-                                                    checked={isSelected}
-                                                    onChange={() => {}}
-                                                  />
-                                                </div>
-                                              </div>
-                                              <div className="text-muted fs-8 mb-2">
-                                                {fc.cabin}
-                                              </div>
-                                            </div>
-                                            <div>
-                                              <div className="fw-bold text-dark fs-6">
-                                                {formatCurrency(amt, cur)}
-                                              </div>
-                                              <div className="d-flex gap-1 mt-1 flex-wrap">
-                                                <span
-                                                  className={`badge fs-9 ${fare.refundable ? "bg-success-subtle text-success" : "bg-secondary-subtle text-secondary"}`}
-                                                >
-                                                  {fare.refundable
-                                                    ? "Refundable"
-                                                    : "Non-ref"}
-                                                </span>
-                                              </div>
-                                            </div>
+                                          <div className="form-check m-0">
+                                            <input
+                                              className="form-check-input"
+                                              type="radio"
+                                              checked={isSelected}
+                                              onChange={() => {}}
+                                            />
                                           </div>
                                         </div>
-                                      );
-                                    })}
-                                  </div>
-                                ) : (
-                                  <div className="alert alert-warning fs-8 mb-3">
-                                    No fare options available.
-                                  </div>
-                                )}
-
-                                {/* Expanded Breakdown for Active Fare */}
-                                {activeFare &&
-                                  (() => {
-                                    const amount = getFareAmount(activeFare);
-                                    const fareDetail =
-                                      activeFare.fareDetails?.[0];
-                                    const baggage = fareDetail?.freeBaggage;
-                                    const currency =
-                                      fareDetail?.currency || "INR";
-                                    const baseAmount = (
-                                      activeFare.fareDetails || []
-                                    ).reduce(
-                                      (total, detail) =>
-                                        total +
-                                        (Number(detail.basicAmount) || 0),
-                                      0,
-                                    );
-                                    const taxes = (
-                                      activeFare.fareDetails || []
-                                    ).reduce(
-                                      (total, detail) =>
-                                        total +
-                                        (Number(detail.airportTaxAmount) || 0) +
-                                        (Number(detail.yqAmount) || 0) +
-                                        (Number(detail.gst) || 0) +
-                                        (Number(detail.serviceFeeAmount) || 0),
-                                      0,
-                                    );
-
-                                    return (
-                                      <div className="border rounded-3 p-3 bg-white shadow-xs">
-                                        <div className="d-flex flex-wrap justify-content-between align-items-center gap-2 mb-2 pb-2 border-bottom">
-                                          <div className="small fw-bold text-secondary text-uppercase">
-                                            Fare Breakdown & Baggage Details
-                                          </div>
-                                          <span className="fw-bold text-primary fs-6">
-                                            Total:{" "}
-                                            {formatCurrency(amount, currency)}
+                                        <div className="mt-3 d-flex align-items-baseline justify-content-between">
+                                          <span className="fw-bold text-dark fs-5">
+                                            {formatCurrency(amt, cur)}
+                                          </span>
+                                          <span
+                                            className={`badge fs-9 ${fare.refundable ? "bg-success-subtle text-success" : "bg-warning-subtle text-warning-emphasis"}`}
+                                          >
+                                            {fare.refundable
+                                              ? "Refundable"
+                                              : "Non-Ref"}
                                           </span>
                                         </div>
-
-                                        <div className="row g-3 small">
-                                          <div className="col-sm-6">
-                                            <div className="d-flex justify-content-between text-muted mb-1">
-                                              <span>Base Fare</span>
-                                              <span>
-                                                {formatCurrency(
-                                                  baseAmount,
-                                                  currency,
-                                                )}
-                                              </span>
-                                            </div>
-                                            <div className="d-flex justify-content-between text-muted">
-                                              <span>Taxes & Surcharges</span>
-                                              <span>
-                                                {formatCurrency(
-                                                  taxes,
-                                                  currency,
-                                                )}
-                                              </span>
-                                            </div>
-                                          </div>
-                                          <div className="col-sm-6 border-start-sm">
-                                            {baggage && (
-                                              <div className="d-flex align-items-center gap-2 text-dark">
-                                                <i className="fa-solid fa-suitcase text-primary"></i>
-                                                <div>
-                                                  <div>
-                                                    Check-in:{" "}
-                                                    <strong>
-                                                      {baggage.checkIn || "—"}
-                                                    </strong>
-                                                  </div>
-                                                  <div>
-                                                    Cabin:{" "}
-                                                    <strong>
-                                                      {baggage.hand || "—"}
-                                                    </strong>
-                                                  </div>
-                                                </div>
-                                              </div>
-                                            )}
-                                          </div>
-                                        </div>
-
-                                        {activeFare.promptMessage && (
-                                          <div className="small text-info mt-2 pt-2 border-top">
-                                            <i className="fa-solid fa-circle-info me-1"></i>
-                                            {activeFare.promptMessage}
-                                          </div>
-                                        )}
-                                        {activeFare.warning && (
-                                          <div className="small text-warning-emphasis mt-2 pt-2 border-top">
-                                            <i className="fa-solid fa-triangle-exclamation me-1"></i>
-                                            {activeFare.warning}
-                                          </div>
-                                        )}
                                       </div>
-                                    );
-                                  })()}
+                                    </div>
+                                  );
+                                })}
                               </div>
-                            </div>
+                            ) : (
+                              <div className="text-muted small">
+                                No fare options listed.
+                              </div>
+                            )}
+
+                            {/* Active Fare Baggage & Rules Footer */}
+                            {activeFare && (
+                              <div className="mt-3 pt-3 border-top d-flex flex-wrap align-items-center justify-content-between gap-2">
+                                <div className="d-flex align-items-center gap-3 small text-secondary">
+                                  <span>
+                                    <i className="fa-solid fa-suitcase me-1 text-primary"></i>
+                                    Check-in:{" "}
+                                    <strong>
+                                      {activeFare.fareDetails?.[0]?.freeBaggage
+                                        ?.checkIn || "15 Kg"}
+                                    </strong>
+                                  </span>
+                                  <span>·</span>
+                                  <span>
+                                    <i className="fa-solid fa-briefcase me-1 text-primary"></i>
+                                    Cabin:{" "}
+                                    <strong>
+                                      {activeFare.fareDetails?.[0]?.freeBaggage
+                                        ?.hand || "7 Kg"}
+                                    </strong>
+                                  </span>
+                                </div>
+
+                                <button
+                                  className="btn btn-link btn-sm text-decoration-none p-0 fw-semibold text-primary"
+                                  onClick={() =>
+                                    fetchFlightFareRules(
+                                      flightKey,
+                                      currentSelectedFareId,
+                                    )
+                                  }
+                                  disabled={loadingFlightRules[flightKey]}
+                                >
+                                  {loadingFlightRules[flightKey]
+                                    ? "Loading Rules..."
+                                    : showFlightRules[flightKey]
+                                      ? "Hide Fare Rules"
+                                      : "View Fare Rules ▾"}
+                                </button>
+                              </div>
+                            )}
+
+                            {/* Accordion Fare Rules Box */}
+                            {showFlightRules[flightKey] &&
+                              flightRulesData[flightKey] && (
+                                <div
+                                  className="mt-3 bg-white p-3 rounded-3 border text-secondary fs-8 shadow-xs"
+                                  style={{
+                                    maxHeight: "250px",
+                                    overflowY: "auto",
+                                  }}
+                                  dangerouslySetInnerHTML={{
+                                    __html: flightRulesData[flightKey],
+                                  }}
+                                />
+                              )}
                           </div>
-                        </article>
-                      );
-                    })
-                  )}
+                        </div>
+                      </article>
+                    );
+                  })}
                 </section>
               );
             })}
-
-            {displayedTrips.length === 0 && (
-              <div className="card p-5 border text-center rounded-3 bg-white">
-                <div className="text-muted fs-3 mb-2">
-                  <i className="fa-solid fa-plane-slash"></i>
-                </div>
-                <h5 className="fw-bold text-dark">No flights found</h5>
-                <p className="text-secondary fs-8 mb-0">
-                  Try another route or change your search dates.
-                </p>
-              </div>
-            )}
           </div>
         </div>
       )}
